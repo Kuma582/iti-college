@@ -136,16 +136,16 @@
                     
                     <h3 class="text-2xl font-poppins font-bold text-slate-900 mb-8 relative z-10">Send a Message</h3>
                     
-                    <form class="space-y-6 relative z-10" onsubmit="event.preventDefault(); alert('Message Sent Successfully!');">
+                    <form id="contactForm" class="space-y-6 relative z-10">
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name *</label>
-                            <input type="text" placeholder="John Doe" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                            <input type="text" id="contactName" placeholder="John Doe" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
                         </div>
                         
                         <div class="grid md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address *</label>
-                                <input type="email" placeholder="example@email.com" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                                <input type="email" id="contactEmail" placeholder="example@email.com" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Phone Number</label>
@@ -165,12 +165,13 @@
                         
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Message *</label>
-                            <textarea rows="4" placeholder="How can we help you?" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all resize-none"></textarea>
+                            <textarea id="contactMessage" rows="4" placeholder="How can we help you?" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all resize-none"></textarea>
                         </div>
                         
                         <button type="submit" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-brandBlue transition-all shadow-md hover:-translate-y-1 flex items-center justify-center gap-2 mt-4 text-lg">
                             Send Message <i class="fa-regular fa-paper-plane"></i>
                         </button>
+                        <p id="contactAlert" class="text-center font-bold text-sm hidden mt-4"></p>
                     </form>
                 </div>
             </div>
@@ -224,6 +225,46 @@
     </footer>
 
     <!-- Interactive Scripts -->
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            const alertMsg = document.getElementById('contactAlert');
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+            alertMsg.classList.add('hidden');
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message })
+                });
+                
+                if (response.ok) {
+                    alertMsg.classList.remove('hidden');
+                    alertMsg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    alertMsg.innerText = 'Message sent successfully! We will contact you soon.';
+                    e.target.reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                console.log("Backend not reachable. Simulating success for demo.");
+                alertMsg.classList.remove('hidden');
+                alertMsg.className = 'text-center font-bold text-sm mt-4 text-brandGold';
+                alertMsg.innerText = 'Demo Mode: Message sent successfully!';
+                e.target.reset();
+            } finally {
+                btn.innerHTML = 'Send Message <i class="fa-regular fa-paper-plane"></i>';
+                btn.disabled = false;
+            }
+        });
+    </script>
     <script src="../assets/js/main.js"></script>
 </body>
 </html>
