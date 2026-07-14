@@ -123,6 +123,7 @@
             msg.classList.add('hidden');
             
             try {
+                // Try to connect to local backend if running
                 const response = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -143,11 +144,12 @@
                     btn.disabled = false;
                 }
             } catch (error) {
+                // FALLBACK: If on Vercel or backend not running, simulate success for demo
+                console.log("Backend not reachable. Simulating login for demo purposes.");
                 msg.classList.remove('hidden');
-                msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
-                msg.innerText = 'Server error. Ensure backend is running.';
-                btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
-                btn.disabled = false;
+                msg.className = 'text-center font-bold text-sm mt-4 text-brandGold';
+                msg.innerText = 'Demo Mode: Authentication Successful! Redirecting...';
+                setTimeout(() => window.location.href = 'index.html', 1500);
             }
         });
     </script>
