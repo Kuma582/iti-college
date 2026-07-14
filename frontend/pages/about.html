@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Excellence ITI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
+
+    <!-- Top Information Bar -->
+    <div
+        class="bg-brandBlue text-white text-[11px] md:text-xs py-2 px-6 flex flex-col md:flex-row justify-between items-center border-b border-brandGold/50">
+        <div class="flex gap-4">
+            <span><i class="fa-solid fa-phone mr-1 text-brandGold"></i> +91-6209303249</span>
+            <span><i class="fa-solid fa-envelope mr-1 text-brandGold"></i>anmolsharma8783@gmail.com</span>
+        </div>
+        <div class="flex gap-4 mt-2 md:mt-0 font-medium tracking-wide">
+            <span>NCVT Affiliated: DGET-6/24/2024-TC</span>
+            <span class="text-brandGold font-bold">AISHE CODE: C-54321</span>
+        </div>
+    </div>
+
+    <!-- Sticky Header & Mega Nav -->
+    <header class="glass sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div
+                    class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft group-hover:shadow-glow transition-all duration-300 border border-brandGold/20">
+                    <i class="fa-solid fa-bolt text-brandGold"></i>
+                </div>
+                <div>
+                    <h1
+                        class="text-xl font-poppins font-bold text-brandBlue tracking-tight leading-none group-hover:text-blue-700 transition">
+                        EXCELLENCE ITI</h1>
+                    <span class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Industrial Training
+                        Institute</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700">
+                <a href="index.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Home</a>
+                <a href="about.html" class="text-brandBlue border-b-2 border-brandBlue pb-1">About Us</a>
+                <a href="courses.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Trades</a>
+                <a href="admission.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Admission</a>
+                <a href="faculty.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Faculty</a>
+                <a href="facilities.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Facilities</a>
+                <a href="gallery.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Gallery</a>
+                <a href="student-corner.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Notice</a>
+                <a href="contact.html"
+                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Contact</a>
+            <a href="login.html" class="lg:hidden hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Login</a>
+            </nav>
+
+            <!-- Login CTA -->
+            <div class="hidden lg:block">
+                <a href="login.html"
+                    class="bg-brandBlue text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-soft hover:shadow-lg border border-brandBlue hover:border-brandGold flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> MIS Login
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-brandBlue"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="relative bg-brandBlue text-white py-24 px-6 overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop')] opacity-10 mix-blend-overlay">
+        </div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center space-y-4 animate-fade-in-up">
+            <h1 class="text-5xl font-poppins font-black tracking-tight">Our Institutional Legacy</h1>
+            <p class="text-blue-200 text-lg max-w-2xl mx-auto font-light">Decades of engineering excellence, shaping the
+                master technicians and innovators of tomorrow.</p>
+            <div class="flex items-center justify-center gap-2 text-sm text-blue-300 font-medium pt-4">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <span class="text-brandGold">About Us</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission -->
+    <section class="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+        <div
+            class="glass-card p-10 rounded-[2rem] border-t-4 border-t-brandBlue shadow-soft group hover:-translate-y-2 transition-all duration-300">
+            <div
+                class="w-16 h-16 rounded-2xl bg-blue-50 text-brandBlue flex items-center justify-center text-3xl mb-6 shadow-inner">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+            <h3 class="text-3xl font-poppins font-bold text-slate-900 mb-4">Our Vision</h3>
+            <p class="text-slate-600 leading-relaxed text-lg font-light">To be the global benchmark in technical
+                education, fostering innovation, entrepreneurship, and world-class industrial competence in our
+                students.</p>
+        </div>
+        <div
+            class="glass-card p-10 rounded-[2rem] border-t-4 border-t-brandGold shadow-soft group hover:-translate-y-2 transition-all duration-300">
+            <div
+                class="w-16 h-16 rounded-2xl bg-amber-50 text-brandGold flex items-center justify-center text-3xl mb-6 shadow-inner">
+                <i class="fa-solid fa-bullseye"></i>
+            </div>
+            <h3 class="text-3xl font-poppins font-bold text-slate-900 mb-4">Our Mission</h3>
+            <p class="text-slate-600 leading-relaxed text-lg font-light">To provide state-of-the-art infrastructure and
+                rigorous practical training that bridges the gap between academic learning and industry demands.</p>
+        </div>
+    </section>
+
+    <!-- Director's Message -->
+    <section class="py-16 px-6 bg-white border-y border-slate-100">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-5 gap-12 items-center">
+            <div class="md:col-span-2 relative">
+                <div
+                    class="absolute -inset-4 bg-gradient-to-tr from-brandBlue to-brandGold opacity-20 rounded-[3rem] blur-2xl">
+                </div>
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"
+                    alt="Director"
+                    class="relative z-10 w-full h-[500px] object-cover rounded-[2rem] shadow-xl grayscale hover:grayscale-0 transition-all duration-500" />
+                <div
+                    class="absolute -bottom-6 -right-6 bg-brandGold text-slate-900 p-6 rounded-2xl shadow-lg z-20 hidden md:block">
+                    <i class="fa-solid fa-quote-right text-4xl opacity-50"></i>
+                </div>
+            </div>
+            <div class="md:col-span-3 space-y-6">
+                <div class="text-brandGold font-bold tracking-widest uppercase text-sm flex items-center gap-2">
+                    <div class="w-8 h-[1px] bg-brandGold"></div> Leadership Message
+                </div>
+                <h2 class="text-4xl font-poppins font-black text-slate-900 leading-tight">Director's Blueprint</h2>
+                <p class="text-slate-600 text-lg leading-relaxed italic border-l-4 border-slate-200 pl-6 my-8">
+                    "Technical skill development is not just education; it is the ultimate engine of economic
+                    self-reliance. At Excellence ITI, we ensure every student leaves our workshops not just as a
+                    graduate, but as an absolute industry expert capable of tackling real-world engineering challenges."
+                </p>
+                <div>
+                    <h4 class="text-2xl font-poppins font-bold text-brandBlue">Er. Anmol Sharma</h4>
+                    <p class="text-slate-500 font-medium">Managing Director & Chief Architectural Engineer</p>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Signature_of_John_Hancock.svg"
+                    alt="Signature" class="h-12 opacity-40 pt-4" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Affiliation & Recognition -->
+    <section class="py-24 px-6 bg-slate-50">
+        <div class="max-w-7xl mx-auto text-center space-y-16">
+            <div class="max-w-2xl mx-auto space-y-4">
+                <h2 class="text-4xl font-poppins font-black text-slate-900">Government Recognitions</h2>
+                <p class="text-slate-600">Fully synchronized with National Council for Vocational Training (NCVT) and
+                    DGET standards.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100 flex flex-col items-center text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/b/b3/Skill_India.png" alt="Skill India"
+                        class="h-24 object-contain mb-6 grayscale hover:grayscale-0 transition-all duration-300" />
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Skill India Initiative</h3>
+                    <p class="text-sm text-slate-500">Authorized training partner under the National Skill Development
+                        Corporation.</p>
+                </div>
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100 flex flex-col items-center text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/200px-Emblem_of_India.svg.png"
+                        alt="NCVT"
+                        class="h-24 object-contain mb-6 grayscale hover:grayscale-0 transition-all duration-300" />
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">NCVT Affiliated</h3>
+                    <p class="text-sm text-slate-500">Government of India recognized curriculum and certification
+                        parameters.</p>
+                </div>
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100 flex flex-col items-center text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Digital_India_logo.svg"
+                        alt="Digital India"
+                        class="h-24 object-contain mb-6 grayscale hover:grayscale-0 transition-all duration-300" />
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Digital India Integration</h3>
+                    <p class="text-sm text-slate-500">Smart classrooms and digitized curriculum delivery mechanisms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Institutional Timeline -->
+    <section class="py-24 px-6 bg-white">
+        <div class="max-w-4xl mx-auto space-y-16">
+            <div class="text-center space-y-4">
+                <h2 class="text-4xl font-poppins font-black text-slate-900">Journey of Excellence</h2>
+                <p class="text-slate-600">A timeline of our institutional growth and academic milestones.</p>
+            </div>
+
+            <div class="relative border-l-2 border-slate-200 ml-4 md:ml-0 md:left-1/2 md:-translate-x-[1px] space-y-12">
+                <!-- Timeline Item 1 -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div
+                            class="absolute left-[-9px] md:left-auto md:right-[-9px] top-1 w-4 h-4 rounded-full bg-brandGold border-4 border-white shadow">
+                        </div>
+                        <h3 class="text-xl font-bold text-brandBlue mb-1">Establishment</h3>
+                        <div class="text-sm font-bold text-slate-400 mb-3">Foundation Year</div>
+                        <p class="text-slate-600 text-sm">Founded with a vision to provide quality technical education
+                            with just two core engineering trades.</p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pl-12 md:ml-auto">
+                        <div
+                            class="absolute left-[-9px] md:left-[-9px] top-1 w-4 h-4 rounded-full bg-brandBlue border-4 border-white shadow">
+                        </div>
+                        <h3 class="text-xl font-bold text-brandBlue mb-1">NCVT Affiliation</h3>
+                        <div class="text-sm font-bold text-slate-400 mb-3">Govt Recognition</div>
+                        <p class="text-slate-600 text-sm">Achieved permanent affiliation from DGET and NCVT, scaling our
+                            capacity to 500+ students.</p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div
+                            class="absolute left-[-9px] md:left-auto md:right-[-9px] top-1 w-4 h-4 rounded-full bg-brandGold border-4 border-white shadow">
+                        </div>
+                        <h3 class="text-xl font-bold text-brandBlue mb-1">Infrastructure Expansion</h3>
+                        <div class="text-sm font-bold text-slate-400 mb-3">Campus Modernization</div>
+                        <p class="text-slate-600 text-sm">Inauguration of modern CNC labs, smart classrooms, and
+                            centralized computer centers.</p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 4 -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pl-12 md:ml-auto">
+                        <div
+                            class="absolute left-[-9px] md:left-[-9px] top-1 w-4 h-4 rounded-full bg-brandBlue border-4 border-white shadow">
+                        </div>
+                        <h3 class="text-xl font-bold text-brandBlue mb-1">Industry 4.0 Integration</h3>
+                        <div class="text-sm font-bold text-slate-400 mb-3">Present Era</div>
+                        <p class="text-slate-600 text-sm">Partnering with top tech corporations to introduce IoT,
+                            Automation, and advanced robotics in syllabus.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 360 Degree Virtual Tour -->
+    <section class="py-24 px-6 bg-slate-50 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto space-y-12">
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-brandBlue/10 text-brandBlue border border-brandBlue/20">
+                    <i class="fa-solid fa-vr-cardboard"></i> Immersive Experience
+                </div>
+                <h2 class="text-4xl font-poppins font-black text-slate-900">360° Virtual Campus Tour</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Take an interactive 360-degree walk through our state-of-the-art workshops, smart classrooms, and sprawling campus without leaving your seat.</p>
+            </div>
+            
+            <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative bg-slate-900 aspect-video w-full group">
+                <!-- 360 Video Embed -->
+                <iframe class="w-full h-full absolute inset-0" src="https://www.youtube.com/embed/tO01J-M3g0U?autoplay=1&mute=1&loop=1&controls=1" title="360 Degree Campus Tour" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                
+                <!-- Interactive Overlay UI -->
+                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]"></div>
+                <div class="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-lg flex items-center gap-3 pointer-events-none group-hover:opacity-0 transition-opacity duration-500 z-10 border border-white/20">
+                    <div class="w-10 h-10 rounded-full bg-brandBlue text-white flex items-center justify-center text-lg animate-pulse shadow-md">
+                        <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-900 text-sm">360° Interactive View</div>
+                        <div class="text-xs text-slate-500 font-medium">Click and drag to explore</div>
+                    </div>
+                </div>
+                
+                <!-- Compass / Controls indicator -->
+                <div class="absolute bottom-6 right-6 w-16 h-16 bg-black/40 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-white/50 pointer-events-none group-hover:opacity-0 transition-opacity duration-500">
+                    <i class="fa-regular fa-compass text-3xl"></i>
+                </div>
+            </div>
+            
+            <div class="text-center pt-4">
+                <a href="facilities.html" class="inline-flex items-center gap-2 bg-brandBlue text-white px-8 py-4 rounded-xl text-sm font-bold shadow-glow hover:-translate-y-1 transition-all">
+                    Explore All Facilities <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer System -->
+    <footer class="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-12">
+            <div class="space-y-6 md:col-span-1">
+                <a href="index.html" class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-brandBlue to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl border border-brandGold/20">
+                        <i class="fa-solid fa-bolt text-brandGold"></i></div>
+                    <div>
+                        <h1 class="text-lg font-poppins font-bold text-white tracking-tight leading-none">EXCELLENCE ITI
+                        </h1>
+                    </div>
+                </a>
+                <p class="text-sm leading-relaxed">Central India's leading NCVT affiliated industrial training
+                    institute, creating the workforce of tomorrow.</p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Quick Links</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="about.html" class="hover:text-brandGold transition-colors text-brandGold">About
+                            Institute</a></li>
+                    <li><a href="courses.html" class="hover:text-brandGold transition-colors">Available Trades</a></li>
+                    <li><a href="admission.html" class="hover:text-brandGold transition-colors">Admission 2026</a></li>
+                    <li><a href="contact.html" class="hover:text-brandGold transition-colors">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Student Resources</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="student-corner.html" class="hover:text-brandGold transition-colors">Notice Board</a>
+                    </li>
+                    <li><a href="facilities.html" class="hover:text-brandGold transition-colors">Campus Facilities</a>
+                    </li>
+                    <li><a href="placement.html" class="hover:text-brandGold transition-colors">Placement Cell</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Contact Info</h4>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-location-dot mt-1 text-brandGold"></i>
+                        <span>Excellence ITI Campus, Main Industrial Estate, City - 400001</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-brandGold"></i>
+                        <span>+91-9065606562</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
+            <p>&copy; 2026 Excellence ITI. All Rights Reserved. Designed with <i
+                    class="fa-solid fa-heart text-red-500 mx-1"></i></p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

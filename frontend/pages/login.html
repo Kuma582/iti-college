@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIS Gateway Authentication | Excellence ITI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden">
+
+    <!-- Left Side: Illustration / Branding -->
+    <div class="hidden lg:flex w-1/2 relative bg-brandBlue flex-col justify-between p-12 overflow-hidden">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop')] opacity-20 mix-blend-overlay"></div>
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-brandGold rounded-full blur-[100px] opacity-30"></div>
+        
+        <div class="relative z-10">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center text-brandGold font-bold text-2xl border border-white/20">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-poppins font-bold text-white tracking-tight leading-none">EXCELLENCE ITI</h1>
+                    <span class="text-[10px] text-blue-200 font-semibold tracking-widest uppercase">Management Information System</span>
+                </div>
+            </a>
+        </div>
+        
+        <div class="relative z-10 max-w-md">
+            <div class="glass-dark p-8 rounded-3xl border border-white/10 shadow-2xl">
+                <i class="fa-solid fa-quote-left text-brandGold text-3xl mb-4 opacity-80"></i>
+                <p class="text-white text-lg font-light leading-relaxed mb-6">"Access the central nervous system of our institution. Securely manage academic records, faculty directories, and institutional resources."</p>
+                <div class="flex items-center gap-4 border-t border-white/10 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-brandGold flex items-center justify-center text-slate-900 font-bold"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <div class="text-white text-sm font-bold">Secure Gateway</div>
+                        <div class="text-blue-200 text-xs">End-to-end encrypted protocol</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white relative">
+        <a href="index.html" class="lg:hidden absolute top-6 left-6 flex items-center gap-2 text-brandBlue font-bold text-sm">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div class="w-full max-w-md animate-fade-in-up">
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-brandBlue text-3xl mx-auto mb-6 shadow-inner">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+                <h2 class="text-3xl font-poppins font-black text-slate-900 tracking-tight">Welcome Back</h2>
+                <p class="text-slate-500 text-sm mt-2">Enter your credentials to access the MIS Portal</p>
+            </div>
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address / User ID</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="loginEmail" required placeholder="admin@excellenceiti.com"
+                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Secure Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="password" id="loginPassword" required placeholder="••••••••"
+                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                        <i class="fa-regular fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 cursor-pointer hover:text-brandBlue transition-colors"></i>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 text-sm">
+                    <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
+                        <input type="checkbox" class="accent-brandBlue w-4 h-4 rounded border-slate-300">
+                        <span class="font-medium">Remember me</span>
+                    </label>
+                    <a href="#" class="text-brandBlue font-bold hover:text-brandGold transition-colors">Forgot Password?</a>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-brandBlue text-white font-bold py-4 rounded-xl hover:bg-blue-800 transition-all shadow-glow hover:-translate-y-1 mt-4 text-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-fingerprint"></i> Authenticate Terminal
+                </button>
+            </form>
+            
+            <p id="loginMessage" class="text-center font-bold text-sm hidden mt-4"></p>
+            
+            <div class="mt-12 text-center">
+                <p class="text-xs text-slate-400 font-medium">&copy; 2026 Excellence ITI Enterprise Management.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            const msg = document.getElementById('loginMessage');
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+            btn.disabled = true;
+            msg.classList.add('hidden');
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                msg.classList.remove('hidden');
+                if (response.ok) {
+                    msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    msg.innerText = 'Authentication Successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                    msg.innerText = data.message || 'Authentication Failed';
+                    btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                msg.classList.remove('hidden');
+                msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                msg.innerText = 'Server error. Ensure backend is running.';
+                btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
+                btn.disabled = false;
+            }
+        });
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

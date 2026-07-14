@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skilled Trades & Courses | Excellence ITI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
+
+    <!-- Sticky Header & Mega Nav -->
+    <header class="glass sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft group-hover:shadow-glow transition-all duration-300 border border-brandGold/20">
+                    <i class="fa-solid fa-bolt text-brandGold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-poppins font-bold text-brandBlue tracking-tight leading-none group-hover:text-blue-700 transition">EXCELLENCE ITI</h1>
+                    <span class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Industrial Training Institute</span>
+                </div>
+            </a>
+            
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700">
+                <a href="index.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Home</a>
+                <a href="about.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">About Us</a>
+                <a href="courses.html" class="text-brandBlue border-b-2 border-brandBlue pb-1">Trades</a>
+                <a href="admission.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Admission</a>
+                <a href="faculty.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Faculty</a>
+                <a href="facilities.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Facilities</a>
+                <a href="gallery.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Gallery</a>
+                <a href="student-corner.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Notice</a>
+                <a href="contact.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Contact</a>
+            <a href="login.html" class="lg:hidden hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Login</a>
+            </nav>
+
+            <!-- Login CTA -->
+            <div class="hidden lg:block">
+                <a href="login.html" class="bg-brandBlue text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-soft hover:shadow-lg border border-brandBlue hover:border-brandGold flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> MIS Login
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-brandBlue"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="relative bg-brandBlue text-white py-24 px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=2070&auto=format&fit=crop')] opacity-10 mix-blend-overlay"></div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center space-y-4 animate-fade-in-up">
+            <h1 class="text-5xl font-poppins font-black tracking-tight">Technical Trades</h1>
+            <p class="text-blue-200 text-lg max-w-2xl mx-auto font-light">Explore our industry-aligned NCVT approved technical programs designed for 100% employability.</p>
+        </div>
+    </section>
+
+    <!-- Search & Filters -->
+    <section class="py-12 px-6 max-w-7xl mx-auto">
+        <div class="glass-card rounded-[2rem] p-6 flex flex-col md:flex-row gap-6 items-center justify-between shadow-soft">
+            <div class="relative w-full md:w-1/2">
+                <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Search trades (e.g., Electrician, Fitter)..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pl-12 pr-4 py-4 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+            </div>
+            <div class="flex gap-4 w-full md:w-auto overflow-x-auto no-scrollbar pb-2 md:pb-0">
+                <button class="bg-brandBlue text-white px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap shadow-md">All Trades</button>
+                <button class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-colors">Engineering</button>
+                <button class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-colors">Non-Engineering</button>
+                <button class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-colors">Short-term</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Cards Grid -->
+    <section class="pb-24 px-6 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Electrician -->
+            <div class="bg-white rounded-[2rem] p-4 shadow-soft border border-slate-100 group hover:-translate-y-2 transition-all duration-300" data-category="engineering">
+                <div class="relative h-56 rounded-3xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=2069&auto=format&fit=crop" alt="Electrician" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-brandBlue shadow-sm"><i class="fa-regular fa-clock mr-1"></i> 2 Years</div>
+                    <div class="absolute bottom-4 left-4 bg-brandBlue/90 backdrop-blur text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">NCVT Approved</div>
+                </div>
+                <div class="px-4 pb-4">
+                    <h3 class="text-2xl font-poppins font-bold text-slate-900 mb-2">Electrician</h3>
+                    <p class="text-slate-600 text-sm mb-6 line-clamp-2">Master electrical wiring, industrial motors, transformers, and power grids with hands-on practical training.</p>
+                    
+                    <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-8 border-t border-b border-slate-100 py-4">
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Eligibility</span> <span class="font-semibold text-slate-700">10th Pass (Sci/Math)</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Seats</span> <span class="font-semibold text-slate-700">40 Units</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Course Fee</span> <span class="font-semibold text-brandBlue">₹35,000/yr</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Department</span> <span class="font-semibold text-slate-700">Electrical</span></div>
+                    </div>
+                    
+                    <a href="admission.html" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-semibold hover:bg-brandBlue transition-colors shadow-md">Apply For Admission</a>
+                </div>
+            </div>
+
+            <!-- Fitter -->
+            <div class="bg-white rounded-[2rem] p-4 shadow-soft border border-slate-100 group hover:-translate-y-2 transition-all duration-300" data-category="engineering">
+                <div class="relative h-56 rounded-3xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop" alt="Fitter" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-brandBlue shadow-sm"><i class="fa-regular fa-clock mr-1"></i> 2 Years</div>
+                    <div class="absolute bottom-4 left-4 bg-brandBlue/90 backdrop-blur text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">NCVT Approved</div>
+                </div>
+                <div class="px-4 pb-4">
+                    <h3 class="text-2xl font-poppins font-bold text-slate-900 mb-2">Fitter</h3>
+                    <p class="text-slate-600 text-sm mb-6 line-clamp-2">Gain expertise in high-precision machining, assembly, fabrication, and structural engineering mechanics.</p>
+                    
+                    <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-8 border-t border-b border-slate-100 py-4">
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Eligibility</span> <span class="font-semibold text-slate-700">10th Pass (Sci/Math)</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Seats</span> <span class="font-semibold text-slate-700">40 Units</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Course Fee</span> <span class="font-semibold text-brandBlue">₹35,000/yr</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Department</span> <span class="font-semibold text-slate-700">Mechanical</span></div>
+                    </div>
+                    
+                    <a href="admission.html" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-semibold hover:bg-brandBlue transition-colors shadow-md">Apply For Admission</a>
+                </div>
+            </div>
+            
+            <!-- Mechanic Diesel -->
+            <div class="bg-white rounded-[2rem] p-4 shadow-soft border border-slate-100 group hover:-translate-y-2 transition-all duration-300" data-category="short-term non-engineering">
+                <div class="relative h-56 rounded-3xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1486262715619-673956004ea0?q=80&w=2070&auto=format&fit=crop" alt="Mechanic" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-brandBlue shadow-sm"><i class="fa-regular fa-clock mr-1"></i> 1 Year</div>
+                    <div class="absolute bottom-4 left-4 bg-brandBlue/90 backdrop-blur text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">NCVT Approved</div>
+                </div>
+                <div class="px-4 pb-4">
+                    <h3 class="text-2xl font-poppins font-bold text-slate-900 mb-2">Mechanic Diesel</h3>
+                    <p class="text-slate-600 text-sm mb-6 line-clamp-2">Learn repair, maintenance, and overhaul of heavy-duty diesel engines used in industrial and automotive sectors.</p>
+                    
+                    <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-8 border-t border-b border-slate-100 py-4">
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Eligibility</span> <span class="font-semibold text-slate-700">10th Pass</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Seats</span> <span class="font-semibold text-slate-700">20 Units</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Course Fee</span> <span class="font-semibold text-brandBlue">₹30,000/yr</span></div>
+                        <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Department</span> <span class="font-semibold text-slate-700">Automotive</span></div>
+                    </div>
+                    
+                    <a href="admission.html" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-semibold hover:bg-brandBlue transition-colors shadow-md">Apply For Admission</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer System -->
+    <footer class="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto text-center text-xs font-medium text-slate-500">
+            <p>&copy; 2026 Excellence ITI. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

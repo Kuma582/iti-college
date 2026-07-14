@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Gallery | Excellence ITI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
+
+    <!-- Sticky Header -->
+    <header class="glass sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft group-hover:shadow-glow transition-all duration-300 border border-brandGold/20">
+                    <i class="fa-solid fa-bolt text-brandGold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-poppins font-bold text-brandBlue tracking-tight leading-none group-hover:text-blue-700 transition">EXCELLENCE ITI</h1>
+                    <span class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Industrial Training Institute</span>
+                </div>
+            </a>
+            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700">
+                <a href="index.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Home</a>
+                <a href="about.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">About Us</a>
+                <a href="courses.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Trades</a>
+                <a href="admission.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Admission</a>
+                <a href="faculty.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Faculty</a>
+                <a href="facilities.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Facilities</a>
+                <a href="gallery.html" class="text-brandBlue border-b-2 border-brandBlue pb-1">Gallery</a>
+                <a href="student-corner.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Notice</a>
+                <a href="contact.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Contact</a>
+            <a href="login.html" class="lg:hidden hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Login</a>
+            </nav>
+            <div class="hidden lg:block">
+                <a href="login.html" class="bg-brandBlue text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-soft hover:shadow-lg border border-brandBlue hover:border-brandGold flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> MIS Login
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-brandBlue"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="relative bg-brandBlue text-white py-24 px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop')] opacity-10 mix-blend-overlay"></div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center space-y-4 animate-fade-in-up">
+            <h1 class="text-5xl font-poppins font-black tracking-tight">Life at Excellence ITI</h1>
+            <p class="text-blue-200 text-lg max-w-2xl mx-auto font-light">Explore our state-of-the-art campus, modern workshops, and vibrant student activities.</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-12 px-6 max-w-7xl mx-auto">
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button class="bg-brandBlue text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md">All Media</button>
+            <button class="bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-6 py-2.5 rounded-full text-sm font-bold transition-colors">Workshops</button>
+            <button class="bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-6 py-2.5 rounded-full text-sm font-bold transition-colors">Campus</button>
+            <button class="bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-6 py-2.5 rounded-full text-sm font-bold transition-colors">Events</button>
+            <button class="bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-6 py-2.5 rounded-full text-sm font-bold transition-colors">Videos <i class="fa-solid fa-play ml-1"></i></button>
+        </div>
+
+        <!-- Masonry Grid -->
+        <div class="masonry-grid">
+            
+            <!-- Image Item -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft" data-category="workshops">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" alt="Workshop" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brandBlue/90 via-brandBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h4 class="text-white font-poppins font-bold text-lg">Heavy Machinery Lab</h4>
+                    <p class="text-blue-200 text-sm">Fitter Trade Practical Session</p>
+                    <div class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all delay-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hover:bg-brandGold">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Item (Tall) -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft" data-category="campus">
+                <img src="https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop" alt="Campus" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brandBlue/90 via-brandBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h4 class="text-white font-poppins font-bold text-lg">Main Academic Block</h4>
+                    <p class="text-blue-200 text-sm">Central Campus View</p>
+                    <div class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all delay-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hover:bg-brandGold">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Item -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft border border-slate-100" data-category="videos">
+                <img src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?q=80&w=1974&auto=format&fit=crop" alt="Video Thumbnail" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/50 transition-colors">
+                    <div class="w-16 h-16 rounded-full bg-brandGold/90 backdrop-blur flex items-center justify-center text-slate-900 text-2xl shadow-lg cursor-pointer group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                    1:24
+                </div>
+            </div>
+
+            <!-- Image Item -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft" data-category="workshops">
+                <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop" alt="Students" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brandBlue/90 via-brandBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h4 class="text-white font-poppins font-bold text-lg">Precision Engineering</h4>
+                    <p class="text-blue-200 text-sm">Industrial Training Exercise</p>
+                    <div class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all delay-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hover:bg-brandGold">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Item -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft" data-category="campus">
+                <img src="https://images.unsplash.com/photo-1577415124269-fc1140a69e91?q=80&w=2070&auto=format&fit=crop" alt="Computer Lab" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brandBlue/90 via-brandBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h4 class="text-white font-poppins font-bold text-lg">Digital Innovation Center</h4>
+                    <p class="text-blue-200 text-sm">Computer Lab Overview</p>
+                    <div class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all delay-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hover:bg-brandGold">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Item -->
+            <div class="masonry-item relative group overflow-hidden rounded-[2rem] shadow-soft" data-category="events">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop" alt="Event" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brandBlue/90 via-brandBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h4 class="text-white font-poppins font-bold text-lg">Tech Fest 2025</h4>
+                    <p class="text-blue-200 text-sm">Annual Tech Symposium</p>
+                    <div class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all delay-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hover:bg-brandGold">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="mt-12 text-center">
+            <button class="bg-white text-brandBlue border border-slate-200 px-8 py-3 rounded-full text-sm font-bold shadow-sm hover:shadow-md hover:bg-slate-50 transition-all"><i class="fa-solid fa-rotate-right mr-2"></i> Load More Images</button>
+        </div>
+    </section>
+
+    <!-- Footer System -->
+    <footer class="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto text-center text-xs font-medium text-slate-500">
+            <p>&copy; 2026 Excellence ITI. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

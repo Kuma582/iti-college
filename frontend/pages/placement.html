@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Cell | Excellence ITI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
+
+    <!-- Sticky Header -->
+    <header class="glass sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft group-hover:shadow-glow transition-all duration-300 border border-brandGold/20">
+                    <i class="fa-solid fa-bolt text-brandGold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-poppins font-bold text-brandBlue tracking-tight leading-none group-hover:text-blue-700 transition">EXCELLENCE ITI</h1>
+                    <span class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Industrial Training Institute</span>
+                </div>
+            </a>
+            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700">
+                <a href="index.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Home</a>
+                <a href="about.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">About Us</a>
+                <a href="courses.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Trades</a>
+                <a href="admission.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Admission</a>
+                <a href="faculty.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Faculty</a>
+                <a href="facilities.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Facilities</a>
+                <a href="gallery.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Gallery</a>
+                <a href="student-corner.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Notice</a>
+                <a href="contact.html" class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Contact</a>
+            <a href="login.html" class="lg:hidden hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Login</a>
+            </nav>
+            <div class="hidden lg:block">
+                <a href="login.html" class="bg-brandBlue text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-soft hover:shadow-lg border border-brandBlue hover:border-brandGold flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> MIS Login
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-brandBlue"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="relative bg-brandBlue text-white py-24 px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop')] opacity-10 mix-blend-overlay"></div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center space-y-4 animate-fade-in-up">
+            <h1 class="text-5xl font-poppins font-black tracking-tight">Placement Cell</h1>
+            <p class="text-blue-200 text-lg max-w-2xl mx-auto font-light">Dedicated to connecting our master technicians with global industry leaders.</p>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="relative -mt-10 z-20 max-w-6xl mx-auto px-6 mb-16">
+        <div class="glass-card rounded-[2rem] p-8 grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-slate-200 shadow-xl border border-slate-100">
+            <div class="text-center md:py-0 py-4">
+                <div class="text-brandGold text-3xl mb-2"><i class="fa-solid fa-chart-line"></i></div>
+                <h3 class="text-4xl font-poppins font-black text-brandBlue">100%</h3>
+                <p class="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Placement Assistance</p>
+            </div>
+            <div class="text-center md:py-0 py-4">
+                <div class="text-brandGold text-3xl mb-2"><i class="fa-solid fa-building"></i></div>
+                <h3 class="text-4xl font-poppins font-black text-brandBlue">50+</h3>
+                <p class="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Recruiting Partners</p>
+            </div>
+            <div class="text-center md:py-0 py-4">
+                <div class="text-brandGold text-3xl mb-2"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <h3 class="text-4xl font-poppins font-black text-brandBlue">4.2<span class="text-2xl text-slate-400 font-medium">LPA</span></h3>
+                <p class="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Highest Package (2025)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Recruiters -->
+    <section class="py-16 px-6 max-w-7xl mx-auto text-center">
+        <div class="text-brandGold font-bold tracking-widest uppercase text-sm mb-2 flex items-center justify-center gap-2">
+            <div class="w-8 h-[1px] bg-brandGold"></div> Industry Partners <div class="w-8 h-[1px] bg-brandGold"></div>
+        </div>
+        <h2 class="text-4xl font-poppins font-black text-slate-900 mb-12">Our Top Recruiters</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-slate-800">TATA</h3>
+            </div>
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-blue-600">MARUTI</h3>
+            </div>
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-red-600">L&T</h3>
+            </div>
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-slate-700">HONDA</h3>
+            </div>
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-blue-800">BHEL</h3>
+            </div>
+            <div class="bg-white h-24 rounded-2xl flex items-center justify-center p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow grayscale hover:grayscale-0">
+                <h3 class="font-black text-xl text-amber-600">JCB</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="py-24 px-6 bg-slate-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-poppins font-black text-slate-900">Alumni Success Stories</h2>
+                <p class="text-slate-600 mt-4">Hear from our graduates who are now excelling in their careers.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-soft border border-slate-200 relative">
+                    <i class="fa-solid fa-quote-left text-5xl text-brandGold/20 absolute top-6 left-6"></i>
+                    <p class="text-slate-600 text-sm leading-relaxed relative z-10 mb-8 pt-4">"The practical training at Excellence ITI gave me the confidence to handle heavy machinery. The placement cell helped me secure a job at Tata Motors right after my final exams."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1974&auto=format&fit=crop" alt="Student" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Rahul Verma</h4>
+                            <p class="text-xs text-brandBlue font-medium">Placed at Tata Motors</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 2 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-soft border border-slate-200 relative">
+                    <i class="fa-solid fa-quote-left text-5xl text-brandGold/20 absolute top-6 left-6"></i>
+                    <p class="text-slate-600 text-sm leading-relaxed relative z-10 mb-8 pt-4">"The faculty here is incredibly supportive. They don't just teach from books; they teach from experience. I am currently working as a Senior Electrician at L&T Construction."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" alt="Student" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Vikas Singh</h4>
+                            <p class="text-xs text-brandBlue font-medium">Placed at L&T</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 3 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-soft border border-slate-200 relative">
+                    <i class="fa-solid fa-quote-left text-5xl text-brandGold/20 absolute top-6 left-6"></i>
+                    <p class="text-slate-600 text-sm leading-relaxed relative z-10 mb-8 pt-4">"I never thought I could get a job before even graduating. The campus placement drives organized by the college are genuine and bring top companies."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" alt="Student" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Amit Kumar</h4>
+                            <p class="text-xs text-brandBlue font-medium">Placed at Maruti Suzuki</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Placement Activities -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="text-brandGold font-bold tracking-widest uppercase text-sm flex items-center gap-2">
+                    <div class="w-8 h-[1px] bg-brandGold"></div> Training & Development
+                </div>
+                <h2 class="text-4xl font-poppins font-black text-slate-900 leading-tight">Beyond the Syllabus</h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    Our placement cell conducts rigorous pre-placement training to ensure our students are not just technically sound, but also possess the soft skills required to thrive in a corporate environment.
+                </p>
+                <ul class="space-y-4 pt-4 border-t border-slate-100">
+                    <li class="flex items-center gap-4 text-slate-700 font-medium">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-brandBlue flex items-center justify-center"><i class="fa-solid fa-user-tie"></i></div>
+                        Mock Interviews & Resume Building
+                    </li>
+                    <li class="flex items-center gap-4 text-slate-700 font-medium">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-brandBlue flex items-center justify-center"><i class="fa-solid fa-industry"></i></div>
+                        Industrial Visits & Seminars
+                    </li>
+                    <li class="flex items-center gap-4 text-slate-700 font-medium">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-brandBlue flex items-center justify-center"><i class="fa-solid fa-comments"></i></div>
+                        Communication & Soft Skills Workshops
+                    </li>
+                </ul>
+            </div>
+            <div class="relative">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-brandBlue/10 rounded-full blur-3xl"></div>
+                <img src="https://images.unsplash.com/photo-1515169067868-5387ec356754?q=80&w=2070&auto=format&fit=crop" alt="Interview" class="rounded-[2rem] shadow-xl relative z-10 w-full object-cover h-[400px]" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer System -->
+    <footer class="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto text-center text-xs font-medium text-slate-500">
+            <p>&copy; 2026 Excellence ITI. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
