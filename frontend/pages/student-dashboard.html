@@ -272,35 +272,45 @@
             </div>
             </div> <!-- END VIEW: DASHBOARD -->
 
-            <!-- OTHER VIEWS (Placeholders) -->
-            <div id="view-study" class="tab-view hidden h-full flex-col items-center justify-center text-center py-20 animate-fade-in-up">
-                <div class="w-24 h-24 bg-brandBlue/10 text-brandBlue rounded-full flex items-center justify-center text-4xl mb-4 mx-auto"><i class="fa-solid fa-book-open"></i></div>
-                <h3 class="text-2xl font-bold text-slate-800">Study Materials</h3>
-                <p class="text-slate-500 mt-2 max-w-md mx-auto">Access all your course materials, PDF notes, and assignments here. This module is currently being updated by your professors.</p>
+            <!-- REAL VIEWS -->
+            <div id="view-study" class="tab-view hidden flex-col w-full max-w-4xl mx-auto py-8 animate-fade-in-up">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"><i class="fa-solid fa-book-open text-brandBlue"></i> Study Materials</h3>
+                <div id="studentMaterialsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p class="text-slate-500 text-center w-full col-span-2">Loading materials...</p>
+                </div>
             </div>
 
-            <div id="view-attendance" class="tab-view hidden h-full flex-col items-center justify-center text-center py-20 animate-fade-in-up">
-                <div class="w-24 h-24 bg-brandBlue/10 text-brandBlue rounded-full flex items-center justify-center text-4xl mb-4 mx-auto"><i class="fa-solid fa-clipboard-user"></i></div>
-                <h3 class="text-2xl font-bold text-slate-800">Attendance Tracker</h3>
-                <p class="text-slate-500 mt-2 max-w-md mx-auto">Detailed monthly attendance reports will be available soon. Your current overall attendance is 85.4%.</p>
+            <div id="view-attendance" class="tab-view hidden flex-col w-full max-w-4xl mx-auto py-8 animate-fade-in-up">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"><i class="fa-solid fa-clipboard-user text-brandBlue"></i> Attendance Tracker</h3>
+                <div class="glass p-8 rounded-3xl text-center border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-600">Overall Attendance</h4>
+                    <div id="studentAttendance" class="text-6xl font-black text-brandBlue mt-4 mb-2">--%</div>
+                    <p class="text-sm text-slate-500">Updated by administration</p>
+                </div>
             </div>
 
-            <div id="view-fees" class="tab-view hidden h-full flex-col items-center justify-center text-center py-20 animate-fade-in-up">
-                <div class="w-24 h-24 bg-brandBlue/10 text-brandBlue rounded-full flex items-center justify-center text-4xl mb-4 mx-auto"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                <h3 class="text-2xl font-bold text-slate-800">Fee Details</h3>
-                <p class="text-slate-500 mt-2 max-w-md mx-auto">Your fees for the current semester are cleared. Downloadable fee receipts will be added to this portal shortly.</p>
+            <div id="view-fees" class="tab-view hidden flex-col w-full max-w-4xl mx-auto py-8 animate-fade-in-up">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"><i class="fa-solid fa-file-invoice-dollar text-brandBlue"></i> Fee Details</h3>
+                <div class="glass p-8 rounded-3xl text-center border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-600">Current Semester Fee Status</h4>
+                    <div id="studentFee" class="text-4xl font-bold mt-4 mb-2">--</div>
+                    <p class="text-sm text-slate-500">Contact admin office for discrepancies.</p>
+                </div>
             </div>
 
-            <div id="view-results" class="tab-view hidden h-full flex-col items-center justify-center text-center py-20 animate-fade-in-up">
-                <div class="w-24 h-24 bg-brandBlue/10 text-brandBlue rounded-full flex items-center justify-center text-4xl mb-4 mx-auto"><i class="fa-solid fa-award"></i></div>
-                <h3 class="text-2xl font-bold text-slate-800">Examination Results</h3>
-                <p class="text-slate-500 mt-2 max-w-md mx-auto">Semester results and performance analytics are synchronized with the central database. Check back after exams.</p>
+            <div id="view-results" class="tab-view hidden flex-col w-full max-w-4xl mx-auto py-8 animate-fade-in-up">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"><i class="fa-solid fa-award text-brandBlue"></i> Examination Results</h3>
+                <div class="glass p-8 rounded-3xl text-center border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-600">Latest Results</h4>
+                    <p id="studentResults" class="text-xl font-medium text-slate-800 mt-4 leading-relaxed">No results uploaded yet.</p>
+                </div>
             </div>
 
-            <div id="view-notices" class="tab-view hidden h-full flex-col items-center justify-center text-center py-20 animate-fade-in-up">
-                <div class="w-24 h-24 bg-brandBlue/10 text-brandBlue rounded-full flex items-center justify-center text-4xl mb-4 mx-auto"><i class="fa-solid fa-bell"></i></div>
-                <h3 class="text-2xl font-bold text-slate-800">Notice Board</h3>
-                <p class="text-slate-500 mt-2 max-w-md mx-auto">No new notices for your batch today. You are all caught up!</p>
+            <div id="view-notices" class="tab-view hidden flex-col w-full max-w-4xl mx-auto py-8 animate-fade-in-up">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"><i class="fa-solid fa-bell text-brandBlue"></i> Notice Board</h3>
+                <div id="studentNoticesList" class="space-y-4">
+                    <p class="text-slate-500 text-center w-full">Loading notices...</p>
+                </div>
             </div>
             
             <div class="mt-8 text-center text-xs text-slate-400 font-medium pb-8 w-full">
@@ -368,6 +378,77 @@
                 }
             });
         }
+
+        // --- Fetch Data ---
+        async function fetchStudentData() {
+            const API_BASE = '/api';
+            try {
+                // Fetch Notices
+                const noticesRes = await fetch(`${API_BASE}/notices`);
+                const noticesData = await noticesRes.json();
+                const noticeList = document.getElementById('studentNoticesList');
+                noticeList.innerHTML = '';
+                if(noticesData.notices && noticesData.notices.length > 0) {
+                    noticesData.notices.forEach(n => {
+                        noticeList.innerHTML += `
+                            <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
+                                <span class="text-xs font-bold text-brandGold uppercase bg-brandGold/10 px-3 py-1 rounded-full mb-3 inline-block">${n.category}</span>
+                                <h4 class="font-bold text-lg text-slate-800">${n.title}</h4>
+                                <p class="text-slate-600 mt-2">${n.content}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    noticeList.innerHTML = '<p class="text-center text-slate-500 py-8">No notices available.</p>';
+                }
+
+                // Fetch Materials
+                const matRes = await fetch(`${API_BASE}/materials`);
+                const matData = await matRes.json();
+                const matList = document.getElementById('studentMaterialsList');
+                matList.innerHTML = '';
+                if(matData.materials && matData.materials.length > 0) {
+                    matData.materials.forEach(m => {
+                        matList.innerHTML += `
+                            <a href="${m.url}" target="_blank" class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:-translate-y-1 transition-all group block">
+                                <h4 class="font-bold text-slate-800 group-hover:text-brandBlue transition-colors">${m.title}</h4>
+                                ${m.description ? `<p class="text-sm text-slate-600 mt-2">${m.description}</p>` : ''}
+                                <span class="text-xs font-bold text-brandBlue mt-4 inline-block bg-blue-50 px-3 py-1 rounded-lg"><i class="fa-solid fa-download mr-1"></i> Download</span>
+                            </a>
+                        `;
+                    });
+                } else {
+                    matList.innerHTML = '<p class="text-center text-slate-500 col-span-2 py-8">No study materials uploaded yet.</p>';
+                }
+
+                // Fetch Personal Records
+                if(userEmail) {
+                    const recRes = await fetch(`${API_BASE}/records/${encodeURIComponent(userEmail)}`);
+                    const recData = await recRes.json();
+                    if(recData.record) {
+                        document.getElementById('studentAttendance').innerText = `${recData.record.attendance}%`;
+                        const feeEl = document.getElementById('studentFee');
+                        feeEl.innerText = recData.record.feeStatus;
+                        if(recData.record.feeStatus === 'Paid') feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-green-500';
+                        else if(recData.record.feeStatus === 'Overdue') feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-red-500';
+                        else feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-yellow-500';
+                        
+                        if(recData.record.results) document.getElementById('studentResults').innerText = recData.record.results;
+                    } else {
+                        document.getElementById('studentAttendance').innerText = 'N/A';
+                        document.getElementById('studentFee').innerText = 'No Record';
+                        document.getElementById('studentFee').className = 'text-4xl font-bold mt-4 mb-2 text-slate-400';
+                    }
+                }
+
+            } catch (err) {
+                console.error("Error fetching portal data:", err);
+            }
+        }
+        
+        // Load data on start
+        fetchStudentData();
+
     </script>
 </body>
 </html>

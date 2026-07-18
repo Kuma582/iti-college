@@ -71,6 +71,18 @@
             <a href="#" onclick="showSection('messages')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                 <i class="fa-solid fa-envelope w-5"></i> <span class="font-medium text-sm">Messages</span>
             </a>
+            <div class="pt-4 pb-2">
+                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portal Management</p>
+            </div>
+            <a href="#" onclick="showSection('notices')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fa-solid fa-bullhorn w-5"></i> <span class="font-medium text-sm">Notices</span>
+            </a>
+            <a href="#" onclick="showSection('materials')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fa-solid fa-book-open w-5"></i> <span class="font-medium text-sm">Study Materials</span>
+            </a>
+            <a href="#" onclick="showSection('records')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fa-solid fa-clipboard-user w-5"></i> <span class="font-medium text-sm">Student Records</span>
+            </a>
         </nav>
         
         <div class="p-4 border-t border-white/10">
@@ -233,6 +245,66 @@
                 </div>
             </div>
 
+            <!-- SECTION: Notices -->
+            <div id="section-notices" class="hidden space-y-6 animate-fade-in">
+                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">Post New Notice</h3>
+                    <form onsubmit="postNotice(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="noticeTitle" placeholder="Notice Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="text" id="noticeCategory" placeholder="Category (e.g., Exam, Event)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        </div>
+                        <textarea id="noticeContent" placeholder="Notice Details..." required rows="3" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none"></textarea>
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors">Publish Notice</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50"><h3 class="font-bold text-slate-800">Existing Notices</h3></div>
+                    <div id="noticesList" class="p-6 space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION: Materials -->
+            <div id="section-materials" class="hidden space-y-6 animate-fade-in">
+                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">Upload Study Material</h3>
+                    <form onsubmit="postMaterial(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="matTitle" placeholder="Material Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="url" id="matUrl" placeholder="Download Link (Google Drive, PDF URL)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        </div>
+                        <input type="text" id="matDesc" placeholder="Description (Optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-3 rounded-xl font-bold hover:bg-yellow-500 transition-colors">Add Material</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50"><h3 class="font-bold text-slate-800">Shared Materials</h3></div>
+                    <div id="materialsList" class="p-6 space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION: Records -->
+            <div id="section-records" class="hidden space-y-6 animate-fade-in">
+                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">Update Student Record</h3>
+                    <p class="text-sm text-slate-500 mb-4">Enter a student's email to update their Attendance and Fee Status. They will see this in their portal.</p>
+                    <form onsubmit="postRecord(event)" class="space-y-4">
+                        <input type="email" id="recEmail" placeholder="Student Email (e.g., student@excellenceiti.com)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="number" id="recAttendance" placeholder="Attendance Percentage (0-100)" min="0" max="100" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <select id="recFee" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                                <option value="" disabled selected>Fee Status</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <input type="text" id="recResults" placeholder="Recent Results (e.g., Semester 1: 85%)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">Update Record</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -245,7 +317,10 @@
             const titles = {
                 'dashboard': 'Dashboard Overview',
                 'admissions': 'Admission Applications',
-                'messages': 'Contact Messages'
+                'messages': 'Contact Messages',
+                'notices': 'Notice Board Management',
+                'materials': 'Study Materials Management',
+                'records': 'Student Records (Attendance & Fees)'
             };
             document.getElementById('headerTitle').innerText = titles[sectionName];
 
@@ -269,6 +344,11 @@
             if (sectionName === 'dashboard') fetchDashboardData();
             if (sectionName === 'admissions') fetchAdmissions();
             if (sectionName === 'messages') fetchMessages();
+            if (sectionName === 'notices') fetchNotices();
+            if (sectionName === 'materials') fetchMaterials();
+            if (sectionName === 'records') {
+                // Form is static, no auto fetch needed unless searching
+            }
         }
 
         function logout() {
@@ -387,6 +467,127 @@
                 console.error("Error fetching messages:", err);
                 document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-red-400">Failed to load messages from server.</td></tr>';
             }
+        }
+
+        // --- Portal Management Logic ---
+        async function fetchNotices() {
+            try {
+                const res = await fetch(`${API_BASE}/notices`);
+                const data = await res.json();
+                const list = document.getElementById('noticesList');
+                list.innerHTML = '';
+                if(!data.notices || data.notices.length === 0) return list.innerHTML = '<p class="text-slate-500">No notices found.</p>';
+                
+                data.notices.forEach(n => {
+                    list.innerHTML += `
+                        <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-start gap-4">
+                            <div>
+                                <span class="text-[10px] font-bold text-brandGold uppercase tracking-wider bg-brandGold/10 px-2 py-1 rounded-md mb-2 inline-block">${n.category}</span>
+                                <h4 class="font-bold text-slate-800">${n.title}</h4>
+                                <p class="text-sm text-slate-600 mt-1">${n.content}</p>
+                            </div>
+                            <button onclick="deleteNotice(${n.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        async function postNotice(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Publishing...';
+            try {
+                await fetch(`${API_BASE}/notices`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        title: document.getElementById('noticeTitle').value,
+                        category: document.getElementById('noticeCategory').value,
+                        content: document.getElementById('noticeContent').value
+                    })
+                });
+                e.target.reset();
+                fetchNotices();
+            } catch (err) { alert('Error publishing notice'); }
+            finally { btn.disabled = false; btn.innerText = 'Publish Notice'; }
+        }
+
+        async function deleteNotice(id) {
+            if(!confirm('Delete this notice?')) return;
+            await fetch(`${API_BASE}/notices/${id}`, { method: 'DELETE' });
+            fetchNotices();
+        }
+
+        async function fetchMaterials() {
+            try {
+                const res = await fetch(`${API_BASE}/materials`);
+                const data = await res.json();
+                const list = document.getElementById('materialsList');
+                list.innerHTML = '';
+                if(!data.materials || data.materials.length === 0) return list.innerHTML = '<p class="text-slate-500">No materials found.</p>';
+                
+                data.materials.forEach(m => {
+                    list.innerHTML += `
+                        <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-center gap-4">
+                            <div>
+                                <h4 class="font-bold text-slate-800">${m.title}</h4>
+                                ${m.description ? `<p class="text-sm text-slate-600">${m.description}</p>` : ''}
+                                <a href="${m.url}" target="_blank" class="text-xs font-bold text-brandBlue hover:underline mt-1 inline-block">View Link <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            </div>
+                            <button onclick="deleteMaterial(${m.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        async function postMaterial(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Adding...';
+            try {
+                await fetch(`${API_BASE}/materials`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        title: document.getElementById('matTitle').value,
+                        url: document.getElementById('matUrl').value,
+                        description: document.getElementById('matDesc').value
+                    })
+                });
+                e.target.reset();
+                fetchMaterials();
+            } catch (err) { alert('Error adding material'); }
+            finally { btn.disabled = false; btn.innerText = 'Add Material'; }
+        }
+
+        async function deleteMaterial(id) {
+            if(!confirm('Delete this material?')) return;
+            await fetch(`${API_BASE}/materials/${id}`, { method: 'DELETE' });
+            fetchMaterials();
+        }
+
+        async function postRecord(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Updating...';
+            try {
+                const res = await fetch(`${API_BASE}/records`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: document.getElementById('recEmail').value,
+                        attendance: document.getElementById('recAttendance').value,
+                        feeStatus: document.getElementById('recFee').value,
+                        results: document.getElementById('recResults').value
+                    })
+                });
+                if(res.ok) {
+                    alert('Record updated successfully!');
+                    e.target.reset();
+                } else {
+                    alert('Failed to update record');
+                }
+            } catch (err) { alert('Network Error'); }
+            finally { btn.disabled = false; btn.innerText = 'Update Record'; }
         }
 
         // Initialize dashboard on load

@@ -147,6 +147,80 @@ app.get('/api/dashboard-stats', async (req, res) => {
   }
 });
 
+// 8. Admin: Create Notice
+app.post('/api/notices', async (req, res) => {
+  try {
+    const { title, content, category } = req.body;
+    const notice = await prisma.notice.create({ data: { title, content, category } });
+    res.status(201).json({ success: true, notice });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to create notice' });
+  }
+});
+
+// 9. Admin: Delete Notice
+app.delete('/api/notices/:id', async (req, res) => {
+  try {
+    await prisma.notice.delete({ where: { id: Number(req.params.id) } });
+    res.status(200).json({ success: true, message: 'Notice deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to delete notice' });
+  }
+});
+
+// 10. Study Materials
+app.get('/api/materials', async (req, res) => {
+  try {
+    const materials = await prisma.studyMaterial.findMany({ orderBy: { createdAt: 'desc' } });
+    res.status(200).json({ success: true, materials });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch materials' });
+  }
+});
+
+app.post('/api/materials', async (req, res) => {
+  try {
+    const { title, description, url, category } = req.body;
+    const material = await prisma.studyMaterial.create({ data: { title, description, url, category } });
+    res.status(201).json({ success: true, material });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to create material' });
+  }
+});
+
+app.delete('/api/materials/:id', async (req, res) => {
+  try {
+    await prisma.studyMaterial.delete({ where: { id: Number(req.params.id) } });
+    res.status(200).json({ success: true, message: 'Material deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to delete material' });
+  }
+});
+
+// 11. Student Records
+app.get('/api/records/:email', async (req, res) => {
+  try {
+    const record = await prisma.studentRecord.findUnique({ where: { email: req.params.email } });
+    res.status(200).json({ success: true, record });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch record' });
+  }
+});
+
+app.post('/api/records', async (req, res) => {
+  try {
+    const { email, attendance, feeStatus, results } = req.body;
+    const record = await prisma.studentRecord.upsert({
+      where: { email },
+      update: { attendance: Number(attendance), feeStatus, results },
+      create: { email, attendance: Number(attendance), feeStatus, results }
+    });
+    res.status(200).json({ success: true, record });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update record' });
+  }
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running smoothly!' });
