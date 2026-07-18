@@ -21,36 +21,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Mobile Menu Toggle
-    // The design currently has a desktop nav (<nav class="hidden lg:flex...">)
-    // We will clone it and create a mobile sidebar if a mobile button exists.
-    const mobileBtn = document.querySelector('button .fa-bars')?.parentElement;
-    const desktopNav = document.querySelector('nav.hidden.lg\\:flex');
+    // 2. Mobile Menu Toggle - Main Website
+    const mainMobileBtn = document.querySelector('header button .fa-bars')?.parentElement;
+    const desktopNav = document.querySelector('header nav');
     
-    if (mobileBtn && desktopNav) {
-        // Create mobile menu container
+    if (mainMobileBtn && desktopNav && !document.querySelector('aside')) { // Only on main website
         const mobileMenu = document.createElement('div');
         mobileMenu.className = 'fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-8';
         
-        // Close button
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
         closeBtn.className = 'absolute top-6 right-6 text-white text-3xl hover:text-brandGold transition-colors';
         mobileMenu.appendChild(closeBtn);
         
-        // Links
         const links = desktopNav.querySelectorAll('a');
         links.forEach(l => {
             const mLink = document.createElement('a');
             mLink.href = l.href;
             mLink.textContent = l.textContent;
             mLink.className = 'text-white text-2xl font-poppins font-bold py-4 border-b border-white/10 hover:text-brandGold transition-colors';
+            // Also close menu on link click
+            mLink.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            });
             mobileMenu.appendChild(mLink);
         });
 
         document.body.appendChild(mobileMenu);
 
-        mobileBtn.addEventListener('click', () => {
+        mainMobileBtn.addEventListener('click', () => {
             mobileMenu.classList.remove('translate-x-full');
             document.body.style.overflow = 'hidden';
         });
@@ -58,6 +58,40 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', () => {
             mobileMenu.classList.add('translate-x-full');
             document.body.style.overflow = '';
+        });
+    }
+
+    // 2.1 Mobile Menu Toggle - Dashboards (Student & Admin)
+    const dashboardMobileBtn = document.querySelector('main header button .fa-bars')?.parentElement;
+    const dashboardSidebar = document.querySelector('aside');
+    
+    if (dashboardMobileBtn && dashboardSidebar) {
+        dashboardMobileBtn.addEventListener('click', () => {
+            // Toggle sidebar visibility on mobile
+            if (dashboardSidebar.classList.contains('hidden')) {
+                dashboardSidebar.classList.remove('hidden');
+                dashboardSidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-72');
+                // Create a backdrop overlay
+                let backdrop = document.getElementById('sidebarBackdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.id = 'sidebarBackdrop';
+                    backdrop.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden';
+                    document.body.appendChild(backdrop);
+                    
+                    backdrop.addEventListener('click', () => {
+                        dashboardSidebar.classList.add('hidden');
+                        dashboardSidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50');
+                        backdrop.style.display = 'none';
+                    });
+                }
+                backdrop.style.display = 'block';
+            } else {
+                dashboardSidebar.classList.add('hidden');
+                dashboardSidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50');
+                const backdrop = document.getElementById('sidebarBackdrop');
+                if (backdrop) backdrop.style.display = 'none';
+            }
         });
     }
 
