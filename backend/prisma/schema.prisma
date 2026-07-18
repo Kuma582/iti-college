@@ -25,6 +25,7 @@ model Contact {
   name      String
   email     String
   message   String
+  status    String   @default("Pending")
   createdAt DateTime @default(now())
 }
 

@@ -127,6 +127,21 @@ app.get('/api/contact', async (req, res) => {
   }
 });
 
+// 6.1 Admin Dashboard: Mark contact as resolved
+app.put('/api/contact/:id/resolve', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const contact = await prisma.contact.update({
+      where: { id: parseInt(id) },
+      data: { status: 'Resolved' },
+    });
+    res.status(200).json({ success: true, message: 'Marked as resolved', contact });
+  } catch (error) {
+    console.error('Error resolving contact:', error);
+    res.status(500).json({ success: false, message: 'Failed to resolve contact' });
+  }
+});
+
 // 7. Admin Dashboard: Get summary stats
 app.get('/api/dashboard-stats', async (req, res) => {
   try {
