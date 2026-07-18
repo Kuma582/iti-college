@@ -76,8 +76,12 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Check for dynamic student login (Demo feature requested by user)
-    if (email && email.endsWith('@excellenceiti.com') && email !== 'admin@excellenceiti.com' && password === 'student123') {
+    // Check if the user is a registered student
+    const student = await prisma.student.findUnique({
+      where: { email },
+    });
+    
+    if (student && student.password === password) {
       return res.status(200).json({ success: true, message: 'Student login successful', role: 'student' });
     }
     
@@ -226,10 +230,46 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running smoothly!' });
 });
 
-// Start Server
+// 12. Create a Student Account
+app.post('/api/students', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    // Check if email already exists
+    const existingStudent = await prisma.student.findUnique({ where: { email } });
+    if (existingStudent) {
+      return res.status(400).json({ success: false, message: 'Student with this email already exists' });
+    }
+    
+    const student = await prisma.student.create({
+      data: { name, email, password }
+    });
+    
+    res.status(201).json({ success: true, message: 'Student account created', student });
+  } catch (error) {
+    console.error('Error creating student:', error);
+    res.status(500).json({ success: false, message: 'Failed to create student account' });
+  }
+});
+
+// 13. Fetch Student Accounts
+app.get('/api/students', async (req, res) => {
+  try {
+    const students = await prisma.student.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, name: true, email: true, createdAt: true } // don't send passwords
+    });
+    res.status(200).json({ success: true, students });
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch students' });
+  }
+});
+
+// Start Server (only for local development, Vercel uses serverless)
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
