@@ -73,8 +73,8 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="flex-1 overflow-hidden">
-                    <p class="text-sm font-bold truncate">Rahul Kumar</p>
-                    <p class="text-xs text-blue-200 truncate">student@excellenceiti.com</p>
+                    <p class="text-sm font-bold truncate" id="sidebarStudentName">Student Name</p>
+                    <p class="text-xs text-blue-200 truncate" id="sidebarStudentEmail">student@excellenceiti.com</p>
                 </div>
                 <button onclick="logout()" class="text-red-400 hover:text-red-300 transition-colors" title="Logout">
                     <i class="fa-solid fa-power-off"></i>
@@ -96,7 +96,7 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div>
-                    <h2 class="text-2xl font-poppins font-bold text-slate-800">Welcome back, Rahul! 👋</h2>
+                    <h2 class="text-2xl font-poppins font-bold text-slate-800" id="welcomeStudentName">Welcome back! 👋</h2>
                     <p class="text-sm text-slate-500">Here's your academic overview for today.</p>
                 </div>
             </div>
@@ -279,6 +279,19 @@
         // Check Authentication
         if (!localStorage.getItem('studentToken')) {
             window.location.href = 'login.html';
+        }
+
+        // Set Dynamic User Info
+        const userEmail = localStorage.getItem('userEmail');
+        if (userEmail) {
+            // Extract name from email (e.g. rahul@excellenceiti.com -> rahul)
+            let name = userEmail.split('@')[0];
+            // Capitalize first letter
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+            
+            document.getElementById('sidebarStudentName').innerText = name;
+            document.getElementById('sidebarStudentEmail').innerText = userEmail;
+            document.getElementById('welcomeStudentName').innerText = `Welcome back, ${name}! 👋`;
         }
 
         // Logout function
