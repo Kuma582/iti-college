@@ -64,13 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Gallery Filtering and Lightbox
     const gallerySection = document.querySelector('.masonry-grid');
     if (gallerySection) {
-        const filterBtns = document.querySelectorAll('button:contains("Workshops"), button:contains("Campus"), button:contains("Events"), button:contains("Videos"), button:contains("All Media")');
-        // Using a simpler approach since :contains is jQuery
-        
-        const gBtns = Array.from(document.querySelectorAll('button')).filter(b => 
-            ['All Media', 'Workshops', 'Campus', 'Events', 'Videos'].some(t => b.textContent.includes(t))
-        );
-        
+        const gBtns = document.querySelectorAll('.filter-btn');
         const items = document.querySelectorAll('.masonry-item');
         
         gBtns.forEach(btn => {
@@ -83,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.add('bg-brandBlue', 'text-white');
                 btn.classList.remove('bg-white', 'text-slate-600');
 
-                const filter = btn.textContent.trim().toLowerCase();
+                const filter = btn.dataset.filter;
                 
                 items.forEach(item => {
-                    if (filter.includes('all')) {
+                    if (filter === 'all') {
                         item.style.display = 'block';
                     } else if (item.dataset.category && item.dataset.category.includes(filter)) {
                         item.style.display = 'block';
