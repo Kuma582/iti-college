@@ -237,7 +237,7 @@
     </main>
 
     <script>
-        const API_BASE = 'http://localhost:5000/api';
+        const API_BASE = '/api';
 
         // --- Navigation Logic ---
         function showSection(sectionName) {
@@ -313,18 +313,8 @@
                     `;
                 });
             } catch (err) {
-                console.log("Using Demo Data");
-                // Mock data for demo if backend is offline
-                document.getElementById('statAdmissions').innerText = "12";
-                document.getElementById('statMessages').innerText = "5";
-                document.getElementById('recentAdmissionsTable').innerHTML = `
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-4 font-semibold text-slate-800">John Doe (Demo)</td>
-                        <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md">Electrician</span></td>
-                        <td class="px-6 py-4 text-slate-600">+91 9876543210</td>
-                        <td class="px-6 py-4 text-slate-500 text-xs">Today</td>
-                    </tr>
-                `;
+                console.error("Error fetching dashboard data:", err);
+                document.getElementById('recentAdmissionsTable').innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-red-400">Failed to load data from server.</td></tr>';
             }
         }
 
@@ -360,7 +350,8 @@
                     `;
                 });
             } catch (err) {
-                document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">Demo Mode: Connect backend to see real data.</td></tr>';
+                console.error("Error fetching admissions:", err);
+                document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Failed to load applications from server.</td></tr>';
             }
         }
 
@@ -393,7 +384,8 @@
                     `;
                 });
             } catch (err) {
-                document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">Demo Mode: Connect backend to see real data.</td></tr>';
+                console.error("Error fetching messages:", err);
+                document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-red-400">Failed to load messages from server.</td></tr>';
             }
         }
 

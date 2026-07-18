@@ -76,6 +76,11 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    // Check for dynamic student login (Demo feature requested by user)
+    if (email && email.endsWith('@excellenceiti.com') && email !== 'admin@excellenceiti.com' && password === 'student123') {
+      return res.status(200).json({ success: true, message: 'Student login successful', role: 'student' });
+    }
+    
     const admin = await prisma.admin.findUnique({
       where: { email },
     });
@@ -85,7 +90,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
     
     // In a real app, generate a JWT token here
-    res.status(200).json({ success: true, message: 'Login successful' });
+    res.status(200).json({ success: true, message: 'Admin login successful', role: 'admin' });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ success: false, message: 'Login failed' });
@@ -148,6 +153,10 @@ app.get('/api/health', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

@@ -239,7 +239,7 @@
             alertMsg.classList.add('hidden');
             
             try {
-                const response = await fetch('http://localhost:5000/api/contact', {
+                const response = await fetch('/api/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, message })
@@ -254,11 +254,9 @@
                     throw new Error('Failed to send');
                 }
             } catch (error) {
-                console.log("Backend not reachable. Simulating success for demo.");
                 alertMsg.classList.remove('hidden');
-                alertMsg.className = 'text-center font-bold text-sm mt-4 text-brandGold';
-                alertMsg.innerText = 'Demo Mode: Message sent successfully!';
-                e.target.reset();
+                alertMsg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                alertMsg.innerText = 'Error: Could not send message. Please try again.';
             } finally {
                 btn.innerHTML = 'Send Message <i class="fa-regular fa-paper-plane"></i>';
                 btn.disabled = false;

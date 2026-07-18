@@ -224,7 +224,7 @@
             alertMsg.classList.add('hidden');
             
             try {
-                const response = await fetch('http://localhost:5000/api/admissions', {
+                const response = await fetch('/api/admissions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fullName, mobile, email, dob, trade })
@@ -239,11 +239,9 @@
                     throw new Error('Failed to submit');
                 }
             } catch (error) {
-                console.log("Backend not reachable. Simulating success for demo.");
                 alertMsg.classList.remove('hidden');
-                alertMsg.className = 'text-center font-bold text-sm mt-4 text-brandGold';
-                alertMsg.innerText = 'Demo Mode: Application submitted successfully!';
-                e.target.reset();
+                alertMsg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                alertMsg.innerText = 'Error: Could not submit application. Please try again.';
             } finally {
                 btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane"></i>';
                 btn.disabled = false;
