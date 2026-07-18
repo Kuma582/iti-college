@@ -213,4 +213,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 6. User Login State Management
+    const userEmail = localStorage.getItem('userEmail');
+    if (userEmail) {
+        // Change Desktop Login CTA
+        const loginCta = document.querySelector('.hidden.lg\\:block a[href="login.html"]');
+        if (loginCta) {
+            // Extract the username part from email if possible to keep it short
+            const displayName = userEmail.split('@')[0];
+            
+            loginCta.innerHTML = `<i class="fa-solid fa-user-circle"></i> <span class="max-w-[100px] truncate" title="${userEmail}">${displayName}</span>`;
+            loginCta.href = "javascript:void(0)";
+            loginCta.classList.remove('hover:-translate-y-1', 'hover:bg-blue-800');
+            loginCta.classList.add('cursor-default', 'hover:bg-brandBlue');
+            
+            // Add a logout button next to it
+            const logoutBtn = document.createElement('button');
+            logoutBtn.innerHTML = '<i class="fa-solid fa-sign-out-alt"></i>';
+            logoutBtn.className = 'ml-3 bg-white text-red-600 text-sm font-semibold w-10 h-10 rounded-full hover:bg-red-50 transition-all shadow-soft border border-slate-200 flex items-center justify-center';
+            logoutBtn.title = 'Logout';
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('adminToken');
+                window.location.reload();
+            });
+            loginCta.parentElement.classList.add('flex', 'items-center');
+            loginCta.parentElement.appendChild(logoutBtn);
+        }
+
+        // Change Mobile Login Link
+        const mobileLogin = document.querySelector('nav a[href="login.html"]');
+        if (mobileLogin) {
+            const displayName = userEmail.split('@')[0];
+            mobileLogin.innerHTML = `<i class="fa-solid fa-user-circle"></i> ${displayName}`;
+            mobileLogin.href = "javascript:void(0)";
+            mobileLogin.classList.remove('hover:text-brandBlue', 'lg:hidden');
+            mobileLogin.classList.add('text-brandBlue', 'font-bold', 'lg:hidden');
+            
+            const mobileLogout = document.createElement('a');
+            mobileLogout.href = "javascript:void(0)";
+            mobileLogout.className = "lg:hidden text-red-500 hover:text-red-700 transition-colors pb-1 border-b-2 border-transparent mt-2 block";
+            mobileLogout.innerHTML = '<i class="fa-solid fa-sign-out-alt"></i> Logout';
+            mobileLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('adminToken');
+                window.location.reload();
+            });
+            mobileLogin.parentElement.appendChild(mobileLogout);
+        }
+    }
+
 });

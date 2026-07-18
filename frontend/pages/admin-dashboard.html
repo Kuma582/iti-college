@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Excellence ITI</title>
+    <!-- Tailwind CSS (CDN for compilation) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#0f172a',
+                        brandGold: '#fbbf24',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- Auth Check -->
+    <script>
+        if (!localStorage.getItem('adminToken')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <!-- Sidebar -->
+    <aside class="w-64 glass-dark text-white flex flex-col h-full flex-shrink-0 transition-all duration-300 z-20">
+        <div class="p-6 border-b border-white/10 flex items-center gap-3">
+            <div class="w-8 h-8 bg-brandGold rounded-lg flex items-center justify-center text-brandBlue font-bold shadow-lg">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h1 class="font-poppins font-bold text-lg tracking-tight">ITI ADMIN</h1>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <a href="#" onclick="showSection('dashboard')" class="nav-link w-full flex items-center gap-3 px-4 py-3 bg-brandGold/20 text-brandGold rounded-xl transition-all">
+                <i class="fa-solid fa-chart-pie w-5"></i> <span class="font-medium text-sm">Dashboard</span>
+            </a>
+            <a href="#" onclick="showSection('admissions')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fa-solid fa-user-graduate w-5"></i> <span class="font-medium text-sm">Admissions</span>
+            </a>
+            <a href="#" onclick="showSection('messages')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fa-solid fa-envelope w-5"></i> <span class="font-medium text-sm">Messages</span>
+            </a>
+        </nav>
+        
+        <div class="p-4 border-t border-white/10">
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium">
+                <i class="fa-solid fa-right-from-bracket w-5"></i> Log out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
+        <!-- Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brandBlue/5 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brandGold/5 rounded-full blur-3xl -z-10"></div>
+        
+        <!-- Header -->
+        <header class="glass h-20 flex items-center justify-between px-8 border-b border-slate-200 z-10 flex-shrink-0">
+            <div>
+                <h2 class="text-xl font-poppins font-bold text-slate-900" id="headerTitle">Dashboard Overview</h2>
+                <p class="text-xs text-slate-500">Welcome back to the command center.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-brandBlue text-white rounded-full flex items-center justify-center font-bold shadow-md border border-brandGold/30">
+                    AD
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-8 scrollbar-hide">
+            
+            <!-- SECTION: Dashboard -->
+            <div id="section-dashboard" class="space-y-8 animate-fade-in">
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-brandBlue/5 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Admissions</p>
+                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statAdmissions">--</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-brandGold/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Inquiry Messages</p>
+                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statMessages">--</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-amber-50 text-brandGold rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">System Status</p>
+                                <h3 class="text-2xl font-black text-green-600 mt-2 flex items-center gap-2">
+                                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span> Online
+                                </h3>
+                            </div>
+                            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-server"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Admissions Preview -->
+                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-white/50">
+                        <h3 class="font-bold text-slate-800">Recent Applications</h3>
+                        <button onclick="showSection('admissions')" class="text-xs font-bold text-brandBlue hover:text-brandGold transition-colors">View All &rarr;</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold">Applicant Name</th>
+                                    <th class="px-6 py-4 font-bold">Trade</th>
+                                    <th class="px-6 py-4 font-bold">Mobile</th>
+                                    <th class="px-6 py-4 font-bold">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentAdmissionsTable" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Admissions -->
+            <div id="section-admissions" class="hidden space-y-6 animate-fade-in">
+                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-lg">All Admission Applications</h3>
+                        <button onclick="fetchAdmissions()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold">ID</th>
+                                    <th class="px-6 py-4 font-bold">Applicant Name</th>
+                                    <th class="px-6 py-4 font-bold">Trade</th>
+                                    <th class="px-6 py-4 font-bold">Mobile / Email</th>
+                                    <th class="px-6 py-4 font-bold">Date of Birth</th>
+                                    <th class="px-6 py-4 font-bold">Applied On</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allAdmissionsTable" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Messages -->
+            <div id="section-messages" class="hidden space-y-6 animate-fade-in">
+                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-lg">Contact Form Messages</h3>
+                        <button onclick="fetchMessages()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold w-1/4">Sender Details</th>
+                                    <th class="px-6 py-4 font-bold w-1/2">Message</th>
+                                    <th class="px-6 py-4 font-bold w-1/4">Received On</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allMessagesTable" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="3" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        // --- Navigation Logic ---
+        function showSection(sectionName) {
+            // Update Header
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'admissions': 'Admission Applications',
+                'messages': 'Contact Messages'
+            };
+            document.getElementById('headerTitle').innerText = titles[sectionName];
+
+            // Hide all sections
+            document.querySelectorAll('main > div > div[id^="section-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // Show target section
+            document.getElementById('section-' + sectionName).classList.remove('hidden');
+
+            // Update Nav Styles
+            document.querySelectorAll('.nav-link').forEach(el => {
+                el.className = 'nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all';
+            });
+            const activeLink = document.querySelector(`.nav-link[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.className = 'nav-link w-full flex items-center gap-3 px-4 py-3 bg-brandGold/20 text-brandGold rounded-xl transition-all';
+            }
+
+            // Fetch data based on section
+            if (sectionName === 'dashboard') fetchDashboardData();
+            if (sectionName === 'admissions') fetchAdmissions();
+            if (sectionName === 'messages') fetchMessages();
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'login.html';
+        }
+
+        // --- Data Fetching Logic ---
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        async function fetchDashboardData() {
+            try {
+                const res = await fetch(`${API_BASE}/dashboard-stats`);
+                if (!res.ok) throw new Error('Demo Mode');
+                const data = await res.json();
+                
+                document.getElementById('statAdmissions').innerText = data.stats.totalAdmissions;
+                document.getElementById('statMessages').innerText = data.stats.totalContacts;
+                
+                const tbody = document.getElementById('recentAdmissionsTable');
+                tbody.innerHTML = '';
+                
+                if(data.recentAdmissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">No applications yet.</td></tr>';
+                    return;
+                }
+                
+                data.recentAdmissions.forEach(adm => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="px-6 py-4 font-semibold text-slate-800">${adm.fullName}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md">${adm.trade}</span>
+                            </td>
+                            <td class="px-6 py-4 text-slate-600">${adm.mobile}</td>
+                            <td class="px-6 py-4 text-slate-500 text-xs">${formatDate(adm.createdAt)}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.log("Using Demo Data");
+                // Mock data for demo if backend is offline
+                document.getElementById('statAdmissions').innerText = "12";
+                document.getElementById('statMessages').innerText = "5";
+                document.getElementById('recentAdmissionsTable').innerHTML = `
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-semibold text-slate-800">John Doe (Demo)</td>
+                        <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md">Electrician</span></td>
+                        <td class="px-6 py-4 text-slate-600">+91 9876543210</td>
+                        <td class="px-6 py-4 text-slate-500 text-xs">Today</td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function fetchAdmissions() {
+            try {
+                const res = await fetch(`${API_BASE}/admissions`);
+                if (!res.ok) throw new Error('Demo Mode');
+                const data = await res.json();
+                
+                const tbody = document.getElementById('allAdmissionsTable');
+                tbody.innerHTML = '';
+                
+                if(data.admissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No applications found.</td></tr>';
+                    return;
+                }
+                
+                data.admissions.forEach(adm => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">#${adm.id}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-800">${adm.fullName}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md border border-blue-200">${adm.trade}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="font-medium text-slate-700">${adm.mobile}</div>
+                                <div class="text-xs text-slate-500">${adm.email || 'N/A'}</div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-600 text-sm">${formatDate(adm.dob)}</td>
+                            <td class="px-6 py-4 text-slate-500 text-xs">${formatDate(adm.createdAt)}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">Demo Mode: Connect backend to see real data.</td></tr>';
+            }
+        }
+
+        async function fetchMessages() {
+            try {
+                const res = await fetch(`${API_BASE}/contact`);
+                if (!res.ok) throw new Error('Demo Mode');
+                const data = await res.json();
+                
+                const tbody = document.getElementById('allMessagesTable');
+                tbody.innerHTML = '';
+                
+                if(data.contacts.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">No messages found.</td></tr>';
+                    return;
+                }
+                
+                data.contacts.forEach(msg => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-colors align-top">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-800">${msg.name}</div>
+                                <div class="text-xs text-brandBlue mt-1 font-medium bg-blue-50 inline-block px-2 py-0.5 rounded border border-blue-100">${msg.email}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-slate-600 text-sm leading-relaxed">${msg.message}</p>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500 text-xs font-medium">${formatDate(msg.createdAt)}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">Demo Mode: Connect backend to see real data.</td></tr>';
+            }
+        }
+
+        // Initialize dashboard on load
+        fetchDashboardData();
+
+    </script>
+</body>
+</html>

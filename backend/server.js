@@ -92,6 +92,56 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// 5. Admin Dashboard: Get all admissions
+app.get('/api/admissions', async (req, res) => {
+  try {
+    const admissions = await prisma.admission.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    res.status(200).json({ success: true, admissions });
+  } catch (error) {
+    console.error('Error fetching admissions:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch admissions' });
+  }
+});
+
+// 6. Admin Dashboard: Get all contacts
+app.get('/api/contact', async (req, res) => {
+  try {
+    const contacts = await prisma.contact.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    res.status(200).json({ success: true, contacts });
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch contacts' });
+  }
+});
+
+// 7. Admin Dashboard: Get summary stats
+app.get('/api/dashboard-stats', async (req, res) => {
+  try {
+    const totalAdmissions = await prisma.admission.count();
+    const totalContacts = await prisma.contact.count();
+    const totalNotices = await prisma.notice.count();
+    
+    // Get recent admissions for the mini-table
+    const recentAdmissions = await prisma.admission.findMany({
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.status(200).json({ 
+      success: true, 
+      stats: { totalAdmissions, totalContacts, totalNotices },
+      recentAdmissions 
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+  }
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running smoothly!' });
