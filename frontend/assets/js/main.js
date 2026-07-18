@@ -223,7 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayName = userEmail.split('@')[0];
             
             loginCta.innerHTML = `<i class="fa-solid fa-user-circle"></i> <span class="max-w-[100px] truncate" title="${userEmail}">${displayName}</span>`;
-            loginCta.href = "javascript:void(0)";
+            loginCta.href = "#";
+            loginCta.addEventListener('click', (e) => e.preventDefault());
             loginCta.classList.remove('hover:-translate-y-1', 'hover:bg-blue-800');
             loginCta.classList.add('cursor-default', 'hover:bg-brandBlue');
             
@@ -232,7 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
             logoutBtn.innerHTML = '<i class="fa-solid fa-sign-out-alt"></i>';
             logoutBtn.className = 'ml-3 bg-white text-red-600 text-sm font-semibold w-10 h-10 rounded-full hover:bg-red-50 transition-all shadow-soft border border-slate-200 flex items-center justify-center';
             logoutBtn.title = 'Logout';
-            logoutBtn.addEventListener('click', () => {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('adminToken');
                 window.location.reload();
@@ -246,12 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileLogin) {
             const displayName = userEmail.split('@')[0];
             mobileLogin.innerHTML = `<i class="fa-solid fa-user-circle"></i> ${displayName}`;
-            mobileLogin.href = "javascript:void(0)";
+            mobileLogin.href = "#";
+            mobileLogin.addEventListener('click', (e) => e.preventDefault());
             mobileLogin.classList.remove('hover:text-brandBlue', 'lg:hidden');
             mobileLogin.classList.add('text-brandBlue', 'font-bold', 'lg:hidden');
             
             const mobileLogout = document.createElement('a');
-            mobileLogout.href = "javascript:void(0)";
+            mobileLogout.href = "#";
             mobileLogout.className = "lg:hidden text-red-500 hover:text-red-700 transition-colors pb-1 border-b-2 border-transparent mt-2 block";
             mobileLogout.innerHTML = '<i class="fa-solid fa-sign-out-alt"></i> Logout';
             mobileLogout.addEventListener('click', (e) => {
