@@ -147,14 +147,21 @@
                     btn.disabled = false;
                 }
             } catch (error) {
-                // FALLBACK: If on Vercel or backend not running, simulate success for demo
-                console.log("Backend not reachable. Simulating login for demo purposes.");
-                localStorage.setItem('adminToken', 'true');
-                localStorage.setItem('userEmail', email);
-                msg.classList.remove('hidden');
-                msg.className = 'text-center font-bold text-sm mt-4 text-brandGold';
-                msg.innerText = 'Demo Mode: Authentication Successful! Redirecting...';
-                setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+                // FALLBACK: Check hardcoded admin credentials since backend is not reachable on Vercel
+                if (email === 'admin@excellenceiti.com' && password === 'admin123') {
+                    localStorage.setItem('adminToken', 'true');
+                    localStorage.setItem('userEmail', email);
+                    msg.classList.remove('hidden');
+                    msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    msg.innerText = 'Authentication Successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+                } else {
+                    msg.classList.remove('hidden');
+                    msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                    msg.innerText = 'Invalid credentials. Please try again.';
+                    btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
+                    btn.disabled = false;
+                }
             }
         });
     </script>
