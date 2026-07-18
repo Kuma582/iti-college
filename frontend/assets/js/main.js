@@ -223,10 +223,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayName = userEmail.split('@')[0];
             
             loginCta.innerHTML = `<i class="fa-solid fa-user-circle"></i> <span class="max-w-[100px] truncate" title="${userEmail}">${displayName}</span>`;
-            loginCta.href = "#";
-            loginCta.addEventListener('click', (e) => e.preventDefault());
+            if (localStorage.getItem('studentToken')) {
+                loginCta.href = "student-dashboard.html";
+            } else if (localStorage.getItem('adminToken')) {
+                loginCta.href = "admin-dashboard.html";
+            } else {
+                loginCta.href = "#";
+            }
             loginCta.classList.remove('hover:-translate-y-1', 'hover:bg-blue-800');
-            loginCta.classList.add('cursor-default', 'hover:bg-brandBlue');
+            loginCta.classList.add('hover:bg-brandBlue');
             
             // Add a logout button next to it
             const logoutBtn = document.createElement('button');
@@ -237,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('adminToken');
+                localStorage.removeItem('studentToken');
                 window.location.reload();
             });
             loginCta.parentElement.classList.add('flex', 'items-center');
@@ -248,8 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileLogin) {
             const displayName = userEmail.split('@')[0];
             mobileLogin.innerHTML = `<i class="fa-solid fa-user-circle"></i> ${displayName}`;
-            mobileLogin.href = "#";
-            mobileLogin.addEventListener('click', (e) => e.preventDefault());
+            if (localStorage.getItem('studentToken')) {
+                mobileLogin.href = "student-dashboard.html";
+            } else if (localStorage.getItem('adminToken')) {
+                mobileLogin.href = "admin-dashboard.html";
+            } else {
+                mobileLogin.href = "#";
+            }
             mobileLogin.classList.remove('hover:text-brandBlue', 'lg:hidden');
             mobileLogin.classList.add('text-brandBlue', 'font-bold', 'lg:hidden');
             
@@ -261,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('adminToken');
+                localStorage.removeItem('studentToken');
                 window.location.reload();
             });
             mobileLogin.parentElement.appendChild(mobileLogout);

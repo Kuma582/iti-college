@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | Excellence ITI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Basic Styles -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen overflow-hidden flex bg-slate-50">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-brandBlue text-white flex flex-col h-full shadow-2xl relative z-20 transition-all duration-300 hidden md:flex">
+        <!-- Logo -->
+        <div class="p-6 flex items-center gap-3 border-b border-white/10">
+            <div class="w-10 h-10 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center text-brandGold font-bold text-xl border border-white/20 shadow-inner">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-poppins font-bold tracking-tight">Student Portal</h1>
+                <p class="text-[10px] text-blue-200 uppercase tracking-widest">Excellence ITI</p>
+            </div>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-hide">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-xl text-brandGold font-medium transition-all shadow-inner border border-white/5">
+                <i class="fa-solid fa-house w-5"></i> <span>Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-book-open w-5"></i> <span>Study Materials</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-clipboard-user w-5"></i> <span>Attendance</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-file-invoice-dollar w-5"></i> <span>Fee Details</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-award w-5"></i> <span>Results</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-regular fa-bell w-5"></i> <span>Notices</span>
+                <span class="ml-auto bg-brandGold text-brandBlue text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+            </a>
+        </nav>
+
+        <!-- Bottom User Card -->
+        <div class="p-4 border-t border-white/10">
+            <div class="flex items-center gap-3 bg-blue-900/50 p-3 rounded-xl border border-white/5">
+                <div class="w-10 h-10 rounded-full bg-white text-brandBlue flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-sm font-bold truncate">Rahul Kumar</p>
+                    <p class="text-xs text-blue-200 truncate">student@excellenceiti.com</p>
+                </div>
+                <button onclick="logout()" class="text-red-400 hover:text-red-300 transition-colors" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <!-- Abstract Background -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-brandBlue/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute top-40 -left-20 w-72 h-72 bg-brandGold/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+        <!-- Top Header -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center z-10 sticky top-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500 hover:text-brandBlue text-xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div>
+                    <h2 class="text-2xl font-poppins font-bold text-slate-800">Welcome back, Rahul! 👋</h2>
+                    <p class="text-sm text-slate-500">Here's your academic overview for today.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 bg-white border border-slate-200 rounded-full text-slate-600 hover:text-brandBlue hover:shadow-md transition-all relative">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                </button>
+                <a href="index.html" class="hidden sm:flex text-sm font-semibold text-brandBlue bg-blue-50 px-4 py-2 rounded-full hover:bg-brandBlue hover:text-white transition-colors border border-blue-100 items-center gap-2">
+                    <i class="fa-solid fa-globe"></i> College Website
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Scrollable Area -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 z-10">
+            
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Stat 1 -->
+                <div class="glass-panel p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 text-brandBlue flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Attendance</p>
+                        <h3 class="text-2xl font-poppins font-black text-slate-800">85.4%</h3>
+                    </div>
+                    <div class="absolute -right-6 -bottom-6 text-blue-50 text-6xl opacity-50 group-hover:-rotate-12 transition-transform"><i class="fa-solid fa-check-circle"></i></div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="glass-panel p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 text-brandGold flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Active Courses</p>
+                        <h3 class="text-2xl font-poppins font-black text-slate-800">06</h3>
+                    </div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="glass-panel p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Fee Status</p>
+                        <h3 class="text-lg font-poppins font-black text-green-600 mt-1">Cleared</h3>
+                    </div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="glass-panel p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Last Semester</p>
+                        <h3 class="text-2xl font-poppins font-black text-slate-800">A+</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Activity Area (2 cols) -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <!-- Profile Card -->
+                    <div class="glass-panel rounded-3xl p-8 shadow-sm relative overflow-hidden border-t-4 border-t-brandBlue">
+                        <div class="absolute top-0 right-0 p-8 text-brandBlue/5 text-9xl pointer-events-none"><i class="fa-solid fa-id-card"></i></div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i class="fa-regular fa-user text-brandBlue"></i> Student Profile</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div>
+                                <p class="text-xs text-slate-400 font-semibold uppercase">Registration No.</p>
+                                <p class="font-bold text-slate-700 mt-1">ITI/2026/4092</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-semibold uppercase">Trade Enrolled</p>
+                                <p class="font-bold text-brandBlue mt-1">Electrician</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-semibold uppercase">Semester</p>
+                                <p class="font-bold text-slate-700 mt-1">3rd Semester</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-semibold uppercase">Session</p>
+                                <p class="font-bold text-slate-700 mt-1">2024 - 2026</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Study Materials -->
+                    <div class="glass-panel rounded-3xl p-8 shadow-sm">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-down text-brandGold"></i> Recent Study Materials</h3>
+                            <button class="text-brandBlue text-sm font-semibold hover:underline">View All</button>
+                        </div>
+                        <div class="space-y-4">
+                            <!-- Material Item -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl hover:border-brandBlue/30 hover:shadow-md transition-all group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-red-100 text-red-500 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-file-pdf"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm group-hover:text-brandBlue transition-colors">AC Motors Fundamentals.pdf</h4>
+                                        <p class="text-xs text-slate-500 mt-0.5">Uploaded by Prof. Sharma • 2.4 MB</p>
+                                    </div>
+                                </div>
+                                <button class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-600 hover:text-white hover:bg-brandBlue hover:border-brandBlue transition-all shadow-sm">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                            <!-- Material Item -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl hover:border-brandBlue/30 hover:shadow-md transition-all group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-file-word"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm group-hover:text-brandBlue transition-colors">Safety Guidelines Assignment.docx</h4>
+                                        <p class="text-xs text-slate-500 mt-0.5">Uploaded by Prof. Verma • 1.1 MB</p>
+                                    </div>
+                                </div>
+                                <button class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-600 hover:text-white hover:bg-brandBlue hover:border-brandBlue transition-all shadow-sm">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Area (1 col) -->
+                <div class="space-y-8">
+                    <!-- Important Notices -->
+                    <div class="glass-panel rounded-3xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-brandBlue"></i> Student Notices</h3>
+                        
+                        <div class="space-y-4 relative before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-slate-200">
+                            <!-- Notice -->
+                            <div class="relative pl-8">
+                                <div class="absolute left-0 top-1 w-6 h-6 bg-brandGold text-white rounded-full flex items-center justify-center text-[10px] border-4 border-white shadow-sm z-10">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Practical Exam Dates Announced</h4>
+                                <p class="text-xs text-slate-500 mt-1">3rd semester practical exams will begin from 15th August.</p>
+                                <span class="text-[10px] font-semibold text-brandBlue mt-2 block">Today, 09:00 AM</span>
+                            </div>
+                            <!-- Notice -->
+                            <div class="relative pl-8">
+                                <div class="absolute left-0 top-1 w-6 h-6 bg-blue-100 text-brandBlue rounded-full flex items-center justify-center text-[10px] border-4 border-white shadow-sm z-10">
+                                    <i class="fa-solid fa-info"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Fee Submission Deadline</h4>
+                                <p class="text-xs text-slate-500 mt-1">Last date to submit semester fees without late fine is 30th July.</p>
+                                <span class="text-[10px] font-semibold text-slate-400 mt-2 block">Yesterday, 02:30 PM</span>
+                            </div>
+                            <!-- Notice -->
+                            <div class="relative pl-8">
+                                <div class="absolute left-0 top-1 w-6 h-6 bg-blue-100 text-brandBlue rounded-full flex items-center justify-center text-[10px] border-4 border-white shadow-sm z-10">
+                                    <i class="fa-solid fa-info"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Workshop Safety Gear</h4>
+                                <p class="text-xs text-slate-500 mt-1">All students must bring their safety boots to the workshop.</p>
+                                <span class="text-[10px] font-semibold text-slate-400 mt-2 block">14 Jul, 2026</span>
+                            </div>
+                        </div>
+                        <button class="w-full mt-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 text-sm font-bold rounded-xl transition-colors border border-slate-200">
+                            View All Notices
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-xs text-slate-400 font-medium pb-8">
+                &copy; 2026 Excellence ITI. Advanced Student Management System.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check Authentication
+        if (!localStorage.getItem('studentToken')) {
+            window.location.href = 'login.html';
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('studentToken');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
