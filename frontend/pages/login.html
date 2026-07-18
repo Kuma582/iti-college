@@ -83,7 +83,7 @@
                         <i class="fa-solid fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
                         <input type="password" id="loginPassword" required placeholder="••••••••"
                             class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
-                        <i class="fa-regular fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 cursor-pointer hover:text-brandBlue transition-colors"></i>
+                        <i id="togglePassword" class="fa-regular fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 cursor-pointer hover:text-brandBlue transition-colors"></i>
                     </div>
                 </div>
 
@@ -160,6 +160,17 @@
                 btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
                 btn.disabled = false;
             }
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('loginPassword');
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Toggle eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
         });
     </script>
     <script src="../assets/js/main.js"></script>
