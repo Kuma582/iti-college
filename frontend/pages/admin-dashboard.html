@@ -111,6 +111,9 @@
             <a href="#" id="nav-students" onclick="showSection('students')" class="nav-link">
                 <i class="fa-solid fa-user-graduate w-4 text-center"></i> <span>Students</span>
             </a>
+            <a href="#" id="nav-attendance" onclick="showSection('attendance')" class="nav-link">
+                <i class="fa-solid fa-calendar-check w-4 text-center"></i> <span>Attendance</span>
+            </a>
             <a href="#" id="nav-teachers" onclick="showSection('teachers')" class="nav-link">
                 <i class="fa-solid fa-chalkboard-user w-4 text-center"></i> <span>Teachers</span>
             </a>
@@ -366,6 +369,49 @@
                             </thead>
                             <tbody id="studentsTableBody" class="divide-y divide-slate-100">
                                 <tr><td colspan="7" class="px-5 py-10 text-center text-slate-400">No students found. Add your first student!</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Attendance ===== -->
+            <div id="section-attendance" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-brandGold"></i> Daily Attendance
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <input type="date" id="attDate" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm text-slate-600">
+                        <select id="attTrade" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm dynamic-trades-filter">
+                            <option value="">Select Trade</option>
+                        </select>
+                        <select id="attBatch" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm dynamic-sessions-filter">
+                            <option value="">Select Batch</option>
+                        </select>
+                        <button onclick="loadAttendance()" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Load Students</button>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Mark Attendance</h3>
+                        <button onclick="saveAttendance()" class="bg-green-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-green-700 transition-colors text-sm flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-floppy-disk"></i> Save
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold w-16">Roll No</th>
+                                    <th class="px-5 py-3 font-bold">Student Name</th>
+                                    <th class="px-5 py-3 font-bold text-center">Present</th>
+                                    <th class="px-5 py-3 font-bold text-center">Absent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody" class="divide-y divide-slate-100">
+                                <tr><td colspan="4" class="px-5 py-10 text-center text-slate-400">Please select Date, Trade, and Batch to load students.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -934,6 +980,8 @@
     function saveSubjects(data) { localStorage.setItem('itiSubjects', JSON.stringify(data)); }
     function getSessions() { return JSON.parse(localStorage.getItem('itiSessions') || '[]'); }
     function saveSessions(data) { localStorage.setItem('itiSessions', JSON.stringify(data)); }
+    function getAttendance() { return JSON.parse(localStorage.getItem('itiAttendance') || '[]'); }
+    function saveAttendanceData(data) { localStorage.setItem('itiAttendance', JSON.stringify(data)); }
 
     // Init Defaults for Academics if empty
     if(getTrades().length === 0) {
@@ -1018,6 +1066,7 @@
         'trades': ['Trade Management', 'Manage ITI trades and seats'],
         'subjects': ['Subject Management', 'Manage subjects for trades'],
         'sessions': ['Academic Sessions', 'Manage active academic years'],
+        'attendance': ['Daily Attendance', 'Mark and view student attendance'],
         'notices': ['Notice Board', 'Post and manage notices'],
         'materials': ['Study Materials', 'Upload and share study resources'],
         'records': ['Student Records', 'Update attendance and fee records'],
@@ -1053,6 +1102,10 @@
         if (name === 'notices') fetchNotices();
         if (name === 'materials') fetchMaterials();
         if (name === 'accounts') fetchAccounts();
+        if (name === 'attendance') {
+            document.getElementById('attDate').valueAsDate = new Date();
+            document.getElementById('attendanceTableBody').innerHTML = '<tr><td colspan="4" class="px-5 py-10 text-center text-slate-400">Please select Date, Trade, and Batch to load students.</td></tr>';
+        }
     }
 
     // ========================
@@ -1997,6 +2050,91 @@
         renderSessions();
         populateDynamicDropdowns();
         showToast('Session deleted.', 'info');
+    }
+
+    // ========================
+    // ATTENDANCE
+    // ========================
+    function loadAttendance() {
+        const date = document.getElementById('attDate').value;
+        const trade = document.getElementById('attTrade').value;
+        const batch = document.getElementById('attBatch').value;
+        
+        if(!date || !trade || !batch) {
+            showToast('Please select Date, Trade, and Batch', 'error');
+            return;
+        }
+
+        const students = getStudents().filter(s => s.trade === trade && s.batch === batch);
+        const tbody = document.getElementById('attendanceTableBody');
+        
+        if(students.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">No students found for this Trade and Batch.</td></tr>';
+            return;
+        }
+
+        const attendanceRecords = getAttendance();
+        const existingRecord = attendanceRecords.find(a => a.date === date && a.trade === trade && a.batch === batch);
+        const records = existingRecord ? existingRecord.records : {};
+
+        tbody.innerHTML = students.map(s => {
+            const isPresent = records[s.id] === 'Present';
+            const isAbsent = records[s.id] === 'Absent';
+            const checkP = isPresent || !isAbsent ? 'checked' : '';
+            const checkA = isAbsent ? 'checked' : '';
+            
+            return `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-slate-600">${s.rollNo}</td>
+                <td class="px-5 py-3 font-semibold text-slate-800">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center text-[10px] font-bold">${avatarInitials(s.name)}</div>
+                        ${s.name}
+                    </div>
+                </td>
+                <td class="px-5 py-3 text-center">
+                    <input type="radio" name="att_${s.id}" value="Present" class="w-4 h-4 text-green-600 focus:ring-green-500" ${checkP}>
+                </td>
+                <td class="px-5 py-3 text-center">
+                    <input type="radio" name="att_${s.id}" value="Absent" class="w-4 h-4 text-red-600 focus:ring-red-500" ${checkA}>
+                </td>
+            </tr>
+            `;
+        }).join('');
+    }
+
+    function saveAttendance() {
+        const date = document.getElementById('attDate').value;
+        const trade = document.getElementById('attTrade').value;
+        const batch = document.getElementById('attBatch').value;
+        
+        if(!date || !trade || !batch) {
+            showToast('Please load students first.', 'error');
+            return;
+        }
+
+        const students = getStudents().filter(s => s.trade === trade && s.batch === batch);
+        if(students.length === 0) return;
+
+        const records = {};
+        students.forEach(s => {
+            const radios = document.getElementsByName('att_' + s.id);
+            let status = 'Present';
+            for(let r of radios) { if(r.checked) status = r.value; }
+            records[s.id] = status;
+        });
+
+        let attendanceData = getAttendance();
+        const index = attendanceData.findIndex(a => a.date === date && a.trade === trade && a.batch === batch);
+        
+        if(index > -1) {
+            attendanceData[index].records = records;
+        } else {
+            attendanceData.push({ date, trade, batch, records });
+        }
+        
+        saveAttendanceData(attendanceData);
+        showToast('Attendance saved successfully!');
     }
 
     // ========================
