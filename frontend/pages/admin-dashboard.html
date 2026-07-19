@@ -157,6 +157,28 @@
             <a href="#" id="nav-messages" onclick="showSection('messages')" class="nav-link">
                 <i class="fa-solid fa-envelope w-4 text-center"></i> <span>Messages</span>
             </a>
+            <!-- Website CMS -->
+            <div class="pt-4 pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Website CMS</p>
+            </div>
+            <a href="#" id="nav-cms-hero" onclick="showSection('cms-hero')" class="nav-link">
+                <i class="fa-solid fa-images w-4 text-center"></i> <span>Hero Slider</span>
+            </a>
+            <a href="#" id="nav-cms-notices" onclick="showSection('cms-notices')" class="nav-link">
+                <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span>Notices & News</span>
+            </a>
+            <a href="#" id="nav-cms-gallery" onclick="showSection('cms-gallery')" class="nav-link">
+                <i class="fa-solid fa-camera-retro w-4 text-center"></i> <span>Gallery</span>
+            </a>
+            <a href="#" id="nav-cms-testimonials" onclick="showSection('cms-testimonials')" class="nav-link">
+                <i class="fa-solid fa-quote-left w-4 text-center"></i> <span>Testimonials</span>
+            </a>
+            <a href="#" id="nav-cms-recruiters" onclick="showSection('cms-recruiters')" class="nav-link">
+                <i class="fa-solid fa-building w-4 text-center"></i> <span>Recruiters</span>
+            </a>
+            <a href="#" id="nav-cms-settings" onclick="showSection('cms-settings')" class="nav-link">
+                <i class="fa-solid fa-globe w-4 text-center"></i> <span>Site Settings</span>
+            </a>
         </nav>
 
         <div class="p-3 border-t border-white/10">
@@ -777,6 +799,118 @@
                 </div>
             </div>
 
+            </div>
+
+            <!-- ===== CMS SECTIONS ===== -->
+            
+            <!-- Hero Slider -->
+            <div id="section-cms-hero" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Add Hero Slide</h3>
+                    <form onsubmit="saveHeroSlide(event)" class="flex gap-4">
+                        <input type="url" id="heroUrl" required placeholder="Image URL (Unsplash etc.)" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add Slide</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left text-sm"><tbody id="heroTableBody" class="divide-y divide-slate-100"></tbody></table>
+                </div>
+            </div>
+
+            <!-- Notices -->
+            <div id="section-cms-notices" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Add Notice/News</h3>
+                    <form onsubmit="saveNotice(event)" class="grid grid-cols-2 gap-4">
+                        <input type="text" id="noticeTitle" required placeholder="Notice Title" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="date" id="noticeDate" required class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <select id="noticeTag" class="px-4 py-2 border border-slate-200 rounded-xl">
+                            <option value="General">General</option>
+                            <option value="Urgent">Urgent</option>
+                            <option value="Placement">Placement</option>
+                        </select>
+                        <input type="text" id="noticeDesc" required placeholder="Short Description" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <button type="submit" class="col-span-2 bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Publish Notice</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left text-sm"><tbody id="noticesTableBody" class="divide-y divide-slate-100"></tbody></table>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div id="section-cms-gallery" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Add Gallery Image</h3>
+                    <form onsubmit="saveGallery(event)" class="flex gap-4">
+                        <input type="url" id="galUrl" required placeholder="Image URL" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="galCaption" required placeholder="Caption" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <select id="galCat" class="px-4 py-2 border border-slate-200 rounded-xl">
+                            <option value="campus">Campus</option>
+                            <option value="events">Events</option>
+                            <option value="workshops">Workshops</option>
+                        </select>
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 p-5 grid grid-cols-4 gap-4" id="galleryGrid"></div>
+            </div>
+
+            <!-- Testimonials -->
+            <div id="section-cms-testimonials" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Add Testimonial</h3>
+                    <form onsubmit="saveTestimonial(event)" class="grid grid-cols-2 gap-4">
+                        <input type="text" id="testName" required placeholder="Student Name" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="testCourse" required placeholder="Course (e.g. Electrician 2024)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <textarea id="testText" required placeholder="Testimonial text..." class="col-span-2 px-4 py-2 border border-slate-200 rounded-xl"></textarea>
+                        <button type="submit" class="col-span-2 bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add Testimonial</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left text-sm"><tbody id="testTableBody" class="divide-y divide-slate-100"></tbody></table>
+                </div>
+            </div>
+
+            <!-- Recruiters -->
+            <div id="section-cms-recruiters" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Add Recruiter Logo</h3>
+                    <form onsubmit="saveRecruiter(event)" class="flex gap-4">
+                        <input type="text" id="recName" required placeholder="Company Name" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="url" id="recLogo" required placeholder="Logo Image URL" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add</button>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 p-5 grid grid-cols-4 gap-4" id="recruitersGrid"></div>
+            </div>
+
+            <!-- Settings -->
+            <div id="section-cms-settings" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Homepage Stats</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="setStatStudents" placeholder="Students Enrolled (e.g. 2500+)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="setStatFaculty" placeholder="Expert Faculty (e.g. 120+)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="setStatCourses" placeholder="Courses (e.g. 15+)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="setStatPlacement" placeholder="Placement (e.g. 98%)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                    </div>
+                </div>
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Director's Message</h3>
+                    <textarea id="setDirMsg" rows="3" class="w-full px-4 py-2 border border-slate-200 rounded-xl" placeholder="Director's vision text..."></textarea>
+                </div>
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">Contact Info (Footer & Header)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="setContactPhone" placeholder="Phone (e.g. +91-6209303249)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="setContactEmail" placeholder="Email (e.g. admissions@...)" class="px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="text" id="setContactAddress" placeholder="Full Address" class="col-span-2 px-4 py-2 border border-slate-200 rounded-xl">
+                    </div>
+                </div>
+                <button onclick="saveSiteSettings()" class="bg-brandBlue text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 shadow-lg">Save All Settings</button>
+            </div>
+
         </div><!-- end mainContent -->
     </main>
 
@@ -983,6 +1117,33 @@
     function getAttendance() { return JSON.parse(localStorage.getItem('itiAttendance') || '[]'); }
     function saveAttendanceData(data) { localStorage.setItem('itiAttendance', JSON.stringify(data)); }
 
+    function getCmsData(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
+    function setCmsData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+    // CMS Defaults
+    if(getCmsData('itiCmsHeroSlider').length === 0) {
+        setCmsData('itiCmsHeroSlider', [
+            {id: 1, url: 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop'},
+            {id: 2, url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop'}
+        ]);
+    }
+    if(getCmsData('itiCmsNotices').length === 0) {
+        setCmsData('itiCmsNotices', [{id:1, title: 'Welcome to Excellence ITI', date: '2026-08-01', tag: 'General', desc: 'Admissions are now open for all trades.'}]);
+    }
+    if(getCmsData('itiCmsTestimonials').length === 0) {
+        setCmsData('itiCmsTestimonials', [{id:1, name: 'Rahul Kumar', course: 'Electrician', text: 'Great institute with 100% placement!'}]);
+    }
+    if(getCmsData('itiCmsRecruiters').length === 0) {
+        setCmsData('itiCmsRecruiters', [{id:1, name: 'Maruti Suzuki', url: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Suzuki_logo_2.svg'}]);
+    }
+    if(!localStorage.getItem('itiCmsConfig')) {
+        localStorage.setItem('itiCmsConfig', JSON.stringify({
+            stats: { students: '2500+', faculty: '120+', courses: '15+', placement: '98%' },
+            dirMsg: 'Empowering youth through world-class technical education.',
+            contact: { phone: '+91-6209303249', email: 'anmolsharma8783@gmail.com', address: 'Excellence ITI Campus, Main Industrial Estate, City - 400001' }
+        }));
+    }
+
     // Init Defaults for Academics if empty
     if(getTrades().length === 0) {
         saveTrades([{id: 1, name: 'Electrician', duration: '2 Years', seats: 40}, {id: 2, name: 'Fitter', duration: '2 Years', seats: 40}]);
@@ -1072,6 +1233,12 @@
         'records': ['Student Records', 'Update attendance and fee records'],
         'accounts': ['Student Accounts', 'Create and manage student login accounts'],
         'messages': ['Contact Messages', 'View inquiry messages from public'],
+        'cms-hero': ['Hero Slider CMS', 'Manage homepage slider images'],
+        'cms-notices': ['Notice Board CMS', 'Manage public notices and news'],
+        'cms-gallery': ['Gallery CMS', 'Manage campus photos'],
+        'cms-testimonials': ['Testimonials CMS', 'Manage student reviews'],
+        'cms-recruiters': ['Recruiters CMS', 'Manage company logos'],
+        'cms-settings': ['Site Settings', 'Manage homepage stats and text'],
     };
 
     function showSection(name) {
@@ -1102,6 +1269,7 @@
         if (name === 'notices') fetchNotices();
         if (name === 'materials') fetchMaterials();
         if (name === 'accounts') fetchAccounts();
+        if (name.startsWith('cms-')) renderCMS();
         if (name === 'attendance') {
             document.getElementById('attDate').valueAsDate = new Date();
             document.getElementById('attendanceTableBody').innerHTML = '<tr><td colspan="4" class="px-5 py-10 text-center text-slate-400">Please select Date, Trade, and Batch to load students.</td></tr>';
@@ -2135,6 +2303,73 @@
         
         saveAttendanceData(attendanceData);
         showToast('Attendance saved successfully!');
+    }
+
+    // ========================
+    // CMS LOGIC
+    // ========================
+    function renderCMS() {
+        const heroes = getCmsData('itiCmsHeroSlider');
+        if(document.getElementById('heroTableBody')) document.getElementById('heroTableBody').innerHTML = heroes.map(h => `<tr><td class="p-3"><img src="${h.url}" class="h-12 w-20 object-cover rounded"></td><td class="p-3 text-right"><button onclick="delCms('itiCmsHeroSlider', ${h.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+
+        const notices = getCmsData('itiCmsNotices');
+        if(document.getElementById('noticesTableBody')) document.getElementById('noticesTableBody').innerHTML = notices.map(n => `<tr><td class="p-3 font-bold">${n.title}</td><td class="p-3">${n.date}</td><td class="p-3 text-right"><button onclick="delCms('itiCmsNotices', ${n.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+
+        const gallery = getCmsData('itiCmsGallery');
+        if(document.getElementById('galleryGrid')) document.getElementById('galleryGrid').innerHTML = gallery.map(g => `<div class="relative group"><img src="${g.url}" class="h-24 w-full object-cover rounded"><button onclick="delCms('itiCmsGallery', ${g.id})" class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full shadow"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+
+        const tests = getCmsData('itiCmsTestimonials');
+        if(document.getElementById('testTableBody')) document.getElementById('testTableBody').innerHTML = tests.map(t => `<tr><td class="p-3 font-bold">${t.name}</td><td class="p-3">${t.course}</td><td class="p-3 text-right"><button onclick="delCms('itiCmsTestimonials', ${t.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+
+        const recs = getCmsData('itiCmsRecruiters');
+        if(document.getElementById('recruitersGrid')) document.getElementById('recruitersGrid').innerHTML = recs.map(r => `<div class="relative group bg-white p-2 border border-slate-100 rounded"><img src="${r.url}" class="h-12 w-full object-contain"><button onclick="delCms('itiCmsRecruiters', ${r.id})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full"><i class="fa-solid fa-xmark text-xs"></i></button></div>`).join('');
+
+        const cfg = JSON.parse(localStorage.getItem('itiCmsConfig') || '{}');
+        if(document.getElementById('setStatStudents')) {
+            if(cfg.stats) {
+                document.getElementById('setStatStudents').value = cfg.stats.students || '';
+                document.getElementById('setStatFaculty').value = cfg.stats.faculty || '';
+                document.getElementById('setStatCourses').value = cfg.stats.courses || '';
+                document.getElementById('setStatPlacement').value = cfg.stats.placement || '';
+            }
+            if(cfg.contact) {
+                document.getElementById('setContactPhone').value = cfg.contact.phone || '';
+                document.getElementById('setContactEmail').value = cfg.contact.email || '';
+                document.getElementById('setContactAddress').value = cfg.contact.address || '';
+            }
+            document.getElementById('setDirMsg').value = cfg.dirMsg || '';
+        }
+    }
+
+    function delCms(key, id) {
+        if(!confirm('Delete?')) return;
+        setCmsData(key, getCmsData(key).filter(x => x.id !== id));
+        renderCMS();
+        showToast('Deleted');
+    }
+
+    function saveHeroSlide(e) { e.preventDefault(); const d = getCmsData('itiCmsHeroSlider'); d.push({id: Date.now(), url: document.getElementById('heroUrl').value}); setCmsData('itiCmsHeroSlider', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    function saveNotice(e) { e.preventDefault(); const d = getCmsData('itiCmsNotices'); d.push({id: Date.now(), title: document.getElementById('noticeTitle').value, date: document.getElementById('noticeDate').value, tag: document.getElementById('noticeTag').value, desc: document.getElementById('noticeDesc').value}); setCmsData('itiCmsNotices', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    function saveGallery(e) { e.preventDefault(); const d = getCmsData('itiCmsGallery'); d.push({id: Date.now(), url: document.getElementById('galUrl').value, caption: document.getElementById('galCaption').value, cat: document.getElementById('galCat').value}); setCmsData('itiCmsGallery', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    function saveTestimonial(e) { e.preventDefault(); const d = getCmsData('itiCmsTestimonials'); d.push({id: Date.now(), name: document.getElementById('testName').value, course: document.getElementById('testCourse').value, text: document.getElementById('testText').value}); setCmsData('itiCmsTestimonials', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    function saveRecruiter(e) { e.preventDefault(); const d = getCmsData('itiCmsRecruiters'); d.push({id: Date.now(), name: document.getElementById('recName').value, url: document.getElementById('recLogo').value}); setCmsData('itiCmsRecruiters', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    
+    function saveSiteSettings() {
+        localStorage.setItem('itiCmsConfig', JSON.stringify({
+            stats: {
+                students: document.getElementById('setStatStudents').value,
+                faculty: document.getElementById('setStatFaculty').value,
+                courses: document.getElementById('setStatCourses').value,
+                placement: document.getElementById('setStatPlacement').value
+            },
+            contact: {
+                phone: document.getElementById('setContactPhone').value,
+                email: document.getElementById('setContactEmail').value,
+                address: document.getElementById('setContactAddress').value
+            },
+            dirMsg: document.getElementById('setDirMsg').value
+        }));
+        showToast('Settings Saved!');
     }
 
     // ========================
