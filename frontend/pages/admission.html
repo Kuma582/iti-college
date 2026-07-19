@@ -133,6 +133,18 @@
                         </li>
                     </ul>
                 </div>
+
+                <!-- Track Admission Status -->
+                <div class="bg-gradient-to-br from-brandBlue to-blue-800 p-8 rounded-[2rem] shadow-lg text-white relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                    <h3 class="text-xl font-poppins font-bold mb-2 relative z-10"><i class="fa-solid fa-magnifying-glass-chart mr-2 text-brandGold"></i>Track Admission Status</h3>
+                    <p class="text-sm text-blue-200 mb-5 relative z-10">Enter your Mobile Number or Application ID to check your status.</p>
+                    <div class="relative z-10 flex gap-2">
+                        <input type="text" id="trackInput" placeholder="App ID or Mobile No." class="w-full bg-white/10 border border-white/20 text-white placeholder-blue-300 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-brandGold focus:ring-1 focus:ring-brandGold transition-all">
+                        <button onclick="trackStatus()" class="bg-brandGold text-brandBlue font-bold px-5 rounded-xl hover:bg-yellow-400 transition-colors">Track</button>
+                    </div>
+                    <div id="trackResult" class="mt-4 hidden p-4 rounded-xl bg-white/10 border border-white/20 text-sm"></div>
+                </div>
             </div>
 
             <!-- Form Column -->
@@ -230,9 +242,9 @@
 
         document.getElementById('admissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fullName = document.getElementById('admName').value;
-            const mobile = document.getElementById('admMobile').value;
-            const email = document.getElementById('admEmail').value;
+            const fullName = document.getElementById('admName').value.trim();
+            const mobile = document.getElementById('admMobile').value.trim();
+            const email = document.getElementById('admEmail').value.trim();
             const dob = document.getElementById('admDob').value;
             const trade = document.getElementById('admTrade').value;
             
@@ -244,29 +256,72 @@
             alertMsg.classList.add('hidden');
             
             try {
-                const response = await fetch('/api/admissions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fullName, mobile, email, dob, trade })
-                });
+                // Save to localStorage for demo purposes
+                const admissions = JSON.parse(localStorage.getItem('itiAdmissions') || '[]');
+                const appId = 'APP-' + Math.floor(10000 + Math.random() * 90000);
                 
-                if (response.ok) {
-                    alertMsg.classList.remove('hidden');
-                    alertMsg.className = 'text-center font-bold text-sm mt-4 text-green-600';
-                    alertMsg.innerText = 'Application submitted successfully! We will contact you soon.';
-                    e.target.reset();
-                } else {
-                    throw new Error('Failed to submit');
-                }
+                const newAdmission = {
+                    id: appId,
+                    fullName, mobile, email, dob, trade,
+                    status: 'Pending',
+                    createdAt: new Date().toISOString()
+                };
+                
+                admissions.push(newAdmission);
+                localStorage.setItem('itiAdmissions', JSON.stringify(admissions));
+                
+                // Simulate network delay
+                await new Promise(r => setTimeout(r, 800));
+                
+                alertMsg.classList.remove('hidden');
+                alertMsg.className = 'text-center font-bold text-sm mt-4 text-green-600 bg-green-50 p-3 rounded-xl border border-green-200';
+                alertMsg.innerHTML = `<i class="fa-solid fa-check-circle"></i> Application Submitted!<br>Your App ID is <b>${appId}</b>. You can use it to track your status.`;
+                e.target.reset();
             } catch (error) {
                 alertMsg.classList.remove('hidden');
-                alertMsg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                alertMsg.className = 'text-center font-bold text-sm mt-4 text-red-600 bg-red-50 p-3 rounded-xl border border-red-200';
                 alertMsg.innerText = 'Error: Could not submit application. Please try again.';
             } finally {
                 btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane"></i>';
                 btn.disabled = false;
             }
         });
+
+        // Status Tracking Logic
+        function trackStatus() {
+            const input = document.getElementById('trackInput').value.trim().toLowerCase();
+            const resultBox = document.getElementById('trackResult');
+            
+            if (!input) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = '<span class="text-red-300"><i class="fa-solid fa-circle-exclamation"></i> Please enter Mobile No. or App ID.</span>';
+                return;
+            }
+            
+            const admissions = JSON.parse(localStorage.getItem('itiAdmissions') || '[]');
+            const found = admissions.find(a => a.id.toLowerCase() === input || a.mobile === input);
+            
+            resultBox.classList.remove('hidden');
+            if (found) {
+                const statusColors = {
+                    'Pending': 'text-yellow-300',
+                    'Approved': 'text-green-300',
+                    'Rejected': 'text-red-300'
+                };
+                const color = statusColors[found.status] || 'text-white';
+                
+                resultBox.innerHTML = `
+                    <div class="space-y-1">
+                        <p><span class="text-blue-200 text-xs uppercase tracking-wider">Applicant Name:</span> <br><strong class="text-white">${found.fullName}</strong></p>
+                        <p><span class="text-blue-200 text-xs uppercase tracking-wider">Trade:</span> <br><strong class="text-white">${found.trade}</strong></p>
+                        <p class="mt-2 pt-2 border-t border-white/20"><span class="text-blue-200 text-xs uppercase tracking-wider">Current Status:</span> <br><strong class="${color} text-lg font-black tracking-wide">${found.status.toUpperCase()}</strong></p>
+                        ${found.status === 'Approved' ? '<p class="text-xs text-green-200 mt-2">Congratulations! Please visit the college for fee payment.</p>' : ''}
+                    </div>
+                `;
+            } else {
+                resultBox.innerHTML = '<span class="text-red-300"><i class="fa-solid fa-circle-xmark"></i> No application found with that ID or Mobile Number.</span>';
+            }
+        }
     </script>
     <script src="../assets/js/i18n-data.js"></script>
     <script src="../assets/js/premium-features.js"></script>

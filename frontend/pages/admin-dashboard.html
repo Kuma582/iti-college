@@ -42,9 +42,9 @@
         .modal-box { background: #fff; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); max-height: 90vh; overflow-y: auto; width: 100%; }
         .stat-card { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s, transform 0.2s; position: relative; overflow: hidden; }
         .stat-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.10); transform: translateY(-2px); }
-        .badge-paid { background: #dcfce7; color: #16a34a; }
+        .badge-paid, .badge-approved { background: #dcfce7; color: #16a34a; }
         .badge-pending { background: #fef9c3; color: #ca8a04; }
-        .badge-overdue { background: #fee2e2; color: #dc2626; }
+        .badge-overdue, .badge-rejected { background: #fee2e2; color: #dc2626; }
         .badge-trade { background: #dbeafe; color: #1d4ed8; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease forwards; }
@@ -121,6 +121,20 @@
                 <i class="fa-solid fa-file-circle-plus w-4 text-center"></i> <span>Admissions</span>
             </a>
 
+            <!-- Academics -->
+            <div class="pt-4 pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Academics</p>
+            </div>
+            <a href="#" id="nav-trades" onclick="showSection('trades')" class="nav-link">
+                <i class="fa-solid fa-screwdriver-wrench w-4 text-center"></i> <span>Trades</span>
+            </a>
+            <a href="#" id="nav-subjects" onclick="showSection('subjects')" class="nav-link">
+                <i class="fa-solid fa-book w-4 text-center"></i> <span>Subjects</span>
+            </a>
+            <a href="#" id="nav-sessions" onclick="showSection('sessions')" class="nav-link">
+                <i class="fa-solid fa-calendar-days w-4 text-center"></i> <span>Sessions</span>
+            </a>
+
             <!-- Portal -->
             <div class="pt-4 pb-2 px-2">
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portal</p>
@@ -170,7 +184,7 @@
             <div class="flex items-center gap-3">
                 <div class="hidden sm:flex flex-col items-end">
                     <span class="text-xs font-semibold text-slate-700">Administrator</span>
-                    <span class="text-[10px] text-slate-400">Excellence ITI</span>
+                    <span class="text-[10px] text-slate-400" id="headerCurrentSession">Excellence ITI</span>
                 </div>
                 <div class="w-10 h-10 bg-gradient-to-br from-brandBlue to-blue-700 text-white rounded-full flex items-center justify-center font-bold shadow-md text-sm border-2 border-brandGold/40">AD</div>
             </div>
@@ -306,16 +320,8 @@
                             <input id="studentSearch" type="text" placeholder="Search students..." oninput="renderStudentsTable()"
                                 class="pl-8 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none w-56 transition-all">
                         </div>
-                        <select id="filterTrade" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
+                        <select id="filterTrade" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all dynamic-trades-filter">
                             <option value="">All Trades</option>
-                            <option>Electrician</option>
-                            <option>Fitter</option>
-                            <option>Welder</option>
-                            <option>Diesel Mechanic</option>
-                            <option>Computer Operator</option>
-                            <option>Draughtsman Civil</option>
-                            <option>Wireman</option>
-                            <option>Plumber</option>
                         </select>
                         <select id="filterFeeStatus" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
                             <option value="">All Fee Status</option>
@@ -323,11 +329,8 @@
                             <option>Pending</option>
                             <option>Overdue</option>
                         </select>
-                        <select id="filterBatch" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
+                        <select id="filterBatch" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all dynamic-sessions-filter">
                             <option value="">All Batches</option>
-                            <option>2023-24</option>
-                            <option>2024-25</option>
-                            <option>2025-26</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
@@ -406,12 +409,11 @@
                                     <th class="px-5 py-3 font-bold">Subject</th>
                                     <th class="px-5 py-3 font-bold">Qualification</th>
                                     <th class="px-5 py-3 font-bold">Mobile</th>
-                                    <th class="px-5 py-3 font-bold">Experience</th>
                                     <th class="px-5 py-3 font-bold text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="teachersTableBody" class="divide-y divide-slate-100">
-                                <tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>
+                                <tr><td colspan="5" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -474,7 +476,7 @@
                 <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
                     <div class="px-5 py-4 border-b border-slate-100 bg-white/50 flex justify-between items-center">
                         <h3 class="font-bold text-slate-800 text-base">All Admission Applications</h3>
-                        <button onclick="fetchAdmissions()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                        <button onclick="renderAdmissions()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
                             <i class="fa-solid fa-rotate-right text-xs"></i>
                         </button>
                     </div>
@@ -482,22 +484,132 @@
                         <table class="w-full text-left text-sm">
                             <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-5 py-3 font-bold">ID</th>
+                                    <th class="px-5 py-3 font-bold">App ID</th>
                                     <th class="px-5 py-3 font-bold">Applicant Name</th>
                                     <th class="px-5 py-3 font-bold">Trade</th>
                                     <th class="px-5 py-3 font-bold">Mobile / Email</th>
-                                    <th class="px-5 py-3 font-bold">Date of Birth</th>
-                                    <th class="px-5 py-3 font-bold">Applied On</th>
+                                    <th class="px-5 py-3 font-bold">Status</th>
                                     <th class="px-5 py-3 font-bold text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="allAdmissionsTable" class="divide-y divide-slate-100">
-                                <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Loading data...</td></tr>
+                                <tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Loading data...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
+            <!-- ===== SECTION: Trades ===== -->
+            <div id="section-trades" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-screwdriver-wrench text-brandGold"></i> Add/Edit Trade
+                    </h3>
+                    <form onsubmit="saveTrade(event)" id="tradeForm" class="space-y-4">
+                        <input type="hidden" id="editTradeId">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" id="trName" placeholder="Trade Name (e.g. Electrician)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <select id="trDuration" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                                <option value="">Select Duration</option>
+                                <option>1 Year</option>
+                                <option>2 Years</option>
+                            </select>
+                            <input type="number" id="trSeats" placeholder="Total Seats" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Save Trade</button>
+                            <button type="button" onclick="resetTradeForm()" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors text-sm">Reset</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Manage Trades</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold">Trade Name</th>
+                                    <th class="px-5 py-3 font-bold">Duration</th>
+                                    <th class="px-5 py-3 font-bold">Total Seats</th>
+                                    <th class="px-5 py-3 font-bold text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tradesTableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Subjects ===== -->
+            <div id="section-subjects" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-book text-brandGold"></i> Add/Edit Subject
+                    </h3>
+                    <form onsubmit="saveSubject(event)" id="subjectForm" class="space-y-4">
+                        <input type="hidden" id="editSubjectId">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" id="subName" placeholder="Subject Name (e.g. Trade Theory)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <select id="subTrade" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm dynamic-trades-dropdown">
+                                <option value="">Select Trade</option>
+                            </select>
+                            <input type="text" id="subSem" placeholder="Semester/Year (e.g. Sem 1)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Save Subject</button>
+                            <button type="button" onclick="resetSubjectForm()" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors text-sm">Reset</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Manage Subjects</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold">Subject Name</th>
+                                    <th class="px-5 py-3 font-bold">Trade</th>
+                                    <th class="px-5 py-3 font-bold">Sem / Year</th>
+                                    <th class="px-5 py-3 font-bold text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectsTableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Sessions ===== -->
+            <div id="section-sessions" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-brandGold"></i> Academic Sessions
+                    </h3>
+                    <form onsubmit="saveSession(event)" class="space-y-4">
+                        <div class="flex gap-4">
+                            <input type="text" id="sessName" placeholder="Session Name (e.g. 2026-27)" required class="flex-1 px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Add Session</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Manage Sessions</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold">Session</th>
+                                    <th class="px-5 py-3 font-bold text-center">Status</th>
+                                    <th class="px-5 py-3 font-bold text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsTableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- ===== SECTION: Notices ===== -->
             <div id="section-notices" class="section-content fade-in space-y-5">
@@ -665,25 +777,14 @@
                         </div>
                         <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Trade *</label>
-                            <select id="sTrade" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                            <select id="sTrade" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm dynamic-trades-dropdown">
                                 <option value="">Select Trade</option>
-                                <option>Electrician</option>
-                                <option>Fitter</option>
-                                <option>Welder</option>
-                                <option>Diesel Mechanic</option>
-                                <option>Computer Operator</option>
-                                <option>Draughtsman Civil</option>
-                                <option>Wireman</option>
-                                <option>Plumber</option>
                             </select>
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Batch *</label>
-                            <select id="sBatch" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                            <select id="sBatch" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm dynamic-sessions-dropdown">
                                 <option value="">Select Batch</option>
-                                <option>2023-24</option>
-                                <option>2024-25</option>
-                                <option>2025-26</option>
                             </select>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -726,10 +827,10 @@
         </div>
     </div>
 
-    <!-- Student Profile Panel -->
+    <!-- Generic Profile Slide-in Panel (Used for Student & Faculty) -->
     <div id="profilePanel" class="profile-panel hidden" style="top:0; transform: translateX(100%); transition: transform 0.3s ease;">
         <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-brandBlue text-white">
-            <h3 class="font-poppins font-bold text-base">Student Profile</h3>
+            <h3 class="font-poppins font-bold text-base" id="profilePanelTitle">Profile</h3>
             <button onclick="closeProfile()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-xmark text-sm"></i>
             </button>
@@ -825,6 +926,22 @@
     function saveStudents(data) { localStorage.setItem('itiStudents', JSON.stringify(data)); }
     function getTeachers() { return JSON.parse(localStorage.getItem('itiTeachers') || '[]'); }
     function saveTeachers(data) { localStorage.setItem('itiTeachers', JSON.stringify(data)); }
+    function getAdmissions() { return JSON.parse(localStorage.getItem('itiAdmissions') || '[]'); }
+    function saveAdmissions(data) { localStorage.setItem('itiAdmissions', JSON.stringify(data)); }
+    function getTrades() { return JSON.parse(localStorage.getItem('itiTrades') || '[]'); }
+    function saveTrades(data) { localStorage.setItem('itiTrades', JSON.stringify(data)); }
+    function getSubjects() { return JSON.parse(localStorage.getItem('itiSubjects') || '[]'); }
+    function saveSubjects(data) { localStorage.setItem('itiSubjects', JSON.stringify(data)); }
+    function getSessions() { return JSON.parse(localStorage.getItem('itiSessions') || '[]'); }
+    function saveSessions(data) { localStorage.setItem('itiSessions', JSON.stringify(data)); }
+
+    // Init Defaults for Academics if empty
+    if(getTrades().length === 0) {
+        saveTrades([{id: 1, name: 'Electrician', duration: '2 Years', seats: 40}, {id: 2, name: 'Fitter', duration: '2 Years', seats: 40}]);
+    }
+    if(getSessions().length === 0) {
+        saveSessions([{id: 1, name: '2023-25', isActive: false}, {id: 2, name: '2024-26', isActive: true}]);
+    }
 
     // ========================
     // UTILITIES
@@ -837,6 +954,11 @@
 
     function feesBadge(status) {
         const map = { 'Paid': 'badge-paid', 'Pending': 'badge-pending', 'Overdue': 'badge-overdue' };
+        return `<span class="text-xs font-bold px-2 py-1 rounded-lg ${map[status] || 'bg-slate-100 text-slate-600'}">${status || 'N/A'}</span>`;
+    }
+
+    function statusBadge(status) {
+        const map = { 'Approved': 'badge-approved', 'Pending': 'badge-pending', 'Rejected': 'badge-rejected' };
         return `<span class="text-xs font-bold px-2 py-1 rounded-lg ${map[status] || 'bg-slate-100 text-slate-600'}">${status || 'N/A'}</span>`;
     }
 
@@ -861,15 +983,41 @@
         window.location.href = 'login.html';
     }
 
+    function populateDynamicDropdowns() {
+        const trades = getTrades();
+        const sessions = getSessions();
+        const activeSession = sessions.find(s => s.isActive) || sessions[0];
+        
+        if (activeSession) {
+            document.getElementById('headerCurrentSession').innerText = 'Session: ' + activeSession.name;
+        }
+
+        // Trades Dropdowns
+        const tradeOptions = '<option value="">Select Trade</option>' + trades.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+        document.querySelectorAll('.dynamic-trades-dropdown').forEach(el => el.innerHTML = tradeOptions);
+        document.querySelectorAll('.dynamic-trades-filter').forEach(el => el.innerHTML = '<option value="">All Trades</option>' + trades.map(t => `<option value="${t.name}">${t.name}</option>`).join(''));
+
+        // Sessions Dropdowns
+        const sessionOptions = '<option value="">Select Batch/Session</option>' + sessions.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+        document.querySelectorAll('.dynamic-sessions-dropdown').forEach(el => {
+            el.innerHTML = sessionOptions;
+            if(activeSession) el.value = activeSession.name; // pre-select
+        });
+        document.querySelectorAll('.dynamic-sessions-filter').forEach(el => el.innerHTML = '<option value="">All Batches</option>' + sessions.map(s => `<option value="${s.name}">${s.name}</option>`).join(''));
+    }
+
     // ========================
     // NAVIGATION
     // ========================
     const sectionTitles = {
         'dashboard': ['Dashboard Overview', 'Welcome back to the command center!'],
         'students': ['Student Management', 'Add, edit, view and manage all students'],
-        'teachers': ['Teacher Management', 'Manage faculty and teaching staff'],
+        'teachers': ['Faculty Management', 'Manage faculty and teaching staff'],
         'fees': ['Fee Management', 'Track fee collection status'],
         'admissions': ['Admission Applications', 'View all incoming admissions'],
+        'trades': ['Trade Management', 'Manage ITI trades and seats'],
+        'subjects': ['Subject Management', 'Manage subjects for trades'],
+        'sessions': ['Academic Sessions', 'Manage active academic years'],
         'notices': ['Notice Board', 'Post and manage notices'],
         'materials': ['Study Materials', 'Upload and share study resources'],
         'records': ['Student Records', 'Update attendance and fee records'],
@@ -891,12 +1039,16 @@
         document.getElementById('headerSubtitle').innerText = titles[1];
 
         closeSidebar();
+        populateDynamicDropdowns();
 
         if (name === 'dashboard') loadDashboard();
         if (name === 'students') renderStudentsTable();
         if (name === 'teachers') renderTeachersTable();
         if (name === 'fees') renderFeesSection();
-        if (name === 'admissions') fetchAdmissions();
+        if (name === 'admissions') renderAdmissions();
+        if (name === 'trades') renderTrades();
+        if (name === 'subjects') renderSubjects();
+        if (name === 'sessions') renderSessions();
         if (name === 'messages') fetchMessages();
         if (name === 'notices') fetchNotices();
         if (name === 'materials') fetchMaterials();
@@ -921,10 +1073,12 @@
     function loadDashboard() {
         const students = getStudents();
         const teachers = getTeachers();
+        const admissions = getAdmissions();
 
         // Counts
         document.getElementById('statStudents').innerText = students.length;
         document.getElementById('statTeachers').innerText = teachers.length;
+        document.getElementById('statAdmissions').innerText = admissions.length;
 
         // Fees breakdown
         const paid = students.filter(s => s.feeStatus === 'Paid').length;
@@ -961,29 +1115,21 @@
             `).join('');
         }
 
-        // Fetch API stats (admissions count)
-        fetch(`${API_BASE}/dashboard-stats`)
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('statAdmissions').innerText = data.stats?.totalAdmissions || 0;
-                const tbody = document.getElementById('recentAdmissionsTable');
-                tbody.innerHTML = '';
-                if (!data.recentAdmissions || data.recentAdmissions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">No applications yet.</td></tr>';
-                    return;
-                }
-                data.recentAdmissions.forEach(adm => {
-                    tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-5 py-3 font-semibold text-slate-800 text-sm">${adm.fullName}</td>
-                        <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
-                        <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(adm.createdAt)}</td>
-                    </tr>`;
-                });
-            })
-            .catch(() => {
-                document.getElementById('statAdmissions').innerText = '—';
-                document.getElementById('recentAdmissionsTable').innerHTML = '<tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">Connect backend for live data.</td></tr>';
+        // Recent Admissions
+        const recentAdm = [...admissions].reverse().slice(0, 5);
+        const tbody = document.getElementById('recentAdmissionsTable');
+        tbody.innerHTML = '';
+        if (recentAdm.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">No applications yet.</td></tr>';
+        } else {
+            recentAdm.forEach(adm => {
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-3 font-semibold text-slate-800 text-sm">${adm.fullName}</td>
+                    <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
+                    <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(adm.createdAt)}</td>
+                </tr>`;
             });
+        }
     }
 
     // ========================
@@ -1033,7 +1179,7 @@
                 <td class="px-5 py-3">${feesBadge(s.feeStatus)}</td>
                 <td class="px-5 py-3">
                     <div class="flex items-center justify-center gap-1">
-                        <button onclick="viewProfile('${s.id}')" title="View Profile" class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-brandBlue flex items-center justify-center transition-colors text-xs">
+                        <button onclick="viewStudentProfile('${s.id}')" title="View Profile" class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-brandBlue flex items-center justify-center transition-colors text-xs">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         <button onclick="openEditStudent('${s.id}')" title="Edit" class="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 flex items-center justify-center transition-colors text-xs">
@@ -1055,6 +1201,8 @@
         document.getElementById('studentModalTitle').innerText = 'Add New Student';
         document.getElementById('studentForm').reset();
         document.getElementById('editStudentId').value = '';
+        const activeSess = getSessions().find(s => s.isActive);
+        if(activeSess) document.getElementById('sBatch').value = activeSess.name;
         document.getElementById('studentModal').classList.remove('hidden');
     }
 
@@ -1131,11 +1279,13 @@
     }
 
     // ========================
-    // STUDENT PROFILE
+    // PROFILES (Student / Faculty)
     // ========================
-    function viewProfile(id) {
+    function viewStudentProfile(id) {
         const s = getStudents().find(x => x.id === id);
         if (!s) return;
+        
+        document.getElementById('profilePanelTitle').innerText = 'Student Profile';
         const attPct = s.attendance || 0;
         const attColor = attPct >= 75 ? 'bg-green-500' : attPct >= 50 ? 'bg-yellow-500' : 'bg-red-500';
         const docsHtml = (s.documents && s.documents.length > 0)
@@ -1200,17 +1350,66 @@
                 </button>
             </div>
         `;
-        const panel = document.getElementById('profilePanel');
-        panel.classList.remove('hidden');
-        panel.style.transform = 'translateX(0)';
-        document.getElementById('profileOverlay').classList.remove('hidden');
+        openProfilePanel();
+    }
+
+    function viewFacultyProfile(id) {
+        const t = getTeachers().find(x => x.id === id);
+        if (!t) return;
+        
+        document.getElementById('profilePanelTitle').innerText = 'Faculty Profile';
+        
+        document.getElementById('profileContent').innerHTML = `
+            <!-- Header card -->
+            <div class="bg-gradient-to-br from-purple-700 to-indigo-800 rounded-2xl p-5 text-white mb-5 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
+                <div class="flex items-center gap-4 relative">
+                    <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-black overflow-hidden border-2 border-white/30">
+                        <span>${avatarInitials(t.name)}</span>
+                    </div>
+                    <div>
+                        <h2 class="font-poppins font-bold text-xl">${t.name}</h2>
+                        <p class="text-white/70 text-sm">Department: ${t.subject}</p>
+                        <p class="text-white/60 text-xs mt-0.5">Joined: ${formatDate(t.createdAt)}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Info Grid -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                ${profileField('Subject / Trade', t.subject, 'col-span-2 bg-purple-50 text-purple-900 border border-purple-100')}
+                ${profileField('Qualification', t.qualification || '—')}
+                ${profileField('Experience', t.experience || '—')}
+                ${profileField('Mobile', t.mobile || '—')}
+                ${profileField('Email', t.email || '—')}
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-center">
+                <i class="fa-solid fa-chalkboard-user text-3xl text-slate-300 mb-2"></i>
+                <p class="text-sm font-semibold text-slate-600">Active Faculty Member</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 pt-4 border-t border-slate-100">
+                <button onclick="closeProfile(); editTeacher('${t.id}')" class="flex-1 py-2.5 bg-brandBlue text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen"></i> Edit Details
+                </button>
+            </div>
+        `;
+        openProfilePanel();
     }
 
     function profileField(label, value, extraClass = '') {
         return `<div class="bg-slate-50 rounded-xl p-3 ${extraClass}">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">${label}</p>
-            <p class="text-sm font-semibold text-slate-800">${value || '—'}</p>
+            <p class="text-sm font-semibold ${extraClass.includes('text-') ? '' : 'text-slate-800'}">${value || '—'}</p>
         </div>`;
+    }
+
+    function openProfilePanel() {
+        const panel = document.getElementById('profilePanel');
+        panel.classList.remove('hidden');
+        panel.style.transform = 'translateX(0)';
+        document.getElementById('profileOverlay').classList.remove('hidden');
     }
 
     function closeProfile() {
@@ -1427,7 +1626,7 @@
         const teachers = getTeachers();
         const tbody = document.getElementById('teachersTableBody');
         if (teachers.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>`;
             return;
         }
         tbody.innerHTML = teachers.map(t => `
@@ -1441,13 +1640,15 @@
                 <td class="px-5 py-3 text-sm text-slate-600">${t.subject}</td>
                 <td class="px-5 py-3 text-sm text-slate-500">${t.qualification || '—'}</td>
                 <td class="px-5 py-3 text-sm text-slate-600">${t.mobile || '—'}</td>
-                <td class="px-5 py-3 text-sm text-slate-500">${t.experience || '—'}</td>
                 <td class="px-5 py-3">
                     <div class="flex items-center justify-center gap-1">
-                        <button onclick="editTeacher('${t.id}')" class="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs transition-colors">
+                        <button onclick="viewFacultyProfile('${t.id}')" title="View Profile" class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-brandBlue flex items-center justify-center transition-colors text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button onclick="editTeacher('${t.id}')" title="Edit" class="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs transition-colors">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="deleteTeacher('${t.id}')" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center text-xs transition-colors">
+                        <button onclick="deleteTeacher('${t.id}')" title="Delete" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center text-xs transition-colors">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
@@ -1559,65 +1760,248 @@
     }
 
     // ========================
-    // EXISTING API SECTIONS
+    // ADMISSIONS (from localStorage)
     // ========================
-    async function fetchAdmissions() {
-        try {
-            const res = await fetch(`${API_BASE}/admissions`);
-            if (!res.ok) throw new Error('No server');
-            const data = await res.json();
-            const tbody = document.getElementById('allAdmissionsTable');
-            tbody.innerHTML = '';
-            if (!data.admissions || data.admissions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">No applications found.</td></tr>';
-                return;
-            }
-            data.admissions.forEach(adm => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-5 py-3 text-slate-400 font-mono text-xs">#${adm.id}</td>
-                        <td class="px-5 py-3 font-semibold text-slate-800">${adm.fullName}</td>
-                        <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
-                        <td class="px-5 py-3 text-sm"><div class="font-medium text-slate-700">${adm.mobile}</div><div class="text-xs text-slate-400">${adm.email||'N/A'}</div></td>
-                        <td class="px-5 py-3 text-slate-600 text-sm">${formatDate(adm.dob)}</td>
-                        <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(adm.createdAt)}</td>
-                        <td class="px-5 py-3 text-center">
-                            <button onclick="convertToStudent(${JSON.stringify(adm).replace(/"/g,'&quot;')})" class="text-xs font-bold bg-brandBlue text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors">
-                                <i class="fa-solid fa-user-plus"></i> Enroll
-                            </button>
-                        </td>
-                    </tr>`;
+    function renderAdmissions() {
+        const admissions = getAdmissions();
+        const tbody = document.getElementById('allAdmissionsTable');
+        tbody.innerHTML = '';
+        if (admissions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">No applications found.</td></tr>';
+            return;
+        }
+        admissions.reverse().forEach(adm => {
+            const isPending = adm.status === 'Pending';
+            tbody.innerHTML += `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-3 text-slate-400 font-mono text-xs font-bold">#${adm.id}</td>
+                    <td class="px-5 py-3 font-semibold text-slate-800">${adm.fullName}</td>
+                    <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
+                    <td class="px-5 py-3 text-sm"><div class="font-medium text-slate-700">${adm.mobile}</div><div class="text-xs text-slate-400">${adm.email||'N/A'}</div></td>
+                    <td class="px-5 py-3">${statusBadge(adm.status)}</td>
+                    <td class="px-5 py-3 text-center">
+                        ${isPending ? `
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="approveAdmission('${adm.id}')" class="text-xs font-bold bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors">
+                                    <i class="fa-solid fa-check"></i> Approve
+                                </button>
+                                <button onclick="rejectAdmission('${adm.id}')" class="text-xs font-bold bg-red-100 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-200 transition-colors">
+                                    <i class="fa-solid fa-xmark"></i> Reject
+                                </button>
+                            </div>
+                        ` : `<span class="text-xs text-slate-400">Action Complete</span>`}
+                    </td>
+                </tr>`;
+        });
+    }
+
+    function approveAdmission(id) {
+        if (!confirm('Approve this application and enroll as student?')) return;
+        const admissions = getAdmissions();
+        const idx = admissions.findIndex(a => a.id === id);
+        if (idx !== -1) {
+            admissions[idx].status = 'Approved';
+            saveAdmissions(admissions);
+            
+            // Convert to student
+            const adm = admissions[idx];
+            const students = getStudents();
+            const activeSess = getSessions().find(s => s.isActive);
+            students.push({
+                id: 'STU-' + Date.now(),
+                name: adm.fullName,
+                rollNo: 'ITI-' + new Date().getFullYear() + '-' + String(students.length+1).padStart(3,'0'),
+                fatherName: '',
+                dob: adm.dob,
+                mobile: adm.mobile,
+                email: adm.email || '',
+                trade: adm.trade,
+                batch: activeSess ? activeSess.name : new Date().getFullYear() + '-' + (new Date().getFullYear()+1).toString().slice(-2),
+                feeStatus: 'Pending',
+                address: '',
+                photo: '',
+                attendance: 0,
+                results: '',
+                documents: [],
+                createdAt: new Date().toISOString(),
             });
-        } catch(err) {
-            document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Connect backend to load applications.</td></tr>';
+            saveStudents(students);
+            showToast(`${adm.fullName} Approved and Enrolled!`);
+            renderAdmissions();
+            loadDashboard();
         }
     }
 
-    function convertToStudent(adm) {
-        if (!confirm(`Enroll "${adm.fullName}" as a student?`)) return;
-        const students = getStudents();
-        students.push({
-            id: 'STU-' + Date.now(),
-            name: adm.fullName,
-            rollNo: 'ITI-' + new Date().getFullYear() + '-' + String(students.length+1).padStart(3,'0'),
-            fatherName: '',
-            dob: adm.dob,
-            mobile: adm.mobile,
-            email: adm.email || '',
-            trade: adm.trade,
-            batch: new Date().getFullYear() + '-' + (new Date().getFullYear()+1).toString().slice(-2),
-            feeStatus: 'Pending',
-            address: '',
-            photo: '',
-            attendance: 0,
-            results: '',
-            documents: [],
-            createdAt: new Date().toISOString(),
-        });
-        saveStudents(students);
-        showToast(`${adm.fullName} enrolled as student!`);
+    function rejectAdmission(id) {
+        if (!confirm('Reject this application?')) return;
+        const admissions = getAdmissions();
+        const idx = admissions.findIndex(a => a.id === id);
+        if (idx !== -1) {
+            admissions[idx].status = 'Rejected';
+            saveAdmissions(admissions);
+            showToast('Application Rejected', 'info');
+            renderAdmissions();
+        }
     }
 
+    // ========================
+    // TRADES
+    // ========================
+    function renderTrades() {
+        const trades = getTrades();
+        const tbody = document.getElementById('tradesTableBody');
+        tbody.innerHTML = trades.length ? trades.map(t => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3 font-semibold text-slate-800">${t.name}</td>
+                <td class="px-5 py-3 text-sm text-slate-600">${t.duration}</td>
+                <td class="px-5 py-3 text-sm font-bold text-slate-600">${t.seats}</td>
+                <td class="px-5 py-3 text-center">
+                    <button onclick="editTrade(${t.id})" class="text-yellow-600 hover:text-yellow-700 mx-1"><i class="fa-solid fa-pen"></i></button>
+                    <button onclick="deleteTrade(${t.id})" class="text-red-500 hover:text-red-700 mx-1"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('') : '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">No trades defined.</td></tr>';
+    }
+    
+    function saveTrade(e) {
+        e.preventDefault();
+        const id = document.getElementById('editTradeId').value;
+        const trade = {
+            id: id ? parseInt(id) : Date.now(),
+            name: document.getElementById('trName').value.trim(),
+            duration: document.getElementById('trDuration').value,
+            seats: document.getElementById('trSeats').value
+        };
+        let trades = getTrades();
+        if (id) trades = trades.map(t => t.id == id ? trade : t);
+        else trades.push(trade);
+        saveTrades(trades);
+        resetTradeForm();
+        renderTrades();
+        populateDynamicDropdowns();
+        showToast('Trade saved!');
+    }
+    
+    function editTrade(id) {
+        const t = getTrades().find(x => x.id === id);
+        if(!t) return;
+        document.getElementById('editTradeId').value = t.id;
+        document.getElementById('trName').value = t.name;
+        document.getElementById('trDuration').value = t.duration;
+        document.getElementById('trSeats').value = t.seats;
+    }
+    
+    function deleteTrade(id) {
+        if(!confirm('Delete this trade?')) return;
+        saveTrades(getTrades().filter(t => t.id !== id));
+        renderTrades();
+        populateDynamicDropdowns();
+        showToast('Trade deleted.', 'info');
+    }
+    
+    function resetTradeForm() { document.getElementById('tradeForm').reset(); document.getElementById('editTradeId').value = ''; }
+
+    // ========================
+    // SUBJECTS
+    // ========================
+    function renderSubjects() {
+        const subs = getSubjects();
+        const tbody = document.getElementById('subjectsTableBody');
+        tbody.innerHTML = subs.length ? subs.map(s => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3 font-semibold text-slate-800">${s.name}</td>
+                <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${s.trade}</span></td>
+                <td class="px-5 py-3 text-sm text-slate-600">${s.sem}</td>
+                <td class="px-5 py-3 text-center">
+                    <button onclick="deleteSubject(${s.id})" class="text-red-500 hover:text-red-700 mx-1"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('') : '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">No subjects defined.</td></tr>';
+    }
+    
+    function saveSubject(e) {
+        e.preventDefault();
+        const subs = getSubjects();
+        subs.push({
+            id: Date.now(),
+            name: document.getElementById('subName').value.trim(),
+            trade: document.getElementById('subTrade').value,
+            sem: document.getElementById('subSem').value.trim()
+        });
+        saveSubjects(subs);
+        resetSubjectForm();
+        renderSubjects();
+        showToast('Subject saved!');
+    }
+    
+    function deleteSubject(id) {
+        if(!confirm('Delete this subject?')) return;
+        saveSubjects(getSubjects().filter(s => s.id !== id));
+        renderSubjects();
+        showToast('Subject deleted.', 'info');
+    }
+    
+    function resetSubjectForm() { document.getElementById('subjectForm').reset(); document.getElementById('editSubjectId').value = ''; }
+
+    // ========================
+    // SESSIONS
+    // ========================
+    function renderSessions() {
+        const sessions = getSessions();
+        const tbody = document.getElementById('sessionsTableBody');
+        tbody.innerHTML = sessions.length ? sessions.map(s => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3 font-semibold text-slate-800">${s.name}</td>
+                <td class="px-5 py-3 text-center">
+                    ${s.isActive ? `<span class="badge-approved text-xs font-bold px-2 py-1 rounded-lg">Active Session</span>` : `<span class="text-xs text-slate-400">Inactive</span>`}
+                </td>
+                <td class="px-5 py-3 text-center">
+                    ${!s.isActive ? `<button onclick="makeActiveSession(${s.id})" class="text-xs font-bold bg-blue-50 text-brandBlue px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors mr-2">Set Active</button>` : ''}
+                    <button onclick="deleteSession(${s.id})" class="text-red-500 hover:text-red-700 mx-1"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('') : '<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">No sessions defined.</td></tr>';
+    }
+    
+    function saveSession(e) {
+        e.preventDefault();
+        const sessions = getSessions();
+        const name = document.getElementById('sessName').value.trim();
+        const isFirst = sessions.length === 0;
+        sessions.push({ id: Date.now(), name: name, isActive: isFirst });
+        saveSessions(sessions);
+        e.target.reset();
+        renderSessions();
+        populateDynamicDropdowns();
+        showToast('Session added!');
+    }
+    
+    function makeActiveSession(id) {
+        let sessions = getSessions();
+        sessions = sessions.map(s => ({...s, isActive: s.id === id}));
+        saveSessions(sessions);
+        renderSessions();
+        populateDynamicDropdowns();
+        showToast('Active session updated!');
+    }
+    
+    function deleteSession(id) {
+        const sessions = getSessions();
+        const s = sessions.find(x => x.id === id);
+        if(s && s.isActive && sessions.length > 1) {
+            showToast('Cannot delete the active session. Set another active first.', 'error');
+            return;
+        }
+        if(!confirm('Delete this session?')) return;
+        saveSessions(sessions.filter(x => x.id !== id));
+        renderSessions();
+        populateDynamicDropdowns();
+        showToast('Session deleted.', 'info');
+    }
+
+    // ========================
+    // EXISTING API SECTIONS
+    // ========================
     async function fetchMessages() {
         try {
             const res = await fetch(`${API_BASE}/contact`);
@@ -1790,6 +2174,7 @@
     // ========================
     // INIT
     // ========================
+    populateDynamicDropdowns();
     loadDashboard();
     </script>
 </body>
