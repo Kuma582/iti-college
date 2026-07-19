@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Excellence ITI</title>
-    <!-- Tailwind CSS (CDN for compilation) -->
+    <meta name="description" content="Admin control panel for Excellence ITI – manage students, teachers, fees, admissions, notices and more.">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,21 +27,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- SheetJS for Excel import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .glass-dark { background: rgba(15,23,42,0.97); backdrop-filter: blur(10px); border-right: 1px solid rgba(255,255,255,0.08); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; transition: all 0.2s; width: 100%; font-size: 0.875rem; font-weight: 500; color: #94a3b8; }
+        .nav-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+        .nav-link.active { background: rgba(251,191,36,0.18); color: #fbbf24; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        .modal-box { background: #fff; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); max-height: 90vh; overflow-y: auto; width: 100%; }
+        .stat-card { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s, transform 0.2s; position: relative; overflow: hidden; }
+        .stat-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.10); transform: translateY(-2px); }
+        .badge-paid { background: #dcfce7; color: #16a34a; }
+        .badge-pending { background: #fef9c3; color: #ca8a04; }
+        .badge-overdue { background: #fee2e2; color: #dc2626; }
+        .badge-trade { background: #dbeafe; color: #1d4ed8; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease forwards; }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .slide-in { animation: slideInRight 0.3s ease forwards; }
+        .profile-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; max-width: 100vw; background: #fff; box-shadow: -8px 0 40px rgba(0,0,0,0.15); z-index: 90; display: flex; flex-direction: column; }
+        .id-card { width: 340px; min-height: 520px; background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%); border-radius: 20px; padding: 28px 24px; color: #fff; position: relative; overflow: hidden; }
+        .id-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; background: rgba(251,191,36,0.12); border-radius: 50%; }
+        .id-card::after { content: ''; position: absolute; bottom: -60px; left: -40px; width: 220px; height: 220px; background: rgba(251,191,36,0.07); border-radius: 50%; }
+        input[type=file] { display: none; }
+        .drop-zone { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 32px; text-align: center; transition: border-color 0.2s, background 0.2s; cursor: pointer; }
+        .drop-zone.dragover { border-color: #fbbf24; background: #fefce8; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 19; }
+        @media (max-width: 768px) {
+            #sidebar { position: fixed; left: -100%; top: 0; bottom: 0; z-index: 20; transition: left 0.3s ease; }
+            #sidebar.open { left: 0; }
+            .sidebar-overlay.open { display: block; }
+            .profile-panel { width: 100vw; }
         }
-        .glass-dark {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        @media print {
+            body > * { display: none; }
+            #printArea { display: block !important; }
         }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
+        #printArea { display: none; }
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 flex h-screen overflow-hidden">
@@ -52,648 +85,1712 @@
         }
     </script>
 
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 glass-dark text-white flex flex-col h-full flex-shrink-0 transition-all duration-300 z-20">
-        <div class="p-6 border-b border-white/10 flex items-center gap-3">
-            <div class="w-8 h-8 bg-brandGold rounded-lg flex items-center justify-center text-brandBlue font-bold shadow-lg">
+    <aside id="sidebar" class="w-64 glass-dark text-white flex flex-col h-full flex-shrink-0 z-20">
+        <div class="p-5 border-b border-white/10 flex items-center gap-3">
+            <div class="w-9 h-9 bg-brandGold rounded-lg flex items-center justify-center text-brandBlue font-black shadow-lg text-sm">
                 <i class="fa-solid fa-bolt"></i>
             </div>
-            <h1 class="font-poppins font-bold text-lg tracking-tight">ITI ADMIN</h1>
-        </div>
-        
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="#" onclick="showSection('dashboard')" class="nav-link w-full flex items-center gap-3 px-4 py-3 bg-brandGold/20 text-brandGold rounded-xl transition-all">
-                <i class="fa-solid fa-chart-pie w-5"></i> <span class="font-medium text-sm">Dashboard</span>
-            </a>
-            <a href="#" onclick="showSection('admissions')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-user-graduate w-5"></i> <span class="font-medium text-sm">Admissions</span>
-            </a>
-            <a href="#" onclick="showSection('messages')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-envelope w-5"></i> <span class="font-medium text-sm">Messages</span>
-            </a>
-            <div class="pt-4 pb-2">
-                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portal Management</p>
+            <div>
+                <h1 class="font-poppins font-bold text-base tracking-tight leading-none">ITI ADMIN</h1>
+                <p class="text-[10px] text-slate-400 mt-0.5">Excellence ITI College</p>
             </div>
-            <a href="#" onclick="showSection('notices')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-bullhorn w-5"></i> <span class="font-medium text-sm">Notices</span>
+        </div>
+
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto scrollbar-hide">
+            <!-- Main -->
+            <div class="pt-1 pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Main</p>
+            </div>
+            <a href="#" id="nav-dashboard" onclick="showSection('dashboard')" class="nav-link active">
+                <i class="fa-solid fa-chart-pie w-4 text-center"></i> <span>Dashboard</span>
             </a>
-            <a href="#" onclick="showSection('materials')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-book-open w-5"></i> <span class="font-medium text-sm">Study Materials</span>
+            <a href="#" id="nav-students" onclick="showSection('students')" class="nav-link">
+                <i class="fa-solid fa-user-graduate w-4 text-center"></i> <span>Students</span>
             </a>
-            <a href="#" onclick="showSection('records')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-clipboard-user w-5"></i> <span class="font-medium text-sm">Student Records</span>
+            <a href="#" id="nav-teachers" onclick="showSection('teachers')" class="nav-link">
+                <i class="fa-solid fa-chalkboard-user w-4 text-center"></i> <span>Teachers</span>
             </a>
-            <a href="#" onclick="showSection('accounts')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                <i class="fa-solid fa-users-gear w-5"></i> <span class="font-medium text-sm">Student Accounts</span>
+            <a href="#" id="nav-fees" onclick="showSection('fees')" class="nav-link">
+                <i class="fa-solid fa-indian-rupee-sign w-4 text-center"></i> <span>Fees</span>
+            </a>
+            <a href="#" id="nav-admissions" onclick="showSection('admissions')" class="nav-link">
+                <i class="fa-solid fa-file-circle-plus w-4 text-center"></i> <span>Admissions</span>
+            </a>
+
+            <!-- Portal -->
+            <div class="pt-4 pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portal</p>
+            </div>
+            <a href="#" id="nav-notices" onclick="showSection('notices')" class="nav-link">
+                <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span>Notices</span>
+            </a>
+            <a href="#" id="nav-materials" onclick="showSection('materials')" class="nav-link">
+                <i class="fa-solid fa-book-open w-4 text-center"></i> <span>Study Materials</span>
+            </a>
+            <a href="#" id="nav-records" onclick="showSection('records')" class="nav-link">
+                <i class="fa-solid fa-clipboard-user w-4 text-center"></i> <span>Student Records</span>
+            </a>
+            <a href="#" id="nav-accounts" onclick="showSection('accounts')" class="nav-link">
+                <i class="fa-solid fa-users-gear w-4 text-center"></i> <span>Accounts</span>
+            </a>
+            <a href="#" id="nav-messages" onclick="showSection('messages')" class="nav-link">
+                <i class="fa-solid fa-envelope w-4 text-center"></i> <span>Messages</span>
             </a>
         </nav>
-        
-        <div class="p-4 border-t border-white/10">
+
+        <div class="p-3 border-t border-white/10">
             <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium">
-                <i class="fa-solid fa-right-from-bracket w-5"></i> Log out
+                <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Log Out
             </button>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
-        <!-- Background Elements -->
-        <div class="absolute top-0 right-0 w-96 h-96 bg-brandBlue/5 rounded-full blur-3xl -z-10"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brandGold/5 rounded-full blur-3xl -z-10"></div>
-        
+        <!-- Background accents -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brandGold/5 rounded-full blur-3xl pointer-events-none"></div>
+
         <!-- Header -->
-        <header class="glass h-20 flex items-center justify-between px-8 border-b border-slate-200 z-10 flex-shrink-0">
-            <div>
-                <h2 class="text-xl font-poppins font-bold text-slate-900" id="headerTitle">Dashboard Overview</h2>
-                <p class="text-xs text-slate-500">Welcome back to the command center.</p>
-            </div>
+        <header class="glass h-16 flex items-center justify-between px-6 border-b border-slate-200 z-10 flex-shrink-0">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-brandBlue text-white rounded-full flex items-center justify-center font-bold shadow-md border border-brandGold/30">
-                    AD
+                <!-- Hamburger (mobile) -->
+                <button onclick="openSidebar()" class="md:hidden w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div>
+                    <h2 class="text-base font-poppins font-bold text-slate-900 leading-none" id="headerTitle">Dashboard Overview</h2>
+                    <p class="text-xs text-slate-400 mt-0.5" id="headerSubtitle">Welcome back, Admin!</p>
                 </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end">
+                    <span class="text-xs font-semibold text-slate-700">Administrator</span>
+                    <span class="text-[10px] text-slate-400">Excellence ITI</span>
+                </div>
+                <div class="w-10 h-10 bg-gradient-to-br from-brandBlue to-blue-700 text-white rounded-full flex items-center justify-center font-bold shadow-md text-sm border-2 border-brandGold/40">AD</div>
             </div>
         </header>
 
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto p-8 scrollbar-hide">
-            
-            <!-- SECTION: Dashboard -->
-            <div id="section-dashboard" class="space-y-8 animate-fade-in">
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-hide" id="mainContent">
+
+            <!-- ===== SECTION: Dashboard ===== -->
+            <div id="section-dashboard" class="section-content active fade-in space-y-6">
                 <!-- Stat Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-brandBlue/5 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+                    <div class="stat-card col-span-1">
+                        <div class="absolute -right-3 -top-3 w-20 h-20 bg-blue-500/8 rounded-full"></div>
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Admissions</p>
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Students</p>
+                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statStudents">--</h3>
+                                <p class="text-xs text-green-600 font-medium mt-1">Enrolled</p>
+                            </div>
+                            <div class="w-11 h-11 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-user-graduate"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card col-span-1">
+                        <div class="absolute -right-3 -top-3 w-20 h-20 bg-purple-500/8 rounded-full"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Teachers</p>
+                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statTeachers">--</h3>
+                                <p class="text-xs text-purple-600 font-medium mt-1">Faculty</p>
+                            </div>
+                            <div class="w-11 h-11 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card col-span-1">
+                        <div class="absolute -right-3 -top-3 w-20 h-20 bg-blue-500/8 rounded-full"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Admissions</p>
                                 <h3 class="text-3xl font-black text-slate-900 mt-2" id="statAdmissions">--</h3>
+                                <p class="text-xs text-blue-600 font-medium mt-1">Applications</p>
                             </div>
-                            <div class="w-12 h-12 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl">
-                                <i class="fa-solid fa-users"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-brandGold/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Inquiry Messages</p>
-                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statMessages">--</h3>
-                            </div>
-                            <div class="w-12 h-12 bg-amber-50 text-brandGold rounded-xl flex items-center justify-center text-xl">
-                                <i class="fa-solid fa-comments"></i>
+                            <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-file-circle-plus"></i>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="stat-card col-span-1">
+                        <div class="absolute -right-3 -top-3 w-20 h-20 bg-green-500/8 rounded-full"></div>
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">System Status</p>
-                                <h3 class="text-2xl font-black text-green-600 mt-2 flex items-center gap-2">
-                                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span> Online
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Fees Paid</p>
+                                <h3 class="text-3xl font-black text-slate-900 mt-2" id="statFeesPaid">--</h3>
+                                <p class="text-xs text-green-600 font-medium mt-1" id="statFeesPercent">of total</p>
+                            </div>
+                            <div class="w-11 h-11 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card col-span-1">
+                        <div class="absolute -right-3 -top-3 w-20 h-20 bg-green-500/8 rounded-full"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">System</p>
+                                <h3 class="text-xl font-black text-green-600 mt-2 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse inline-block"></span>Online
                                 </h3>
+                                <p class="text-xs text-slate-400 font-medium mt-1">All services OK</p>
                             </div>
-                            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-xl">
+                            <div class="w-11 h-11 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-lg">
                                 <i class="fa-solid fa-server"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Admissions Preview -->
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-white/50">
-                        <h3 class="font-bold text-slate-800">Recent Applications</h3>
-                        <button onclick="showSection('admissions')" class="text-xs font-bold text-brandBlue hover:text-brandGold transition-colors">View All &rarr;</button>
+                <!-- Fee Collection Progress -->
+                <div class="glass rounded-2xl border border-slate-200 p-5">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-slate-800">Fee Collection Rate</h3>
+                        <span class="text-xs font-bold text-brandBlue bg-blue-50 px-3 py-1 rounded-full" id="dashFeeRate">Loading...</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3">
+                        <div id="feeProgressBar" class="bg-gradient-to-r from-brandBlue to-blue-500 h-3 rounded-full transition-all duration-700" style="width:0%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-slate-500">
+                        <span id="dashFeesPaid">Paid: 0</span>
+                        <span id="dashFeesPending">Pending: 0</span>
+                        <span id="dashFeesOverdue">Overdue: 0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Students -->
+                    <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                        <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 text-sm">Recent Students</h3>
+                            <button onclick="showSection('students')" class="text-xs font-bold text-brandBlue hover:text-brandGold transition-colors">View All →</button>
+                        </div>
+                        <div id="dashRecentStudents" class="divide-y divide-slate-50">
+                            <div class="px-5 py-6 text-center text-slate-400 text-sm">Loading...</div>
+                        </div>
+                    </div>
+                    <!-- Recent Admissions -->
+                    <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                        <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 text-sm">Recent Applications</h3>
+                            <button onclick="showSection('admissions')" class="text-xs font-bold text-brandBlue hover:text-brandGold transition-colors">View All →</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <tbody id="recentAdmissionsTable" class="divide-y divide-slate-100">
+                                    <tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Students ===== -->
+            <div id="section-students" class="section-content fade-in space-y-5">
+                <!-- Toolbar -->
+                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+                    <div class="flex gap-2 flex-wrap">
+                        <div class="relative">
+                            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="studentSearch" type="text" placeholder="Search students..." oninput="renderStudentsTable()"
+                                class="pl-8 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none w-56 transition-all">
+                        </div>
+                        <select id="filterTrade" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
+                            <option value="">All Trades</option>
+                            <option>Electrician</option>
+                            <option>Fitter</option>
+                            <option>Welder</option>
+                            <option>Diesel Mechanic</option>
+                            <option>Computer Operator</option>
+                            <option>Draughtsman Civil</option>
+                            <option>Wireman</option>
+                            <option>Plumber</option>
+                        </select>
+                        <select id="filterFeeStatus" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
+                            <option value="">All Fee Status</option>
+                            <option>Paid</option>
+                            <option>Pending</option>
+                            <option>Overdue</option>
+                        </select>
+                        <select id="filterBatch" onchange="renderStudentsTable()" class="px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none transition-all">
+                            <option value="">All Batches</option>
+                            <option>2023-24</option>
+                            <option>2024-25</option>
+                            <option>2025-26</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openBulkImport()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors">
+                            <i class="fa-solid fa-file-excel text-green-600"></i> Import Excel
+                        </button>
+                        <button onclick="exportStudentsCSV()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors">
+                            <i class="fa-solid fa-download text-blue-600"></i> Export
+                        </button>
+                        <button onclick="openAddStudent()" id="addStudentBtn" class="flex items-center gap-2 px-4 py-2.5 text-sm font-bold bg-brandBlue hover:bg-slate-800 text-white rounded-xl transition-colors shadow-sm">
+                            <i class="fa-solid fa-plus"></i> Add Student
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between bg-white/50">
+                        <p class="text-sm text-slate-500 font-medium"><span id="studentCount">0</span> students found</p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-6 py-4 font-bold">Applicant Name</th>
-                                    <th class="px-6 py-4 font-bold">Trade</th>
-                                    <th class="px-6 py-4 font-bold">Mobile</th>
-                                    <th class="px-6 py-4 font-bold">Date</th>
+                                    <th class="px-5 py-3 font-bold">Student</th>
+                                    <th class="px-5 py-3 font-bold">Roll No.</th>
+                                    <th class="px-5 py-3 font-bold">Trade</th>
+                                    <th class="px-5 py-3 font-bold">Batch</th>
+                                    <th class="px-5 py-3 font-bold">Mobile</th>
+                                    <th class="px-5 py-3 font-bold">Fee Status</th>
+                                    <th class="px-5 py-3 font-bold text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="recentAdmissionsTable" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
-                                </tr>
+                            <tbody id="studentsTableBody" class="divide-y divide-slate-100">
+                                <tr><td colspan="7" class="px-5 py-10 text-center text-slate-400">No students found. Add your first student!</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- SECTION: Admissions -->
-            <div id="section-admissions" class="hidden space-y-6 animate-fade-in">
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800 text-lg">All Admission Applications</h3>
+            <!-- ===== SECTION: Teachers ===== -->
+            <div id="section-teachers" class="section-content fade-in space-y-5">
+                <!-- Add Teacher Form -->
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-brandGold"></i>
+                        <span id="teacherFormTitle">Add New Teacher</span>
+                    </h3>
+                    <form onsubmit="saveTeacher(event)" id="teacherForm" class="space-y-4">
+                        <input type="hidden" id="editTeacherId">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <input type="text" id="tName" placeholder="Full Name *" required class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="text" id="tSubject" placeholder="Subject / Trade *" required class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="text" id="tQualification" placeholder="Qualification (e.g. B.Tech)" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="tel" id="tMobile" placeholder="Mobile Number" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="email" id="tEmail" placeholder="Email Address" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="text" id="tExperience" placeholder="Experience (e.g. 5 years)" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Save Teacher</button>
+                            <button type="button" onclick="resetTeacherForm()" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors text-sm">Reset</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Teachers Table -->
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50">
+                        <h3 class="font-bold text-slate-800">Teaching Staff</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold">Name</th>
+                                    <th class="px-5 py-3 font-bold">Subject</th>
+                                    <th class="px-5 py-3 font-bold">Qualification</th>
+                                    <th class="px-5 py-3 font-bold">Mobile</th>
+                                    <th class="px-5 py-3 font-bold">Experience</th>
+                                    <th class="px-5 py-3 font-bold text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teachersTableBody" class="divide-y divide-slate-100">
+                                <tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Fees ===== -->
+            <div id="section-fees" class="section-content fade-in space-y-5">
+                <!-- Fee Stats -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="stat-card border-l-4 border-green-500">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fees Paid</p>
+                        <h3 class="text-3xl font-black text-green-600 mt-2" id="feeStatPaid">0</h3>
+                        <p class="text-xs text-slate-400 mt-1">Students</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-yellow-500">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fee Pending</p>
+                        <h3 class="text-3xl font-black text-yellow-600 mt-2" id="feeStatPending">0</h3>
+                        <p class="text-xs text-slate-400 mt-1">Students</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-red-500">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fee Overdue</p>
+                        <h3 class="text-3xl font-black text-red-600 mt-2" id="feeStatOverdue">0</h3>
+                        <p class="text-xs text-slate-400 mt-1">Students</p>
+                    </div>
+                </div>
+                <!-- Fee Table -->
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Student-wise Fee Status</h3>
+                        <select id="feeFilter" onchange="renderFeesTable()" class="text-xs px-3 py-2 bg-white border border-slate-200 rounded-lg outline-none">
+                            <option value="">All</option>
+                            <option>Paid</option>
+                            <option>Pending</option>
+                            <option>Overdue</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold">Student</th>
+                                    <th class="px-5 py-3 font-bold">Roll No.</th>
+                                    <th class="px-5 py-3 font-bold">Trade</th>
+                                    <th class="px-5 py-3 font-bold">Batch</th>
+                                    <th class="px-5 py-3 font-bold">Fee Status</th>
+                                    <th class="px-5 py-3 font-bold text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feesTableBody" class="divide-y divide-slate-100">
+                                <tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No student data available.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: Admissions ===== -->
+            <div id="section-admissions" class="section-content fade-in space-y-5">
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-base">All Admission Applications</h3>
                         <button onclick="fetchAdmissions()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
-                            <i class="fa-solid fa-rotate-right"></i>
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
                         </button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-6 py-4 font-bold">ID</th>
-                                    <th class="px-6 py-4 font-bold">Applicant Name</th>
-                                    <th class="px-6 py-4 font-bold">Trade</th>
-                                    <th class="px-6 py-4 font-bold">Mobile / Email</th>
-                                    <th class="px-6 py-4 font-bold">Date of Birth</th>
-                                    <th class="px-6 py-4 font-bold">Applied On</th>
+                                    <th class="px-5 py-3 font-bold">ID</th>
+                                    <th class="px-5 py-3 font-bold">Applicant Name</th>
+                                    <th class="px-5 py-3 font-bold">Trade</th>
+                                    <th class="px-5 py-3 font-bold">Mobile / Email</th>
+                                    <th class="px-5 py-3 font-bold">Date of Birth</th>
+                                    <th class="px-5 py-3 font-bold">Applied On</th>
+                                    <th class="px-5 py-3 font-bold text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="allAdmissionsTable" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
-                                </tr>
+                                <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Loading data...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- SECTION: Messages -->
-            <div id="section-messages" class="hidden space-y-6 animate-fade-in">
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800 text-lg">Contact Form Messages</h3>
-                        <button onclick="fetchMessages()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
-                            <i class="fa-solid fa-rotate-right"></i>
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
-                                <tr>
-                                    <th class="px-6 py-4 font-bold w-1/4">Sender Details</th>
-                                    <th class="px-6 py-4 font-bold w-1/2">Message</th>
-                                    <th class="px-6 py-4 font-bold w-1/6">Received On</th>
-                                    <th class="px-6 py-4 font-bold w-1/6">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="allMessagesTable" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-slate-400">Loading data...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION: Notices -->
-            <div id="section-notices" class="hidden space-y-6 animate-fade-in">
-                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-lg mb-4">Post New Notice</h3>
+            <!-- ===== SECTION: Notices ===== -->
+            <div id="section-notices" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4">Post New Notice</h3>
                     <form onsubmit="postNotice(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="noticeTitle" placeholder="Notice Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                            <input type="text" id="noticeCategory" placeholder="Category (e.g., Exam, Event)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="text" id="noticeTitle" placeholder="Notice Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                            <input type="text" id="noticeCategory" placeholder="Category (e.g., Exam, Event)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
                         </div>
-                        <textarea id="noticeContent" placeholder="Notice Details..." required rows="3" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none"></textarea>
-                        <button type="submit" class="bg-brandBlue text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors">Publish Notice</button>
+                        <textarea id="noticeContent" placeholder="Notice Details..." required rows="3" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm resize-none"></textarea>
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm">Publish Notice</button>
                     </form>
                 </div>
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50"><h3 class="font-bold text-slate-800">Existing Notices</h3></div>
-                    <div id="noticesList" class="p-6 space-y-4"></div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Existing Notices</h3></div>
+                    <div id="noticesList" class="p-5 space-y-3"></div>
                 </div>
             </div>
 
-            <!-- SECTION: Materials -->
-            <div id="section-materials" class="hidden space-y-6 animate-fade-in">
-                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-lg mb-4">Upload Study Material</h3>
+            <!-- ===== SECTION: Materials ===== -->
+            <div id="section-materials" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-4">Upload Study Material</h3>
                     <form onsubmit="postMaterial(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="matTitle" placeholder="Material Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                            <input type="url" id="matUrl" placeholder="Download Link (Google Drive, PDF URL)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="text" id="matTitle" placeholder="Material Title" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <input type="url" id="matUrl" placeholder="Download Link (Google Drive, PDF URL)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
                         </div>
-                        <input type="text" id="matDesc" placeholder="Description (Optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-3 rounded-xl font-bold hover:bg-yellow-500 transition-colors">Add Material</button>
+                        <input type="text" id="matDesc" placeholder="Description (Optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-2.5 rounded-xl font-bold hover:bg-yellow-500 transition-colors text-sm">Add Material</button>
                     </form>
                 </div>
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50"><h3 class="font-bold text-slate-800">Shared Materials</h3></div>
-                    <div id="materialsList" class="p-6 space-y-4"></div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Shared Materials</h3></div>
+                    <div id="materialsList" class="p-5 space-y-3"></div>
                 </div>
             </div>
 
-            <!-- SECTION: Records -->
-            <div id="section-records" class="hidden space-y-6 animate-fade-in">
-                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-lg mb-4">Update Student Record</h3>
-                    <p class="text-sm text-slate-500 mb-4">Enter a student's email to update their Attendance and Fee Status. They will see this in their portal.</p>
+            <!-- ===== SECTION: Records ===== -->
+            <div id="section-records" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Update Student Record</h3>
+                    <p class="text-sm text-slate-500 mb-4">Enter a student's email to update their Attendance and Fee Status.</p>
                     <form onsubmit="postRecord(event)" class="space-y-4">
-                        <input type="email" id="recEmail" placeholder="Student Email (e.g., student@excellenceiti.com)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                        <input type="email" id="recEmail" placeholder="Student Email (e.g., student@excellenceiti.com)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="number" id="recAttendance" placeholder="Attendance Percentage (0-100)" min="0" max="100" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                            <select id="recFee" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="number" id="recAttendance" placeholder="Attendance Percentage (0-100)" min="0" max="100" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <select id="recFee" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
                                 <option value="" disabled selected>Fee Status</option>
                                 <option value="Paid">Paid</option>
                                 <option value="Pending">Pending</option>
                                 <option value="Overdue">Overdue</option>
                             </select>
                         </div>
-                        <input type="text" id="recResults" placeholder="Recent Results (e.g., Semester 1: 85%)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">Update Record</button>
+                        <input type="text" id="recResults" placeholder="Recent Results (e.g., Semester 1: 85%)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-colors text-sm">Update Record</button>
                     </form>
                 </div>
             </div>
 
-            <!-- SECTION: Accounts -->
-            <div id="section-accounts" class="hidden space-y-6 animate-fade-in">
-                <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-lg mb-4">Create New Student Account</h3>
+            <!-- ===== SECTION: Accounts ===== -->
+            <div id="section-accounts" class="section-content fade-in space-y-5">
+                <div class="glass p-5 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Create New Student Account</h3>
                     <p class="text-sm text-slate-500 mb-4">Generate login credentials for a student so they can access the portal.</p>
                     <form onsubmit="postAccount(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="accName" placeholder="Student Full Name" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                            <input type="email" id="accEmail" placeholder="Student Email (e.g., rahul@excellenceiti.com)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
+                            <input type="text" id="accName" placeholder="Student Full Name" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                            <input type="email" id="accEmail" placeholder="Student Email" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
                         </div>
-                        <input type="text" id="accPassword" placeholder="Set a Password (e.g., student123)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brandGold outline-none">
-                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-3 rounded-xl font-bold hover:bg-yellow-500 transition-colors">Create Account</button>
+                        <input type="text" id="accPassword" placeholder="Set a Password" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
+                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-2.5 rounded-xl font-bold hover:bg-yellow-500 transition-colors text-sm">Create Account</button>
                     </form>
                 </div>
-                <div class="glass rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-200 bg-white/50"><h3 class="font-bold text-slate-800">Registered Students</h3></div>
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Registered Students</h3></div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-6 py-4 font-bold">Name</th>
-                                    <th class="px-6 py-4 font-bold">Email (Login ID)</th>
-                                    <th class="px-6 py-4 font-bold">Created On</th>
+                                    <th class="px-5 py-3 font-bold">Name</th>
+                                    <th class="px-5 py-3 font-bold">Email (Login ID)</th>
+                                    <th class="px-5 py-3 font-bold">Created On</th>
                                 </tr>
                             </thead>
                             <tbody id="accountsList" class="divide-y divide-slate-100">
+                                <tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-        </div>
+            <!-- ===== SECTION: Messages ===== -->
+            <div id="section-messages" class="section-content fade-in space-y-5">
+                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-base">Contact Form Messages</h3>
+                        <button onclick="fetchMessages()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-3 font-bold w-1/4">Sender</th>
+                                    <th class="px-5 py-3 font-bold w-1/2">Message</th>
+                                    <th class="px-5 py-3 font-bold">Received On</th>
+                                    <th class="px-5 py-3 font-bold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allMessagesTable" class="divide-y divide-slate-100">
+                                <tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end mainContent -->
     </main>
 
+    <!-- ====================================================
+         MODALS
+    ==================================================== -->
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal-overlay hidden" onclick="closeStudentModal(event)">
+        <div class="modal-box max-w-3xl p-0" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <h3 class="font-poppins font-bold text-slate-900 text-lg" id="studentModalTitle">Add New Student</h3>
+                <button onclick="closeStudentModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition-colors text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form onsubmit="saveStudent(event)" id="studentForm">
+                    <input type="hidden" id="editStudentId">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name *</label>
+                            <input type="text" id="sName" required placeholder="e.g. Rahul Kumar" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Roll Number *</label>
+                            <input type="text" id="sRollNo" required placeholder="e.g. ITI-2024-001" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Father's Name</label>
+                            <input type="text" id="sFatherName" placeholder="Father's Full Name" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Date of Birth</label>
+                            <input type="date" id="sDOB" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Mobile *</label>
+                            <input type="tel" id="sMobile" required placeholder="10-digit mobile" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email</label>
+                            <input type="email" id="sEmail" placeholder="student@email.com" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Trade *</label>
+                            <select id="sTrade" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                                <option value="">Select Trade</option>
+                                <option>Electrician</option>
+                                <option>Fitter</option>
+                                <option>Welder</option>
+                                <option>Diesel Mechanic</option>
+                                <option>Computer Operator</option>
+                                <option>Draughtsman Civil</option>
+                                <option>Wireman</option>
+                                <option>Plumber</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Batch *</label>
+                            <select id="sBatch" required class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                                <option value="">Select Batch</option>
+                                <option>2023-24</option>
+                                <option>2024-25</option>
+                                <option>2025-26</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fee Status</label>
+                            <select id="sFeeStatus" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                                <option value="Pending">Pending</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-1 sm:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Address</label>
+                            <input type="text" id="sAddress" placeholder="Full Address" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Photo URL</label>
+                            <input type="url" id="sPhoto" placeholder="https://..." class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Attendance %</label>
+                            <input type="number" id="sAttendance" min="0" max="100" placeholder="e.g. 85" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Results / Marks</label>
+                            <input type="text" id="sResults" placeholder="e.g. Sem1: 85%, Sem2: 90%" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-3">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Documents (comma-separated labels)</label>
+                            <input type="text" id="sDocuments" placeholder="e.g. Aadhar Card, 10th Marksheet, Birth Certificate" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                    </div>
+                    <div class="flex gap-3 mt-5 pt-4 border-t border-slate-100">
+                        <button type="submit" class="bg-brandBlue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Student
+                        </button>
+                        <button type="button" onclick="closeStudentModal()" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors text-sm">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Profile Panel -->
+    <div id="profilePanel" class="profile-panel hidden" style="top:0; transform: translateX(100%); transition: transform 0.3s ease;">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-brandBlue text-white">
+            <h3 class="font-poppins font-bold text-base">Student Profile</h3>
+            <button onclick="closeProfile()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        <div id="profileContent" class="flex-1 overflow-y-auto p-5"></div>
+    </div>
+    <div id="profileOverlay" class="hidden fixed inset-0 bg-black/30 z-80" onclick="closeProfile()"></div>
+
+    <!-- Student ID Card Modal -->
+    <div id="idCardModal" class="modal-overlay hidden" onclick="closeIdCard(event)">
+        <div onclick="event.stopPropagation()" class="flex flex-col items-center gap-4">
+            <div class="id-card" id="idCardContent"></div>
+            <div class="flex gap-3">
+                <button onclick="printIDCard()" class="flex items-center gap-2 px-5 py-2.5 bg-brandGold text-brandBlue font-bold rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+                    <i class="fa-solid fa-print"></i> Print ID Card
+                </button>
+                <button onclick="closeIdCard()" class="px-5 py-2.5 bg-white/20 text-white font-bold rounded-xl hover:bg-white/30 transition-colors text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Import Modal -->
+    <div id="importModal" class="modal-overlay hidden" onclick="closeImport(event)">
+        <div class="modal-box max-w-2xl p-0" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <h3 class="font-poppins font-bold text-slate-900 text-lg"><i class="fa-solid fa-file-excel text-green-600 mr-2"></i>Bulk Import Students</h3>
+                <button onclick="closeImport()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition-colors text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <!-- Template Download -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-4">
+                    <i class="fa-solid fa-circle-info text-blue-600 text-xl"></i>
+                    <div class="flex-1 text-sm text-blue-800">
+                        Download the Excel template, fill in student data, then upload.
+                        <strong>Required columns:</strong> Name, RollNo, Trade, Batch, Mobile, FeeStatus
+                    </div>
+                    <button onclick="downloadTemplate()" class="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
+                        <i class="fa-solid fa-download"></i> Template
+                    </button>
+                </div>
+                <!-- Drop Zone -->
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('excelFileInput').click()"
+                    ondragover="event.preventDefault(); this.classList.add('dragover')"
+                    ondragleave="this.classList.remove('dragover')"
+                    ondrop="handleFileDrop(event)">
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" onchange="handleFileSelect(event)">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-3"></i>
+                    <p class="text-slate-600 font-semibold">Drop Excel / CSV file here</p>
+                    <p class="text-xs text-slate-400 mt-1">or click to browse — .xlsx, .xls, .csv supported</p>
+                </div>
+                <!-- Preview Table -->
+                <div id="importPreview" class="hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-slate-700 text-sm"><span id="importRowCount">0</span> students ready to import</h4>
+                        <button onclick="clearImport()" class="text-xs text-red-500 hover:underline">Clear</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-48 rounded-xl border border-slate-200">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider sticky top-0">
+                                <tr id="importPreviewHeader"></tr>
+                            </thead>
+                            <tbody id="importPreviewBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                    <button onclick="confirmBulkImport()" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-check"></i> Confirm & Import All Students
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2"></div>
+
+    <!-- Print Area -->
+    <div id="printArea"></div>
+
+    <!-- ====================================================
+         JAVASCRIPT
+    ==================================================== -->
     <script>
-        const API_BASE = '/api';
+    const API_BASE = '/api';
 
-        // --- Navigation Logic ---
-        function showSection(sectionName) {
-            // Update Header
-            const titles = {
-                'dashboard': 'Dashboard Overview',
-                'admissions': 'Admission Applications',
-                'messages': 'Contact Messages',
-                'notices': 'Notice Board Management',
-                'materials': 'Study Materials Management',
-                'records': 'Student Records (Attendance & Fees)',
-                'accounts': 'Student Accounts Management'
-            };
-            document.getElementById('headerTitle').innerText = titles[sectionName];
+    // ========================
+    // DATA STORAGE (localStorage)
+    // ========================
+    function getStudents() { return JSON.parse(localStorage.getItem('itiStudents') || '[]'); }
+    function saveStudents(data) { localStorage.setItem('itiStudents', JSON.stringify(data)); }
+    function getTeachers() { return JSON.parse(localStorage.getItem('itiTeachers') || '[]'); }
+    function saveTeachers(data) { localStorage.setItem('itiTeachers', JSON.stringify(data)); }
 
-            // Hide all sections
-            document.querySelectorAll('main > div > div[id^="section-"]').forEach(el => {
-                el.classList.add('hidden');
-            });
-            // Show target section
-            document.getElementById('section-' + sectionName).classList.remove('hidden');
+    // ========================
+    // UTILITIES
+    // ========================
+    function formatDate(isoString) {
+        if (!isoString) return 'N/A';
+        const date = new Date(isoString);
+        return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
 
-            // Update Nav Styles
-            document.querySelectorAll('.nav-link').forEach(el => {
-                el.className = 'nav-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all';
-            });
-            const activeLink = document.querySelector(`.nav-link[onclick="showSection('${sectionName}')"]`);
-            if (activeLink) {
-                activeLink.className = 'nav-link w-full flex items-center gap-3 px-4 py-3 bg-brandGold/20 text-brandGold rounded-xl transition-all';
-            }
+    function feesBadge(status) {
+        const map = { 'Paid': 'badge-paid', 'Pending': 'badge-pending', 'Overdue': 'badge-overdue' };
+        return `<span class="text-xs font-bold px-2 py-1 rounded-lg ${map[status] || 'bg-slate-100 text-slate-600'}">${status || 'N/A'}</span>`;
+    }
 
-            // Fetch data based on section
-            if (sectionName === 'dashboard') fetchDashboardData();
-            if (sectionName === 'admissions') fetchAdmissions();
-            if (sectionName === 'messages') fetchMessages();
-            if (sectionName === 'notices') fetchNotices();
-            if (sectionName === 'materials') fetchMaterials();
-            if (sectionName === 'accounts') fetchAccounts();
-            if (sectionName === 'records') {
-                // Form is static, no auto fetch needed unless searching
-            }
+    function avatarInitials(name) {
+        if (!name) return 'ST';
+        const parts = name.trim().split(' ');
+        return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    }
+
+    function showToast(msg, type = 'success') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
+        const toast = document.getElementById('toast');
+        const id = Date.now();
+        toast.innerHTML += `<div id="t${id}" class="px-5 py-3 ${colors[type]} text-white text-sm font-semibold rounded-xl shadow-xl flex items-center gap-3 fade-in">
+            <i class="fa-solid fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'circle-xmark' : 'circle-info'}"></i> ${msg}
+        </div>`;
+        setTimeout(() => { const el = document.getElementById(`t${id}`); if(el) el.remove(); }, 3500);
+    }
+
+    function logout() {
+        localStorage.removeItem('adminToken');
+        window.location.href = 'login.html';
+    }
+
+    // ========================
+    // NAVIGATION
+    // ========================
+    const sectionTitles = {
+        'dashboard': ['Dashboard Overview', 'Welcome back to the command center!'],
+        'students': ['Student Management', 'Add, edit, view and manage all students'],
+        'teachers': ['Teacher Management', 'Manage faculty and teaching staff'],
+        'fees': ['Fee Management', 'Track fee collection status'],
+        'admissions': ['Admission Applications', 'View all incoming admissions'],
+        'notices': ['Notice Board', 'Post and manage notices'],
+        'materials': ['Study Materials', 'Upload and share study resources'],
+        'records': ['Student Records', 'Update attendance and fee records'],
+        'accounts': ['Student Accounts', 'Create and manage student login accounts'],
+        'messages': ['Contact Messages', 'View inquiry messages from public'],
+    };
+
+    function showSection(name) {
+        document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById('section-' + name);
+        if (target) { target.classList.add('active'); target.classList.add('fade-in'); }
+
+        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+        const navEl = document.getElementById('nav-' + name);
+        if (navEl) navEl.classList.add('active');
+
+        const titles = sectionTitles[name] || [name, ''];
+        document.getElementById('headerTitle').innerText = titles[0];
+        document.getElementById('headerSubtitle').innerText = titles[1];
+
+        closeSidebar();
+
+        if (name === 'dashboard') loadDashboard();
+        if (name === 'students') renderStudentsTable();
+        if (name === 'teachers') renderTeachersTable();
+        if (name === 'fees') renderFeesSection();
+        if (name === 'admissions') fetchAdmissions();
+        if (name === 'messages') fetchMessages();
+        if (name === 'notices') fetchNotices();
+        if (name === 'materials') fetchMaterials();
+        if (name === 'accounts') fetchAccounts();
+    }
+
+    // ========================
+    // MOBILE SIDEBAR
+    // ========================
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebarOverlay').classList.add('open');
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    // ========================
+    // DASHBOARD
+    // ========================
+    function loadDashboard() {
+        const students = getStudents();
+        const teachers = getTeachers();
+
+        // Counts
+        document.getElementById('statStudents').innerText = students.length;
+        document.getElementById('statTeachers').innerText = teachers.length;
+
+        // Fees breakdown
+        const paid = students.filter(s => s.feeStatus === 'Paid').length;
+        const pending = students.filter(s => s.feeStatus === 'Pending').length;
+        const overdue = students.filter(s => s.feeStatus === 'Overdue').length;
+        const total = students.length || 1;
+        const pct = Math.round((paid / total) * 100);
+
+        document.getElementById('statFeesPaid').innerText = paid;
+        document.getElementById('statFeesPercent').innerText = `${pct}% collected`;
+        document.getElementById('dashFeeRate').innerText = `${pct}% collected`;
+        document.getElementById('feeProgressBar').style.width = pct + '%';
+        document.getElementById('dashFeesPaid').innerText = `Paid: ${paid}`;
+        document.getElementById('dashFeesPending').innerText = `Pending: ${pending}`;
+        document.getElementById('dashFeesOverdue').innerText = `Overdue: ${overdue}`;
+
+        // Recent students
+        const recent = [...students].reverse().slice(0, 5);
+        const dashStudents = document.getElementById('dashRecentStudents');
+        if (recent.length === 0) {
+            dashStudents.innerHTML = '<div class="px-5 py-6 text-center text-slate-400 text-sm">No students yet. <button onclick="showSection(\'students\')" class="text-brandBlue font-semibold underline">Add first student</button></div>';
+        } else {
+            dashStudents.innerHTML = recent.map(s => `
+                <div class="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brandBlue to-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                        ${s.photo ? `<img src="${s.photo}" class="w-9 h-9 rounded-full object-cover" onerror="this.parentNode.innerText='${avatarInitials(s.name)}'">` : avatarInitials(s.name)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-slate-800 text-sm truncate">${s.name}</p>
+                        <p class="text-xs text-slate-400 truncate">${s.trade} · ${s.rollNo}</p>
+                    </div>
+                    ${feesBadge(s.feeStatus)}
+                </div>
+            `).join('');
         }
 
-        function logout() {
-            localStorage.removeItem('adminToken');
-            window.location.href = 'login.html';
-        }
-
-        // --- Data Fetching Logic ---
-
-        function formatDate(isoString) {
-            const date = new Date(isoString);
-            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-        }
-
-        async function fetchDashboardData() {
-            try {
-                const res = await fetch(`${API_BASE}/dashboard-stats`);
-                if (!res.ok) throw new Error('Demo Mode');
-                const data = await res.json();
-                
-                document.getElementById('statAdmissions').innerText = data.stats.totalAdmissions;
-                document.getElementById('statMessages').innerText = data.stats.totalContacts;
-                
+        // Fetch API stats (admissions count)
+        fetch(`${API_BASE}/dashboard-stats`)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('statAdmissions').innerText = data.stats?.totalAdmissions || 0;
                 const tbody = document.getElementById('recentAdmissionsTable');
                 tbody.innerHTML = '';
-                
-                if(data.recentAdmissions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">No applications yet.</td></tr>';
+                if (!data.recentAdmissions || data.recentAdmissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">No applications yet.</td></tr>';
                     return;
                 }
-                
                 data.recentAdmissions.forEach(adm => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-6 py-4 font-semibold text-slate-800">${adm.fullName}</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md">${adm.trade}</span>
-                            </td>
-                            <td class="px-6 py-4 text-slate-600">${adm.mobile}</td>
-                            <td class="px-6 py-4 text-slate-500 text-xs">${formatDate(adm.createdAt)}</td>
-                        </tr>
-                    `;
+                    tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-5 py-3 font-semibold text-slate-800 text-sm">${adm.fullName}</td>
+                        <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
+                        <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(adm.createdAt)}</td>
+                    </tr>`;
                 });
-            } catch (err) {
-                console.error("Error fetching dashboard data:", err);
-                document.getElementById('recentAdmissionsTable').innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-red-400">Failed to load data from server.</td></tr>';
-            }
+            })
+            .catch(() => {
+                document.getElementById('statAdmissions').innerText = '—';
+                document.getElementById('recentAdmissionsTable').innerHTML = '<tr><td colspan="3" class="px-5 py-6 text-center text-slate-400 text-sm">Connect backend for live data.</td></tr>';
+            });
+    }
+
+    // ========================
+    // STUDENT MANAGEMENT
+    // ========================
+    let importedRows = [];
+
+    function getFilteredStudents() {
+        const q = document.getElementById('studentSearch').value.toLowerCase();
+        const trade = document.getElementById('filterTrade').value;
+        const fee = document.getElementById('filterFeeStatus').value;
+        const batch = document.getElementById('filterBatch').value;
+        return getStudents().filter(s => {
+            const matchQ = !q || s.name.toLowerCase().includes(q) || (s.rollNo||'').toLowerCase().includes(q) || (s.mobile||'').includes(q);
+            const matchTrade = !trade || s.trade === trade;
+            const matchFee = !fee || s.feeStatus === fee;
+            const matchBatch = !batch || s.batch === batch;
+            return matchQ && matchTrade && matchFee && matchBatch;
+        });
+    }
+
+    function renderStudentsTable() {
+        const students = getFilteredStudents();
+        document.getElementById('studentCount').innerText = students.length;
+        const tbody = document.getElementById('studentsTableBody');
+        if (students.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-12 text-center text-slate-400">No students found. <button onclick="openAddStudent()" class="text-brandBlue font-semibold underline ml-1">Add student</button></td></tr>`;
+            return;
         }
-
-        async function fetchAdmissions() {
-            try {
-                const res = await fetch(`${API_BASE}/admissions`);
-                if (!res.ok) throw new Error('Demo Mode');
-                const data = await res.json();
-                
-                const tbody = document.getElementById('allAdmissionsTable');
-                tbody.innerHTML = '';
-                
-                if(data.admissions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No applications found.</td></tr>';
-                    return;
-                }
-                
-                data.admissions.forEach(adm => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">#${adm.id}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-800">${adm.fullName}</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-md border border-blue-200">${adm.trade}</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                <div class="font-medium text-slate-700">${adm.mobile}</div>
-                                <div class="text-xs text-slate-500">${adm.email || 'N/A'}</div>
-                            </td>
-                            <td class="px-6 py-4 text-slate-600 text-sm">${formatDate(adm.dob)}</td>
-                            <td class="px-6 py-4 text-slate-500 text-xs">${formatDate(adm.createdAt)}</td>
-                        </tr>
-                    `;
-                });
-            } catch (err) {
-                console.error("Error fetching admissions:", err);
-                document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Failed to load applications from server.</td></tr>';
-            }
-        }
-
-        async function fetchMessages() {
-            try {
-                const res = await fetch(`${API_BASE}/contact`);
-                if (!res.ok) throw new Error('Demo Mode');
-                const data = await res.json();
-                
-                const tbody = document.getElementById('allMessagesTable');
-                tbody.innerHTML = '';
-                
-                if(data.contacts.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">No messages found.</td></tr>';
-                    return;
-                }
-                
-                data.contacts.forEach(msg => {
-                    let statusHtml = '';
-                    if(msg.status === 'Resolved') {
-                        statusHtml = '<span class="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full"><i class="fa-solid fa-check-double"></i> Resolved</span>';
-                    } else {
-                        statusHtml = `<button onclick="resolveMessage(${msg.id})" class="text-xs font-bold text-white bg-brandGold hover:bg-yellow-600 px-4 py-2 rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-check"></i> Mark Resolved</button>`;
-                    }
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors align-top">
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-slate-800">${msg.name}</div>
-                                <div class="text-xs text-brandBlue mt-1 font-medium bg-blue-50 inline-block px-2 py-0.5 rounded border border-blue-100">${msg.email}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <p class="text-slate-600 text-sm leading-relaxed">${msg.message}</p>
-                            </td>
-                            <td class="px-6 py-4 text-slate-500 text-xs font-medium">${formatDate(msg.createdAt)}</td>
-                            <td class="px-6 py-4 text-center">${statusHtml}</td>
-                        </tr>
-                    `;
-                });
-            } catch (err) {
-                console.error("Error fetching messages:", err);
-                document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-red-400">Failed to load messages from server.</td></tr>';
-            }
-        }
-
-        async function resolveMessage(id) {
-            if(!confirm('Mark this message as resolved?')) return;
-            try {
-                await fetch(`${API_BASE}/contact/${id}/resolve`, { method: 'PUT' });
-                fetchMessages();
-            } catch (err) {
-                alert('Error updating status');
-            }
-        }
-
-        // --- Portal Management Logic ---
-        async function fetchNotices() {
-            try {
-                const res = await fetch(`${API_BASE}/notices`);
-                const data = await res.json();
-                const list = document.getElementById('noticesList');
-                list.innerHTML = '';
-                if(!data.notices || data.notices.length === 0) return list.innerHTML = '<p class="text-slate-500">No notices found.</p>';
-                
-                data.notices.forEach(n => {
-                    list.innerHTML += `
-                        <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-start gap-4">
-                            <div>
-                                <span class="text-[10px] font-bold text-brandGold uppercase tracking-wider bg-brandGold/10 px-2 py-1 rounded-md mb-2 inline-block">${n.category}</span>
-                                <h4 class="font-bold text-slate-800">${n.title}</h4>
-                                <p class="text-sm text-slate-600 mt-1">${n.content}</p>
-                            </div>
-                            <button onclick="deleteNotice(${n.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>
+        tbody.innerHTML = students.map(s => `
+            <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="px-5 py-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brandBlue to-blue-700 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 overflow-hidden">
+                            ${s.photo ? `<img src="${s.photo}" class="w-9 h-9 object-cover" onerror="this.outerHTML='<span>${avatarInitials(s.name)}</span>'">` : `<span>${avatarInitials(s.name)}</span>`}
                         </div>
-                    `;
-                });
-            } catch (err) { console.error(err); }
-        }
-
-        async function postNotice(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Publishing...';
-            try {
-                await fetch(`${API_BASE}/notices`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        title: document.getElementById('noticeTitle').value,
-                        category: document.getElementById('noticeCategory').value,
-                        content: document.getElementById('noticeContent').value
-                    })
-                });
-                e.target.reset();
-                fetchNotices();
-            } catch (err) { alert('Error publishing notice'); }
-            finally { btn.disabled = false; btn.innerText = 'Publish Notice'; }
-        }
-
-        async function deleteNotice(id) {
-            if(!confirm('Delete this notice?')) return;
-            await fetch(`${API_BASE}/notices/${id}`, { method: 'DELETE' });
-            fetchNotices();
-        }
-
-        async function fetchMaterials() {
-            try {
-                const res = await fetch(`${API_BASE}/materials`);
-                const data = await res.json();
-                const list = document.getElementById('materialsList');
-                list.innerHTML = '';
-                if(!data.materials || data.materials.length === 0) return list.innerHTML = '<p class="text-slate-500">No materials found.</p>';
-                
-                data.materials.forEach(m => {
-                    list.innerHTML += `
-                        <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-center gap-4">
-                            <div>
-                                <h4 class="font-bold text-slate-800">${m.title}</h4>
-                                ${m.description ? `<p class="text-sm text-slate-600">${m.description}</p>` : ''}
-                                <a href="${m.url}" target="_blank" class="text-xs font-bold text-brandBlue hover:underline mt-1 inline-block">View Link <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                            <button onclick="deleteMaterial(${m.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        <div>
+                            <p class="font-semibold text-slate-800 text-sm">${s.name}</p>
+                            <p class="text-xs text-slate-400">${s.email || s.mobile || ''}</p>
                         </div>
-                    `;
-                });
-            } catch (err) { console.error(err); }
+                    </div>
+                </td>
+                <td class="px-5 py-3 font-mono text-xs text-slate-600 font-semibold">${s.rollNo}</td>
+                <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${s.trade}</span></td>
+                <td class="px-5 py-3 text-xs text-slate-500">${s.batch || '—'}</td>
+                <td class="px-5 py-3 text-sm text-slate-600">${s.mobile || '—'}</td>
+                <td class="px-5 py-3">${feesBadge(s.feeStatus)}</td>
+                <td class="px-5 py-3">
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="viewProfile('${s.id}')" title="View Profile" class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-brandBlue flex items-center justify-center transition-colors text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button onclick="openEditStudent('${s.id}')" title="Edit" class="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 flex items-center justify-center transition-colors text-xs">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="openIDCard('${s.id}')" title="ID Card" class="w-8 h-8 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 flex items-center justify-center transition-colors text-xs">
+                            <i class="fa-solid fa-id-card"></i>
+                        </button>
+                        <button onclick="deleteStudent('${s.id}')" title="Delete" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition-colors text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function openAddStudent() {
+        document.getElementById('studentModalTitle').innerText = 'Add New Student';
+        document.getElementById('studentForm').reset();
+        document.getElementById('editStudentId').value = '';
+        document.getElementById('studentModal').classList.remove('hidden');
+    }
+
+    function openEditStudent(id) {
+        const s = getStudents().find(x => x.id === id);
+        if (!s) return;
+        document.getElementById('studentModalTitle').innerText = 'Edit Student';
+        document.getElementById('editStudentId').value = id;
+        document.getElementById('sName').value = s.name || '';
+        document.getElementById('sRollNo').value = s.rollNo || '';
+        document.getElementById('sFatherName').value = s.fatherName || '';
+        document.getElementById('sDOB').value = s.dob || '';
+        document.getElementById('sMobile').value = s.mobile || '';
+        document.getElementById('sEmail').value = s.email || '';
+        document.getElementById('sTrade').value = s.trade || '';
+        document.getElementById('sBatch').value = s.batch || '';
+        document.getElementById('sFeeStatus').value = s.feeStatus || 'Pending';
+        document.getElementById('sAddress').value = s.address || '';
+        document.getElementById('sPhoto').value = s.photo || '';
+        document.getElementById('sAttendance').value = s.attendance || '';
+        document.getElementById('sResults').value = s.results || '';
+        document.getElementById('sDocuments').value = (s.documents || []).join(', ');
+        document.getElementById('studentModal').classList.remove('hidden');
+    }
+
+    function closeStudentModal(event) {
+        if (event && event.target !== document.getElementById('studentModal')) return;
+        document.getElementById('studentModal').classList.add('hidden');
+    }
+
+    function saveStudent(e) {
+        e.preventDefault();
+        const id = document.getElementById('editStudentId').value;
+        const docs = document.getElementById('sDocuments').value.split(',').map(d => d.trim()).filter(Boolean);
+        const student = {
+            id: id || 'STU-' + Date.now(),
+            name: document.getElementById('sName').value.trim(),
+            rollNo: document.getElementById('sRollNo').value.trim(),
+            fatherName: document.getElementById('sFatherName').value.trim(),
+            dob: document.getElementById('sDOB').value,
+            mobile: document.getElementById('sMobile').value.trim(),
+            email: document.getElementById('sEmail').value.trim(),
+            trade: document.getElementById('sTrade').value,
+            batch: document.getElementById('sBatch').value,
+            feeStatus: document.getElementById('sFeeStatus').value,
+            address: document.getElementById('sAddress').value.trim(),
+            photo: document.getElementById('sPhoto').value.trim(),
+            attendance: document.getElementById('sAttendance').value,
+            results: document.getElementById('sResults').value.trim(),
+            documents: docs,
+            createdAt: id ? (getStudents().find(x=>x.id===id)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+        };
+        const students = getStudents();
+        if (id) {
+            const idx = students.findIndex(x => x.id === id);
+            if (idx !== -1) students[idx] = student;
+        } else {
+            students.push(student);
         }
+        saveStudents(students);
+        document.getElementById('studentModal').classList.add('hidden');
+        renderStudentsTable();
+        loadDashboard();
+        showToast(id ? 'Student updated successfully!' : 'Student added successfully!');
+    }
 
-        async function postMaterial(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Adding...';
-            try {
-                await fetch(`${API_BASE}/materials`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        title: document.getElementById('matTitle').value,
-                        url: document.getElementById('matUrl').value,
-                        description: document.getElementById('matDesc').value
-                    })
-                });
-                e.target.reset();
-                fetchMaterials();
-            } catch (err) { alert('Error adding material'); }
-            finally { btn.disabled = false; btn.innerText = 'Add Material'; }
+    function deleteStudent(id) {
+        if (!confirm('Delete this student? This action cannot be undone.')) return;
+        const students = getStudents().filter(s => s.id !== id);
+        saveStudents(students);
+        renderStudentsTable();
+        loadDashboard();
+        showToast('Student deleted.', 'info');
+    }
+
+    // ========================
+    // STUDENT PROFILE
+    // ========================
+    function viewProfile(id) {
+        const s = getStudents().find(x => x.id === id);
+        if (!s) return;
+        const attPct = s.attendance || 0;
+        const attColor = attPct >= 75 ? 'bg-green-500' : attPct >= 50 ? 'bg-yellow-500' : 'bg-red-500';
+        const docsHtml = (s.documents && s.documents.length > 0)
+            ? s.documents.map(d => `<span class="inline-flex items-center gap-1 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-file-lines"></i> ${d}</span>`).join('')
+            : '<span class="text-sm text-slate-400">No documents listed</span>';
+
+        document.getElementById('profileContent').innerHTML = `
+            <!-- Header card -->
+            <div class="bg-gradient-to-br from-brandBlue to-blue-700 rounded-2xl p-5 text-white mb-5 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
+                <div class="flex items-center gap-4 relative">
+                    <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-black overflow-hidden border-2 border-white/30">
+                        ${s.photo ? `<img src="${s.photo}" class="w-16 h-16 object-cover" onerror="this.outerHTML='<span>${avatarInitials(s.name)}</span>'">` : avatarInitials(s.name)}
+                    </div>
+                    <div>
+                        <h2 class="font-poppins font-bold text-xl">${s.name}</h2>
+                        <p class="text-white/70 text-sm">${s.rollNo} · ${s.trade}</p>
+                        <p class="text-white/60 text-xs mt-0.5">${s.batch || ''}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Info Grid -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                ${profileField('Father', s.fatherName)}
+                ${profileField('Date of Birth', s.dob ? formatDate(s.dob) : '—')}
+                ${profileField('Mobile', s.mobile)}
+                ${profileField('Email', s.email)}
+                ${profileField('Address', s.address, 'col-span-2')}
+            </div>
+            <!-- Fee Status -->
+            <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4 mb-4">
+                <span class="text-sm font-bold text-slate-700">Fee Status</span>
+                ${feesBadge(s.feeStatus)}
+            </div>
+            <!-- Attendance Bar -->
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold text-slate-700 mb-1.5">
+                    <span>Attendance</span><span>${attPct}%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="${attColor} h-2.5 rounded-full transition-all duration-500" style="width:${Math.min(attPct,100)}%"></div>
+                </div>
+                <p class="text-xs mt-1 ${attPct >= 75 ? 'text-green-600' : 'text-red-500'} font-medium">${attPct >= 75 ? 'Good standing' : 'Below minimum (75%)'}</p>
+            </div>
+            <!-- Results -->
+            ${s.results ? `<div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-5">
+                <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-1">Results / Marks</p>
+                <p class="text-sm text-slate-700">${s.results}</p>
+            </div>` : ''}
+            <!-- Documents -->
+            <div class="mb-5">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Documents Submitted</p>
+                <div class="flex flex-wrap gap-2">${docsHtml}</div>
+            </div>
+            <!-- Actions -->
+            <div class="flex gap-3 pt-4 border-t border-slate-100">
+                <button onclick="closeProfile(); openEditStudent('${s.id}')" class="flex-1 py-2.5 bg-brandBlue text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button onclick="closeProfile(); openIDCard('${s.id}')" class="flex-1 py-2.5 bg-brandGold text-brandBlue text-sm font-bold rounded-xl hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-id-card"></i> ID Card
+                </button>
+            </div>
+        `;
+        const panel = document.getElementById('profilePanel');
+        panel.classList.remove('hidden');
+        panel.style.transform = 'translateX(0)';
+        document.getElementById('profileOverlay').classList.remove('hidden');
+    }
+
+    function profileField(label, value, extraClass = '') {
+        return `<div class="bg-slate-50 rounded-xl p-3 ${extraClass}">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">${label}</p>
+            <p class="text-sm font-semibold text-slate-800">${value || '—'}</p>
+        </div>`;
+    }
+
+    function closeProfile() {
+        const panel = document.getElementById('profilePanel');
+        panel.style.transform = 'translateX(100%)';
+        setTimeout(() => panel.classList.add('hidden'), 300);
+        document.getElementById('profileOverlay').classList.add('hidden');
+    }
+
+    // ========================
+    // STUDENT ID CARD
+    // ========================
+    function openIDCard(id) {
+        const s = getStudents().find(x => x.id === id);
+        if (!s) return;
+        const photoHtml = s.photo
+            ? `<img src="${s.photo}" class="w-20 h-24 object-cover rounded-xl border-2 border-brandGold/40" onerror="this.outerHTML='<div class=\\"w-20 h-24 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-black text-white\\">${avatarInitials(s.name)}</div>'">`
+            : `<div class="w-20 h-24 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-black text-white border-2 border-white/30">${avatarInitials(s.name)}</div>`;
+
+        document.getElementById('idCardContent').innerHTML = `
+            <div class="relative z-10">
+                <!-- College Header -->
+                <div class="flex items-center gap-3 mb-5 pb-4 border-b border-white/20">
+                    <div class="w-10 h-10 bg-brandGold rounded-xl flex items-center justify-center text-brandBlue font-black text-sm flex-shrink-0">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-poppins font-black text-base leading-none text-white">Excellence ITI</h2>
+                        <p class="text-[10px] text-white/60 mt-0.5">Industrial Training Institute</p>
+                    </div>
+                    <div class="ml-auto">
+                        <span class="text-[10px] font-bold bg-brandGold/20 text-brandGold border border-brandGold/40 px-2 py-1 rounded-lg">STUDENT ID</span>
+                    </div>
+                </div>
+                <!-- Photo + Info -->
+                <div class="flex gap-4 mb-5">
+                    ${photoHtml}
+                    <div class="flex-1">
+                        <h3 class="font-poppins font-black text-lg leading-tight text-white">${s.name}</h3>
+                        <p class="text-white/60 text-xs mt-1">S/o ${s.fatherName || '—'}</p>
+                        <div class="mt-3 space-y-1.5">
+                            <div class="flex gap-2 text-xs">
+                                <span class="text-white/50 w-16 flex-shrink-0">Roll No.</span>
+                                <span class="font-bold text-brandGold">${s.rollNo}</span>
+                            </div>
+                            <div class="flex gap-2 text-xs">
+                                <span class="text-white/50 w-16 flex-shrink-0">Trade</span>
+                                <span class="font-semibold text-white">${s.trade}</span>
+                            </div>
+                            <div class="flex gap-2 text-xs">
+                                <span class="text-white/50 w-16 flex-shrink-0">Batch</span>
+                                <span class="font-semibold text-white">${s.batch || '—'}</span>
+                            </div>
+                            <div class="flex gap-2 text-xs">
+                                <span class="text-white/50 w-16 flex-shrink-0">DOB</span>
+                                <span class="font-semibold text-white">${s.dob ? formatDate(s.dob) : '—'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Divider -->
+                <div class="border-t border-white/15 mb-4"></div>
+                <!-- Contact + Validity -->
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-[10px] text-white/50 uppercase tracking-wider">Mobile</p>
+                        <p class="text-xs font-bold text-white">${s.mobile || '—'}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-white/50 uppercase tracking-wider">Valid Until</p>
+                        <p class="text-xs font-bold text-brandGold">${s.batch ? s.batch.split('-')[1] + ' | Mar' : 'N/A'}</p>
+                    </div>
+                </div>
+                <!-- Barcode-like decoration -->
+                <div class="mt-4 flex items-center gap-1">
+                    ${Array.from({length: 28}, (_, i) => `<div class="h-5 bg-white/20 rounded-sm" style="width:${[2,3,1,4,2,3,1,2,4,3,2,1,3,2,4,1,3,2,1,4,2,3,1,2,3,2,4,1][i]}px"></div>`).join('')}
+                    <span class="ml-2 text-[9px] text-white/40 font-mono">${s.rollNo}</span>
+                </div>
+            </div>
+        `;
+        document.getElementById('idCardModal').classList.remove('hidden');
+    }
+
+    function closeIdCard(event) {
+        if (event && event.target !== document.getElementById('idCardModal')) return;
+        document.getElementById('idCardModal').classList.add('hidden');
+    }
+
+    function printIDCard() {
+        const card = document.getElementById('idCardContent').innerHTML;
+        const printArea = document.getElementById('printArea');
+        printArea.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#f1f5f9;"><div style="width:340px;min-height:520px;background:linear-gradient(135deg,#0f172a,#1e3a5f 60%,#0f172a);border-radius:20px;padding:28px 24px;color:#fff;font-family:Inter,sans-serif;">${card}</div></div>`;
+        window.print();
+        setTimeout(() => printArea.innerHTML = '', 1000);
+    }
+
+    // ========================
+    // BULK IMPORT
+    // ========================
+    function openBulkImport() {
+        importedRows = [];
+        document.getElementById('importPreview').classList.add('hidden');
+        document.getElementById('excelFileInput').value = '';
+        document.getElementById('importModal').classList.remove('hidden');
+    }
+
+    function closeImport(event) {
+        if (event && event.target !== document.getElementById('importModal')) return;
+        document.getElementById('importModal').classList.add('hidden');
+    }
+
+    function handleFileDrop(e) {
+        e.preventDefault();
+        document.getElementById('dropZone').classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) processImportFile(file);
+    }
+
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) processImportFile(file);
+    }
+
+    function processImportFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data, { type: 'array' });
+            const sheet = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+            importedRows = rows;
+            showImportPreview(rows);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function showImportPreview(rows) {
+        if (rows.length === 0) { showToast('No data found in file.', 'error'); return; }
+        const keys = Object.keys(rows[0]);
+        document.getElementById('importRowCount').innerText = rows.length;
+        document.getElementById('importPreviewHeader').innerHTML = keys.map(k => `<th class="px-3 py-2 font-bold whitespace-nowrap">${k}</th>`).join('');
+        document.getElementById('importPreviewBody').innerHTML = rows.slice(0, 8).map(row =>
+            `<tr class="hover:bg-slate-50">${keys.map(k => `<td class="px-3 py-2 whitespace-nowrap text-slate-700">${row[k]}</td>`).join('')}</tr>`
+        ).join('');
+        document.getElementById('importPreview').classList.remove('hidden');
+    }
+
+    function clearImport() {
+        importedRows = [];
+        document.getElementById('importPreview').classList.add('hidden');
+        document.getElementById('excelFileInput').value = '';
+    }
+
+    function confirmBulkImport() {
+        if (importedRows.length === 0) return;
+        const students = getStudents();
+        let added = 0;
+        importedRows.forEach(row => {
+            const name = row['Name'] || row['name'] || row['Student Name'] || '';
+            if (!name) return;
+            students.push({
+                id: 'STU-' + Date.now() + '-' + Math.random().toString(36).substr(2,5),
+                name: name,
+                rollNo: row['RollNo'] || row['Roll No'] || row['Roll Number'] || '',
+                trade: row['Trade'] || '',
+                batch: row['Batch'] || '',
+                mobile: String(row['Mobile'] || row['Phone'] || ''),
+                email: row['Email'] || '',
+                feeStatus: row['FeeStatus'] || row['Fee Status'] || 'Pending',
+                fatherName: row['FatherName'] || row["Father's Name"] || '',
+                address: row['Address'] || '',
+                attendance: row['Attendance'] || 0,
+                results: row['Results'] || '',
+                documents: [],
+                createdAt: new Date().toISOString(),
+            });
+            added++;
+        });
+        saveStudents(students);
+        document.getElementById('importModal').classList.add('hidden');
+        renderStudentsTable();
+        loadDashboard();
+        showToast(`${added} students imported successfully!`);
+    }
+
+    function downloadTemplate() {
+        const headers = ['Name','RollNo','FatherName','Trade','Batch','Mobile','Email','FeeStatus','Address','Attendance','Results'];
+        const sample = [
+            ['Rahul Kumar','ITI-2024-001','Suresh Kumar','Electrician','2024-25','9876543210','rahul@email.com','Paid','123 Main St, Delhi','88','Sem1: 85%'],
+            ['Priya Sharma','ITI-2024-002','Ramesh Sharma','Fitter','2024-25','9876543211','priya@email.com','Pending','456 MG Road, Jaipur','72','Sem1: 78%'],
+        ];
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...sample]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Students');
+        XLSX.writeFile(wb, 'ITI_Student_Template.xlsx');
+    }
+
+    function exportStudentsCSV() {
+        const students = getStudents();
+        if (students.length === 0) { showToast('No students to export.', 'info'); return; }
+        const headers = ['Name','RollNo','FatherName','Trade','Batch','Mobile','Email','FeeStatus','Attendance','Results'];
+        const rows = students.map(s => [s.name,s.rollNo,s.fatherName,s.trade,s.batch,s.mobile,s.email,s.feeStatus,s.attendance,s.results]);
+        const ws = XLSX.utils.aoa_to_sheet([headers,...rows]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Students');
+        XLSX.writeFile(wb, 'ITI_Students_Export.xlsx');
+        showToast('Students exported as Excel!');
+    }
+
+    // ========================
+    // TEACHERS
+    // ========================
+    function renderTeachersTable() {
+        const teachers = getTeachers();
+        const tbody = document.getElementById('teachersTableBody');
+        if (teachers.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No teachers added yet.</td></tr>`;
+            return;
         }
+        tbody.innerHTML = teachers.map(t => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">${avatarInitials(t.name)}</div>
+                        <span class="font-semibold text-slate-800 text-sm">${t.name}</span>
+                    </div>
+                </td>
+                <td class="px-5 py-3 text-sm text-slate-600">${t.subject}</td>
+                <td class="px-5 py-3 text-sm text-slate-500">${t.qualification || '—'}</td>
+                <td class="px-5 py-3 text-sm text-slate-600">${t.mobile || '—'}</td>
+                <td class="px-5 py-3 text-sm text-slate-500">${t.experience || '—'}</td>
+                <td class="px-5 py-3">
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="editTeacher('${t.id}')" class="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs transition-colors">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteTeacher('${t.id}')" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center text-xs transition-colors">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
 
-        async function deleteMaterial(id) {
-            if(!confirm('Delete this material?')) return;
-            await fetch(`${API_BASE}/materials/${id}`, { method: 'DELETE' });
-            fetchMaterials();
+    function saveTeacher(e) {
+        e.preventDefault();
+        const id = document.getElementById('editTeacherId').value;
+        const teacher = {
+            id: id || 'TCH-' + Date.now(),
+            name: document.getElementById('tName').value.trim(),
+            subject: document.getElementById('tSubject').value.trim(),
+            qualification: document.getElementById('tQualification').value.trim(),
+            mobile: document.getElementById('tMobile').value.trim(),
+            email: document.getElementById('tEmail').value.trim(),
+            experience: document.getElementById('tExperience').value.trim(),
+            createdAt: new Date().toISOString(),
+        };
+        const teachers = getTeachers();
+        if (id) {
+            const idx = teachers.findIndex(x => x.id === id);
+            if (idx !== -1) teachers[idx] = teacher;
+        } else {
+            teachers.push(teacher);
         }
+        saveTeachers(teachers);
+        resetTeacherForm();
+        renderTeachersTable();
+        showToast(id ? 'Teacher updated!' : 'Teacher added!');
+    }
 
-        async function postRecord(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Updating...';
-            try {
-                const res = await fetch(`${API_BASE}/records`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        email: document.getElementById('recEmail').value,
-                        attendance: document.getElementById('recAttendance').value,
-                        feeStatus: document.getElementById('recFee').value,
-                        results: document.getElementById('recResults').value
-                    })
-                });
-                if(res.ok) {
-                    alert('Record updated successfully!');
-                    e.target.reset();
-                } else {
-                    alert('Failed to update record');
-                }
-            } catch (err) { alert('Network Error'); }
-            finally { btn.disabled = false; btn.innerText = 'Update Record'; }
+    function editTeacher(id) {
+        const t = getTeachers().find(x => x.id === id);
+        if (!t) return;
+        document.getElementById('teacherFormTitle').innerText = 'Edit Teacher';
+        document.getElementById('editTeacherId').value = id;
+        document.getElementById('tName').value = t.name || '';
+        document.getElementById('tSubject').value = t.subject || '';
+        document.getElementById('tQualification').value = t.qualification || '';
+        document.getElementById('tMobile').value = t.mobile || '';
+        document.getElementById('tEmail').value = t.email || '';
+        document.getElementById('tExperience').value = t.experience || '';
+        document.getElementById('teacherForm').scrollIntoView({behavior:'smooth'});
+    }
+
+    function deleteTeacher(id) {
+        if (!confirm('Delete this teacher?')) return;
+        saveTeachers(getTeachers().filter(t => t.id !== id));
+        renderTeachersTable();
+        showToast('Teacher removed.', 'info');
+    }
+
+    function resetTeacherForm() {
+        document.getElementById('teacherForm').reset();
+        document.getElementById('editTeacherId').value = '';
+        document.getElementById('teacherFormTitle').innerText = 'Add New Teacher';
+    }
+
+    // ========================
+    // FEES
+    // ========================
+    function renderFeesSection() {
+        const students = getStudents();
+        const paid = students.filter(s => s.feeStatus === 'Paid').length;
+        const pending = students.filter(s => s.feeStatus === 'Pending').length;
+        const overdue = students.filter(s => s.feeStatus === 'Overdue').length;
+        document.getElementById('feeStatPaid').innerText = paid;
+        document.getElementById('feeStatPending').innerText = pending;
+        document.getElementById('feeStatOverdue').innerText = overdue;
+        renderFeesTable();
+    }
+
+    function renderFeesTable() {
+        const filter = document.getElementById('feeFilter').value;
+        const students = getStudents().filter(s => !filter || s.feeStatus === filter);
+        const tbody = document.getElementById('feesTableBody');
+        if (students.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No students found.</td></tr>';
+            return;
         }
+        tbody.innerHTML = students.map(s => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-5 py-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center text-xs font-bold">${avatarInitials(s.name)}</div>
+                        <span class="font-semibold text-slate-800 text-sm">${s.name}</span>
+                    </div>
+                </td>
+                <td class="px-5 py-3 font-mono text-xs text-slate-600">${s.rollNo}</td>
+                <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${s.trade}</span></td>
+                <td class="px-5 py-3 text-xs text-slate-500">${s.batch || '—'}</td>
+                <td class="px-5 py-3">${feesBadge(s.feeStatus)}</td>
+                <td class="px-5 py-3 text-center">
+                    ${s.feeStatus !== 'Paid' ? `<button onclick="markFeePaid('${s.id}')" class="text-xs font-bold text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">Mark Paid</button>` : `<span class="text-xs text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Paid</span>`}
+                </td>
+            </tr>
+        `).join('');
+    }
 
-        async function fetchAccounts() {
-            try {
-                const res = await fetch(`${API_BASE}/students`);
-                const data = await res.json();
-                const tbody = document.getElementById('accountsList');
-                tbody.innerHTML = '';
-                if(!data.students || data.students.length === 0) return tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-slate-500">No student accounts found.</td></tr>';
-                
-                data.students.forEach(acc => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-6 py-4 font-bold text-slate-800">${acc.name}</td>
-                            <td class="px-6 py-4 text-brandBlue font-medium">${acc.email}</td>
-                            <td class="px-6 py-4 text-slate-500 text-xs">${formatDate(acc.createdAt)}</td>
-                        </tr>
-                    `;
-                });
-            } catch (err) { console.error(err); }
+    function markFeePaid(id) {
+        const students = getStudents();
+        const idx = students.findIndex(s => s.id === id);
+        if (idx !== -1) { students[idx].feeStatus = 'Paid'; saveStudents(students); }
+        renderFeesSection();
+        showToast('Fee marked as Paid!');
+    }
+
+    // ========================
+    // EXISTING API SECTIONS
+    // ========================
+    async function fetchAdmissions() {
+        try {
+            const res = await fetch(`${API_BASE}/admissions`);
+            if (!res.ok) throw new Error('No server');
+            const data = await res.json();
+            const tbody = document.getElementById('allAdmissionsTable');
+            tbody.innerHTML = '';
+            if (!data.admissions || data.admissions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">No applications found.</td></tr>';
+                return;
+            }
+            data.admissions.forEach(adm => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-5 py-3 text-slate-400 font-mono text-xs">#${adm.id}</td>
+                        <td class="px-5 py-3 font-semibold text-slate-800">${adm.fullName}</td>
+                        <td class="px-5 py-3"><span class="badge-trade text-xs font-bold px-2 py-1 rounded-lg">${adm.trade}</span></td>
+                        <td class="px-5 py-3 text-sm"><div class="font-medium text-slate-700">${adm.mobile}</div><div class="text-xs text-slate-400">${adm.email||'N/A'}</div></td>
+                        <td class="px-5 py-3 text-slate-600 text-sm">${formatDate(adm.dob)}</td>
+                        <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(adm.createdAt)}</td>
+                        <td class="px-5 py-3 text-center">
+                            <button onclick="convertToStudent(${JSON.stringify(adm).replace(/"/g,'&quot;')})" class="text-xs font-bold bg-brandBlue text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                                <i class="fa-solid fa-user-plus"></i> Enroll
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        } catch(err) {
+            document.getElementById('allAdmissionsTable').innerHTML = '<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Connect backend to load applications.</td></tr>';
         }
+    }
 
-        async function postAccount(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button'); btn.disabled = true; btn.innerText = 'Creating...';
-            try {
-                const res = await fetch(`${API_BASE}/students`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        name: document.getElementById('accName').value,
-                        email: document.getElementById('accEmail').value,
-                        password: document.getElementById('accPassword').value
-                    })
-                });
-                const data = await res.json();
-                if(res.ok) {
-                    alert('Student account created successfully!');
-                    e.target.reset();
-                    fetchAccounts();
-                } else {
-                    alert(data.message || 'Failed to create account');
-                }
-            } catch (err) { alert('Network Error'); }
-            finally { btn.disabled = false; btn.innerText = 'Create Account'; }
+    function convertToStudent(adm) {
+        if (!confirm(`Enroll "${adm.fullName}" as a student?`)) return;
+        const students = getStudents();
+        students.push({
+            id: 'STU-' + Date.now(),
+            name: adm.fullName,
+            rollNo: 'ITI-' + new Date().getFullYear() + '-' + String(students.length+1).padStart(3,'0'),
+            fatherName: '',
+            dob: adm.dob,
+            mobile: adm.mobile,
+            email: adm.email || '',
+            trade: adm.trade,
+            batch: new Date().getFullYear() + '-' + (new Date().getFullYear()+1).toString().slice(-2),
+            feeStatus: 'Pending',
+            address: '',
+            photo: '',
+            attendance: 0,
+            results: '',
+            documents: [],
+            createdAt: new Date().toISOString(),
+        });
+        saveStudents(students);
+        showToast(`${adm.fullName} enrolled as student!`);
+    }
+
+    async function fetchMessages() {
+        try {
+            const res = await fetch(`${API_BASE}/contact`);
+            if (!res.ok) throw new Error('No server');
+            const data = await res.json();
+            const tbody = document.getElementById('allMessagesTable');
+            tbody.innerHTML = '';
+            if (!data.contacts || data.contacts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">No messages found.</td></tr>';
+                return;
+            }
+            data.contacts.forEach(msg => {
+                const statusHtml = msg.status === 'Resolved'
+                    ? '<span class="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full"><i class="fa-solid fa-check-double"></i> Resolved</span>'
+                    : `<button onclick="resolveMessage(${msg.id})" class="text-xs font-bold text-white bg-brandGold hover:bg-yellow-600 px-3 py-1.5 rounded-lg transition-colors"><i class="fa-solid fa-check"></i> Resolve</button>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors align-top">
+                    <td class="px-5 py-3"><div class="font-bold text-slate-800 text-sm">${msg.name}</div><div class="text-xs text-brandBlue mt-0.5">${msg.email}</div></td>
+                    <td class="px-5 py-3 text-sm text-slate-600">${msg.message}</td>
+                    <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(msg.createdAt)}</td>
+                    <td class="px-5 py-3">${statusHtml}</td>
+                </tr>`;
+            });
+        } catch(err) {
+            document.getElementById('allMessagesTable').innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">Connect backend to load messages.</td></tr>';
         }
+    }
 
-        // Initialize dashboard on load
-        fetchDashboardData();
+    async function resolveMessage(id) {
+        if (!confirm('Mark as resolved?')) return;
+        try {
+            await fetch(`${API_BASE}/contact/${id}/resolve`, { method: 'PUT' });
+            fetchMessages();
+        } catch { showToast('Error updating status', 'error'); }
+    }
 
+    async function fetchNotices() {
+        try {
+            const res = await fetch(`${API_BASE}/notices`);
+            const data = await res.json();
+            const list = document.getElementById('noticesList');
+            list.innerHTML = '';
+            if (!data.notices || data.notices.length === 0) {
+                list.innerHTML = '<p class="text-slate-400 text-sm">No notices found.</p>';
+                return;
+            }
+            data.notices.forEach(n => {
+                list.innerHTML += `<div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-start gap-4">
+                    <div>
+                        <span class="text-[10px] font-bold text-brandGold uppercase tracking-wider bg-brandGold/10 px-2 py-1 rounded-md mb-2 inline-block">${n.category}</span>
+                        <h4 class="font-bold text-slate-800 text-sm">${n.title}</h4>
+                        <p class="text-sm text-slate-500 mt-1">${n.content}</p>
+                    </div>
+                    <button onclick="deleteNotice(${n.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition-colors flex-shrink-0"><i class="fa-solid fa-trash text-xs"></i></button>
+                </div>`;
+            });
+        } catch {}
+    }
+
+    async function postNotice(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true; btn.innerText = 'Publishing...';
+        try {
+            await fetch(`${API_BASE}/notices`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+                title: document.getElementById('noticeTitle').value,
+                category: document.getElementById('noticeCategory').value,
+                content: document.getElementById('noticeContent').value
+            })});
+            e.target.reset(); fetchNotices(); showToast('Notice published!');
+        } catch { showToast('Error publishing notice', 'error'); }
+        finally { btn.disabled = false; btn.innerText = 'Publish Notice'; }
+    }
+
+    async function deleteNotice(id) {
+        if (!confirm('Delete this notice?')) return;
+        await fetch(`${API_BASE}/notices/${id}`, { method:'DELETE' });
+        fetchNotices();
+    }
+
+    async function fetchMaterials() {
+        try {
+            const res = await fetch(`${API_BASE}/materials`);
+            const data = await res.json();
+            const list = document.getElementById('materialsList');
+            list.innerHTML = '';
+            if (!data.materials || data.materials.length === 0) { list.innerHTML = '<p class="text-slate-400 text-sm">No materials found.</p>'; return; }
+            data.materials.forEach(m => {
+                list.innerHTML += `<div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex justify-between items-center gap-4">
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">${m.title}</h4>
+                        ${m.description ? `<p class="text-xs text-slate-500 mt-0.5">${m.description}</p>` : ''}
+                        <a href="${m.url}" target="_blank" class="text-xs font-bold text-brandBlue hover:underline mt-1 inline-block">View Link <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                    </div>
+                    <button onclick="deleteMaterial(${m.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash text-xs"></i></button>
+                </div>`;
+            });
+        } catch {}
+    }
+
+    async function postMaterial(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true; btn.innerText = 'Adding...';
+        try {
+            await fetch(`${API_BASE}/materials`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+                title: document.getElementById('matTitle').value,
+                url: document.getElementById('matUrl').value,
+                description: document.getElementById('matDesc').value
+            })});
+            e.target.reset(); fetchMaterials(); showToast('Material added!');
+        } catch { showToast('Error adding material', 'error'); }
+        finally { btn.disabled = false; btn.innerText = 'Add Material'; }
+    }
+
+    async function deleteMaterial(id) {
+        if (!confirm('Delete this material?')) return;
+        await fetch(`${API_BASE}/materials/${id}`, { method:'DELETE' });
+        fetchMaterials();
+    }
+
+    async function postRecord(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true; btn.innerText = 'Updating...';
+        try {
+            const res = await fetch(`${API_BASE}/records`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+                email: document.getElementById('recEmail').value,
+                attendance: document.getElementById('recAttendance').value,
+                feeStatus: document.getElementById('recFee').value,
+                results: document.getElementById('recResults').value
+            })});
+            if (res.ok) { showToast('Record updated!'); e.target.reset(); }
+            else showToast('Failed to update record', 'error');
+        } catch { showToast('Network Error', 'error'); }
+        finally { btn.disabled = false; btn.innerText = 'Update Record'; }
+    }
+
+    async function fetchAccounts() {
+        try {
+            const res = await fetch(`${API_BASE}/students`);
+            const data = await res.json();
+            const tbody = document.getElementById('accountsList');
+            tbody.innerHTML = '';
+            if (!data.students || data.students.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">No accounts found.</td></tr>'; return; }
+            data.students.forEach(acc => {
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-3 font-semibold text-slate-800">${acc.name}</td>
+                    <td class="px-5 py-3 text-brandBlue font-medium text-sm">${acc.email}</td>
+                    <td class="px-5 py-3 text-slate-400 text-xs">${formatDate(acc.createdAt)}</td>
+                </tr>`;
+            });
+        } catch {
+            document.getElementById('accountsList').innerHTML = '<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">Connect backend to load accounts.</td></tr>';
+        }
+    }
+
+    async function postAccount(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true; btn.innerText = 'Creating...';
+        try {
+            const res = await fetch(`${API_BASE}/students`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+                name: document.getElementById('accName').value,
+                email: document.getElementById('accEmail').value,
+                password: document.getElementById('accPassword').value
+            })});
+            const data = await res.json();
+            if (res.ok) { showToast('Account created!'); e.target.reset(); fetchAccounts(); }
+            else showToast(data.message || 'Failed to create account', 'error');
+        } catch { showToast('Network Error', 'error'); }
+        finally { btn.disabled = false; btn.innerText = 'Create Account'; }
+    }
+
+    // ========================
+    // INIT
+    // ========================
+    loadDashboard();
     </script>
 </body>
 </html>
