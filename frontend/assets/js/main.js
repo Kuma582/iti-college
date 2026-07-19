@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (mainMobileBtn && desktopNav && !document.querySelector('aside')) { // Only on main website
         const mobileMenu = document.createElement('div');
-        mobileMenu.className = 'fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-8';
+        mobileMenu.className = 'fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-8 overflow-y-auto pb-12';
         
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
