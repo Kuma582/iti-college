@@ -14,7 +14,16 @@
             theme: {
                 extend: {
                     colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] },
+                    animation: {
+                        'marquee': 'marquee 20s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    }
                 }
             }
         }
@@ -198,40 +207,125 @@
         <!-- Dark Stats Bar -->
         <div class="w-full relative lg:absolute bottom-0 lg:bottom-10 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:max-w-6xl z-30 px-4 lg:px-0 pb-16 lg:pb-0 mt-8 lg:mt-0">
             <div class="bg-slate-900/80 backdrop-blur-lg border border-white/10 rounded-[2rem] p-6 lg:p-8 shadow-2xl relative overflow-hidden w-full">
-                <div class="grid grid-cols-2 lg:grid-cols-5 gap-y-8 gap-x-4 lg:gap-4 lg:divide-x divide-white/10 w-full">
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4 text-center lg:text-left px-2 col-span-2 lg:col-span-1 border-b lg:border-b-0 border-white/10 pb-6 lg:pb-0">
+                
+                <!-- Desktop Grid Layout -->
+                <div class="hidden lg:grid grid-cols-5 gap-4 divide-x divide-white/10 w-full">
+                    <div class="flex items-center justify-center gap-4 px-2">
                         <i class="fa-solid fa-graduation-cap text-3xl text-slate-300"></i>
                         <div>
-                            <h3 class="text-2xl lg:text-2xl font-poppins font-bold text-white">2500+</h3>
-                            <p class="text-[11px] lg:text-xs text-slate-300 uppercase tracking-wide">Students<br class="hidden lg:block"> Enrolled</p>
+                            <h3 class="text-2xl font-poppins font-bold text-white">2500+</h3>
+                            <p class="text-xs text-slate-300 uppercase tracking-wide">Students<br> Enrolled</p>
                         </div>
                     </div>
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4 text-center lg:text-left px-2">
+                    <div class="flex items-center justify-center gap-4 px-2">
                         <i class="fa-solid fa-chalkboard-user text-3xl text-purple-400"></i>
                         <div>
-                            <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">120+</h3>
-                            <p class="text-[10px] lg:text-xs text-slate-300 uppercase tracking-wide">Expert<br class="hidden lg:block"> Faculty</p>
+                            <h3 class="text-2xl font-poppins font-bold text-white">120+</h3>
+                            <p class="text-xs text-slate-300 uppercase tracking-wide">Expert<br> Faculty</p>
                         </div>
                     </div>
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4 text-center lg:text-left px-2">
+                    <div class="flex items-center justify-center gap-4 px-2">
                         <i class="fa-solid fa-book-open text-3xl text-blue-400"></i>
                         <div>
-                            <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">15+</h3>
-                            <p class="text-[10px] lg:text-xs text-slate-300 uppercase tracking-wide">Courses<br class="hidden lg:block"> Offered</p>
+                            <h3 class="text-2xl font-poppins font-bold text-white">15+</h3>
+                            <p class="text-xs text-slate-300 uppercase tracking-wide">Courses<br> Offered</p>
                         </div>
                     </div>
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4 text-center lg:text-left px-2">
+                    <div class="flex items-center justify-center gap-4 px-2">
                         <i class="fa-solid fa-briefcase text-3xl text-cyan-400"></i>
                         <div>
-                            <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">98%</h3>
-                            <p class="text-[10px] lg:text-xs text-slate-300 uppercase tracking-wide">Placement<br class="hidden lg:block"> Record</p>
+                            <h3 class="text-2xl font-poppins font-bold text-white">98%</h3>
+                            <p class="text-xs text-slate-300 uppercase tracking-wide">Placement<br> Record</p>
                         </div>
                     </div>
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4 text-center lg:text-left px-2">
+                    <div class="flex items-center justify-center gap-4 px-2">
                         <i class="fa-solid fa-trophy text-3xl text-yellow-500"></i>
                         <div>
-                            <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">25+</h3>
-                            <p class="text-[10px] lg:text-xs text-slate-300 uppercase tracking-wide">Awards<br class="hidden lg:block"> Won</p>
+                            <h3 class="text-2xl font-poppins font-bold text-white">25+</h3>
+                            <p class="text-xs text-slate-300 uppercase tracking-wide">Awards<br> Won</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Marquee Layout -->
+                <div class="lg:hidden flex overflow-hidden relative w-full" style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+                    <div class="flex w-max animate-marquee whitespace-nowrap items-center hover:[animation-play-state:paused]">
+                        <!-- Original Set -->
+                        <div class="flex items-center gap-12 px-6">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-graduation-cap text-2xl text-slate-300"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">2500+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Students Enrolled</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-chalkboard-user text-2xl text-purple-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">120+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Expert Faculty</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-book-open text-2xl text-blue-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">15+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Courses Offered</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-briefcase text-2xl text-cyan-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">98%</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Placement Record</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-trophy text-2xl text-yellow-500"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">25+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Awards Won</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Duplicate Set for seamless scroll -->
+                        <div class="flex items-center gap-12 px-6">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-graduation-cap text-2xl text-slate-300"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">2500+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Students Enrolled</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-chalkboard-user text-2xl text-purple-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">120+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Expert Faculty</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-book-open text-2xl text-blue-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">15+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Courses Offered</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-briefcase text-2xl text-cyan-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">98%</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Placement Record</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-trophy text-2xl text-yellow-500"></i>
+                                <div>
+                                    <h3 class="text-xl font-poppins font-bold text-white">25+</h3>
+                                    <p class="text-[10px] text-slate-300 uppercase tracking-wide">Awards Won</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
