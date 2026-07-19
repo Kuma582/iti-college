@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360° Virtual Campus Tour | Excellence ITI</title>
+    <link rel="manifest" href="../public/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/globals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans overflow-x-hidden transition-colors h-screen flex flex-col">
+
+    <header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-white/50 dark:border-slate-800 z-50 shadow-sm shrink-0" id="main-header">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft">
+                    <i class="fa-solid fa-bolt text-brandGold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-poppins font-bold text-brandBlue dark:text-white tracking-tight leading-none">EXCELLENCE ITI</h1>
+                </div>
+            </a>
+            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700 dark:text-slate-300">
+                <a href="index.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">Home</a>
+                <a href="downloads.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">Downloads</a>
+                <a href="calendar.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">Calendar</a>
+                <a href="tour.html" class="text-brandBlue dark:text-brandGold border-b-2 border-brandBlue dark:border-brandGold pb-1">360° Tour</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 relative bg-black flex flex-col">
+        <div class="absolute inset-x-0 top-0 p-6 z-10 pointer-events-none flex justify-between items-start">
+            <div class="bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-xl pointer-events-auto shadow-lg border border-white/10">
+                <h2 class="font-bold text-lg"><i class="fa-solid fa-vr-cardboard text-brandGold mr-2"></i> Virtual Campus Tour</h2>
+                <p class="text-xs text-slate-300">Drag to look around</p>
+            </div>
+            
+            <div class="flex gap-2 pointer-events-auto">
+                <button class="bg-black/50 backdrop-blur-md hover:bg-brandBlue text-white w-10 h-10 rounded-full flex items-center justify-center transition border border-white/10" title="Main Gate">1</button>
+                <button class="bg-brandBlue text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-[0_0_15px_rgba(11,60,145,0.8)] border border-brandBlue" title="Workshop">2</button>
+                <button class="bg-black/50 backdrop-blur-md hover:bg-brandBlue text-white w-10 h-10 rounded-full flex items-center justify-center transition border border-white/10" title="Library">3</button>
+            </div>
+        </div>
+
+        <!-- 360 Video Embed (YouTube as Placeholder) -->
+        <div class="w-full h-full relative">
+            <iframe 
+                class="w-full h-full" 
+                src="https://www.youtube.com/embed/vQGyd-t4hYQ?autoplay=1&mute=1&controls=1&fs=1&loop=1&modestbranding=1&iv_load_policy=3" 
+                title="360 Campus Tour" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </main>
+
+    <script src="../assets/js/i18n-data.js"></script>
+    <script src="../assets/js/premium-features.js"></script>
+    <script src="../assets/js/pwa-setup.js"></script>
+</body>
+</html>

@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Excellence ITI</title>
+    <link rel="manifest" href="../public/manifest.json">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
@@ -23,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden transition-colors dark:bg-slate-900 dark:text-slate-200">
 
     <!-- Top Information Bar -->
     <div
@@ -373,6 +375,9 @@
     </footer>
 
     <!-- Interactive Scripts -->
+    <script src="../assets/js/i18n-data.js"></script>
+    <script src="../assets/js/premium-features.js"></script>
+    <script src="../assets/js/pwa-setup.js"></script>
     <script src="../assets/js/main.js"></script>
 </body>
 

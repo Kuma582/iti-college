@@ -1,0 +1,16 @@
+{
+  "name": "Excellence ITI",
+  "short_name": "Excellence ITI",
+  "description": "Premium Enterprise Management System for Excellence ITI",
+  "start_url": "/frontend/pages/index.html",
+  "display": "standalone",
+  "background_color": "#0B3C91",
+  "theme_color": "#F4B400",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
