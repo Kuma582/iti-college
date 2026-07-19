@@ -64,21 +64,102 @@ function injectPremiumControls() {
     }
 
     if(window.innerWidth < 1024) {
-        const fab = document.createElement('div');
-        fab.className = 'fixed bottom-6 right-6 z-50 flex flex-col gap-3 lg:hidden';
-        fab.innerHTML = `
-            <button id="mob-dark-mode" class="w-12 h-12 bg-slate-800 dark:bg-white text-white dark:text-slate-800 rounded-full shadow-xl flex items-center justify-center text-xl transition-transform active:scale-95">
-                <i class="fa-solid fa-moon dark:hidden"></i>
-                <i class="fa-solid fa-sun hidden dark:block"></i>
-            </button>
-            <button id="mob-search" class="w-12 h-12 bg-brandBlue text-white rounded-full shadow-xl flex items-center justify-center text-xl transition-transform active:scale-95">
-                <i class="fa-solid fa-magnifying-glass"></i>
+        // Create Mobile Floating Action Button & Menu
+        const mobMenuContainer = document.createElement('div');
+        mobMenuContainer.className = 'fixed bottom-6 right-6 z-[100] lg:hidden flex flex-col items-end';
+        
+        mobMenuContainer.innerHTML = `
+            <!-- Mobile Action Sheet -->
+            <div id="mob-action-sheet" class="mb-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2 w-64 origin-bottom-right transform scale-0 opacity-0 transition-all duration-300">
+                <div class="p-3 border-b border-slate-100 dark:border-slate-700">
+                    <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Preferences</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300"><i class="fa-solid fa-language w-5 text-brandBlue dark:text-brandGold"></i> Language</span>
+                            <button id="mob-btn-lang" class="text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full shadow-sm">HI</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300"><i class="fa-solid fa-palette w-5 text-brandBlue dark:text-brandGold"></i> Theme</span>
+                            <button id="mob-btn-dark-mode" class="text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full shadow-sm w-16">
+                                <span class="dark:hidden">Dark</span>
+                                <span class="hidden dark:inline">Light</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-1">
+                    <button id="mob-btn-search" class="w-full text-left px-3 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition flex items-center">
+                        <i class="fa-solid fa-magnifying-glass w-7 text-slate-400"></i> Search
+                    </button>
+                    <button id="mob-btn-notifications" class="w-full text-left px-3 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition flex items-center justify-between">
+                        <span class="flex items-center"><i class="fa-solid fa-bell w-7 text-slate-400"></i> Notifications</span>
+                        <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">3 New</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main FAB -->
+            <button id="mob-fab-main" class="w-14 h-14 bg-brandBlue text-white rounded-full shadow-[0_0_20px_rgba(11,60,145,0.4)] flex items-center justify-center text-2xl transition-transform active:scale-95 relative">
+                <i class="fa-solid fa-gear"></i>
+                <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>
             </button>
         `;
-        document.body.appendChild(fab);
+        document.body.appendChild(mobMenuContainer);
         
-        document.getElementById('mob-dark-mode').addEventListener('click', toggleDarkMode);
-        document.getElementById('mob-search').addEventListener('click', openSearchModal);
+        // Mobile Interactions
+        const fabMain = document.getElementById('mob-fab-main');
+        const actionSheet = document.getElementById('mob-action-sheet');
+        let isSheetOpen = false;
+
+        fabMain.addEventListener('click', () => {
+            isSheetOpen = !isSheetOpen;
+            if(isSheetOpen) {
+                actionSheet.classList.remove('scale-0', 'opacity-0');
+                actionSheet.classList.add('scale-100', 'opacity-100');
+                fabMain.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                actionSheet.classList.add('scale-0', 'opacity-0');
+                actionSheet.classList.remove('scale-100', 'opacity-100');
+                fabMain.innerHTML = '<i class="fa-solid fa-gear"></i><span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>';
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if(isSheetOpen && !mobMenuContainer.contains(e.target)) {
+                fabMain.click();
+            }
+        });
+
+        // Map mobile buttons to existing logic
+        document.getElementById('mob-btn-dark-mode').addEventListener('click', toggleDarkMode);
+        document.getElementById('mob-btn-search').addEventListener('click', () => {
+            fabMain.click(); // close menu
+            openSearchModal();
+        });
+        
+        // For language toggle, we need to wire it similarly to initi18n. 
+        // We'll update the button text when it's clicked.
+        document.getElementById('mob-btn-lang').addEventListener('click', (e) => {
+            let currentLang = localStorage.getItem('lang') || 'en';
+            currentLang = currentLang === 'en' ? 'hi' : 'en';
+            localStorage.setItem('lang', currentLang);
+            e.target.textContent = currentLang === 'en' ? 'HI' : 'EN';
+            
+            // Also update desktop button if it exists
+            const desktopLangBtn = document.getElementById('btn-lang');
+            if(desktopLangBtn) desktopLangBtn.textContent = currentLang === 'en' ? 'HI' : 'EN';
+            
+            applyTranslations(currentLang);
+        });
+
+        // We map the mob-btn-notifications to open the notif modal.
+        // We'll dispatch a click event to the main notifications button if it exists.
+        document.getElementById('mob-btn-notifications').addEventListener('click', () => {
+            fabMain.click(); // close menu
+            const notifBtn = document.getElementById('btn-notifications-open');
+            if (notifBtn) notifBtn.click();
+        });
     }
 }
 
