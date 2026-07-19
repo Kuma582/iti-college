@@ -717,60 +717,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION: Records ===== -->
-            <div id="section-records" class="section-content fade-in space-y-5">
-                <div class="glass p-5 rounded-2xl border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-base mb-1">Update Student Record</h3>
-                    <p class="text-sm text-slate-500 mb-4">Enter a student's email to update their Attendance and Fee Status.</p>
-                    <form onsubmit="postRecord(event)" class="space-y-4">
-                        <input type="email" id="recEmail" placeholder="Student Email (e.g., student@excellenceiti.com)" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="number" id="recAttendance" placeholder="Attendance Percentage (0-100)" min="0" max="100" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                            <select id="recFee" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                                <option value="" disabled selected>Fee Status</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Overdue">Overdue</option>
-                            </select>
-                        </div>
-                        <input type="text" id="recResults" placeholder="Recent Results (e.g., Semester 1: 85%)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                        <button type="submit" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-colors text-sm">Update Record</button>
-                    </form>
-                </div>
-            </div>
 
-            <!-- ===== SECTION: Accounts ===== -->
-            <div id="section-accounts" class="section-content fade-in space-y-5">
-                <div class="glass p-5 rounded-2xl border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-base mb-1">Create New Student Account</h3>
-                    <p class="text-sm text-slate-500 mb-4">Generate login credentials for a student so they can access the portal.</p>
-                    <form onsubmit="postAccount(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="accName" placeholder="Student Full Name" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                            <input type="email" id="accEmail" placeholder="Student Email" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                        </div>
-                        <input type="text" id="accPassword" placeholder="Set a Password" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 outline-none text-sm">
-                        <button type="submit" class="bg-brandGold text-brandBlue px-6 py-2.5 rounded-xl font-bold hover:bg-yellow-500 transition-colors text-sm">Create Account</button>
-                    </form>
-                </div>
-                <div class="glass rounded-2xl border border-slate-200 overflow-hidden">
-                    <div class="px-5 py-4 border-b border-slate-100 bg-white/50"><h3 class="font-bold text-slate-800">Registered Students</h3></div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50/60 text-slate-500 text-xs uppercase tracking-wider">
-                                <tr>
-                                    <th class="px-5 py-3 font-bold">Name</th>
-                                    <th class="px-5 py-3 font-bold">Email (Login ID)</th>
-                                    <th class="px-5 py-3 font-bold">Created On</th>
-                                </tr>
-                            </thead>
-                            <tbody id="accountsList" class="divide-y divide-slate-100">
-                                <tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">Loading...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <!-- ===== SECTION: Messages ===== -->
             <div id="section-messages" class="section-content fade-in space-y-5">
@@ -990,6 +937,10 @@
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Results / Marks</label>
                             <input type="text" id="sResults" placeholder="e.g. Sem1: 85%, Sem2: 90%" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Portal Password</label>
+                            <input type="password" id="sPassword" placeholder="Set or Change Password" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
                         </div>
                         <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-3">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Documents (comma-separated labels)</label>
@@ -1231,7 +1182,6 @@
         'notices': ['Notice Board', 'Post and manage notices'],
         'materials': ['Study Materials', 'Upload and share study resources'],
         'records': ['Student Records', 'Update attendance and fee records'],
-        'accounts': ['Student Accounts', 'Create and manage student login accounts'],
         'messages': ['Contact Messages', 'View inquiry messages from public'],
         'cms-hero': ['Hero Slider CMS', 'Manage homepage slider images'],
         'cms-notices': ['Notice Board CMS', 'Manage public notices and news'],
@@ -1268,7 +1218,6 @@
         if (name === 'messages') fetchMessages();
         if (name === 'notices') fetchNotices();
         if (name === 'materials') fetchMaterials();
-        if (name === 'accounts') fetchAccounts();
         if (name.startsWith('cms-')) renderCMS();
         if (name === 'attendance') {
             document.getElementById('attDate').valueAsDate = new Date();
@@ -1445,6 +1394,7 @@
         document.getElementById('sPhoto').value = s.photo || '';
         document.getElementById('sAttendance').value = s.attendance || '';
         document.getElementById('sResults').value = s.results || '';
+        document.getElementById('sPassword').value = s.password || '';
         document.getElementById('sDocuments').value = (s.documents || []).join(', ');
         document.getElementById('studentModal').classList.remove('hidden');
     }
@@ -1458,6 +1408,9 @@
         e.preventDefault();
         const id = document.getElementById('editStudentId').value;
         const docs = document.getElementById('sDocuments').value.split(',').map(d => d.trim()).filter(Boolean);
+        const passwordField = document.getElementById('sPassword').value.trim();
+        const existingStudent = id ? getStudents().find(x=>x.id===id) : null;
+        
         const student = {
             id: id || 'STU-' + Date.now(),
             name: document.getElementById('sName').value.trim(),
@@ -1474,7 +1427,8 @@
             attendance: document.getElementById('sAttendance').value,
             results: document.getElementById('sResults').value.trim(),
             documents: docs,
-            createdAt: id ? (getStudents().find(x=>x.id===id)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+            password: passwordField || (existingStudent ? existingStudent.password : ''),
+            createdAt: id ? (existingStudent?.createdAt || new Date().toISOString()) : new Date().toISOString(),
         };
         const students = getStudents();
         if (id) {

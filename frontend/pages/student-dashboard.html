@@ -407,22 +407,20 @@
         }
 
         // --- Fetch Data ---
-        async function fetchStudentData() {
-            const API_BASE = '/api';
-
+        function fetchStudentData() {
             try {
-                // Fetch Notices
-                const noticesRes = await fetch(`${API_BASE}/notices`);
-                const noticesData = await noticesRes.json();
+                // Fetch Notices from CMS
+                const noticesData = JSON.parse(localStorage.getItem('itiCmsNotices') || '[]');
                 const noticeList = document.getElementById('studentNoticesList');
                 noticeList.innerHTML = '';
-                if(noticesData.notices && noticesData.notices.length > 0) {
-                    noticesData.notices.forEach(n => {
+                if(noticesData && noticesData.length > 0) {
+                    noticesData.forEach(n => {
                         noticeList.innerHTML += `
                             <div class="glass p-6 rounded-2xl shadow-sm border border-slate-200">
-                                <span class="text-xs font-bold text-brandGold uppercase bg-brandGold/10 px-3 py-1 rounded-full mb-3 inline-block">${n.category}</span>
+                                <span class="text-xs font-bold text-brandGold uppercase bg-brandGold/10 px-3 py-1 rounded-full mb-3 inline-block">${n.tag || 'General'}</span>
                                 <h4 class="font-bold text-lg text-slate-800">${n.title}</h4>
-                                <p class="text-slate-600 mt-2">${n.content}</p>
+                                <p class="text-slate-600 mt-2">${n.desc || ''}</p>
+                                <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-calendar mr-1"></i> ${n.date}</p>
                             </div>
                         `;
                     });
@@ -430,60 +428,53 @@
                     noticeList.innerHTML = '<p class="text-center text-slate-500 py-8">No notices available.</p>';
                 }
 
-                // Fetch Materials
-                const matRes = await fetch(`${API_BASE}/materials`);
-                const matData = await matRes.json();
+                // Materials - Placeholder
                 const matList = document.getElementById('studentMaterialsList');
-                matList.innerHTML = '';
-                if(matData.materials && matData.materials.length > 0) {
-                    matData.materials.forEach(m => {
-                        matList.innerHTML += `
-                            <a href="${m.url}" target="_blank" class="glass p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:-translate-y-1 transition-all group block">
-                                <h4 class="font-bold text-slate-800 group-hover:text-brandBlue transition-colors">${m.title}</h4>
-                                ${m.description ? `<p class="text-sm text-slate-600 mt-2">${m.description}</p>` : ''}
-                                <span class="text-xs font-bold text-brandBlue mt-4 inline-block bg-blue-50 px-3 py-1 rounded-lg"><i class="fa-solid fa-download mr-1"></i> Download</span>
-                            </a>
-                        `;
-                    });
-                } else {
+                if (matList) {
                     matList.innerHTML = '<p class="text-center text-slate-500 col-span-2 py-8">No study materials uploaded yet.</p>';
                 }
 
-                // Fetch Personal Records
+                // Fetch Personal Records from itiStudents
                 if(userEmail) {
-                    const recRes = await fetch(`${API_BASE}/records/${encodeURIComponent(userEmail)}`);
-                    const recData = await recRes.json();
-                    if(recData.record) {
-                        document.getElementById('studentAttendance').innerText = `${recData.record.attendance}%`;
+                    const students = JSON.parse(localStorage.getItem('itiStudents') || '[]');
+                    const studentId = localStorage.getItem('studentId');
+                    const record = students.find(s => s.id === studentId || s.email === userEmail || s.rollNo === userEmail);
+                    
+                    if(record) {
+                        document.getElementById('studentAttendance').innerText = record.attendance ? `${record.attendance}%` : 'N/A';
                         const feeEl = document.getElementById('studentFee');
-                        feeEl.innerText = recData.record.feeStatus;
-                        if(recData.record.feeStatus === 'Paid') {
-                            feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-green-500';
-                            document.getElementById('overviewFee').className = 'text-lg font-poppins font-black text-green-600 mt-1';
-                        }
-                        else if(recData.record.feeStatus === 'Overdue') {
-                            feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-red-500';
-                            document.getElementById('overviewFee').className = 'text-lg font-poppins font-black text-red-600 mt-1';
-                        }
-                        else {
-                            feeEl.className = 'text-4xl font-bold mt-4 mb-2 text-yellow-500';
-                            document.getElementById('overviewFee').className = 'text-lg font-poppins font-black text-yellow-600 mt-1';
+                        const feeStatus = record.feeStatus || 'Pending';
+                        feeEl.innerText = feeStatus;
+                        
+                        let feeClass = 'text-yellow-500';
+                        let overviewFeeClass = 'text-yellow-600';
+                        if(feeStatus === 'Paid') {
+                            feeClass = 'text-green-500';
+                            overviewFeeClass = 'text-green-600';
+                        } else if (feeStatus === 'Overdue') {
+                            feeClass = 'text-red-500';
+                            overviewFeeClass = 'text-red-600';
                         }
                         
-                        document.getElementById('overviewFee').innerText = recData.record.feeStatus;
-                        document.getElementById('overviewAttendance').innerText = `${recData.record.attendance}%`;
+                        feeEl.className = `text-4xl font-bold mt-4 mb-2 ${feeClass}`;
+                        const overviewFeeEl = document.getElementById('overviewFee');
+                        if (overviewFeeEl) {
+                            overviewFeeEl.className = `text-lg font-poppins font-black ${overviewFeeClass} mt-1`;
+                            overviewFeeEl.innerText = feeStatus;
+                        }
                         
-                        if(recData.record.results) {
-                            document.getElementById('studentResults').innerText = recData.record.results;
-                            document.getElementById('overviewLastSemester').innerText = recData.record.results.substring(0, 5) + "..."; // short version for the card
+                        const overviewAttEl = document.getElementById('overviewAttendance');
+                        if (overviewAttEl) overviewAttEl.innerText = record.attendance ? `${record.attendance}%` : 'N/A';
+                        
+                        if(record.results) {
+                            document.getElementById('studentResults').innerText = record.results;
+                            const overviewLastSem = document.getElementById('overviewLastSemester');
+                            if (overviewLastSem) overviewLastSem.innerText = record.results.length > 20 ? record.results.substring(0, 20) + "..." : record.results;
                         }
                     } else {
                         document.getElementById('studentAttendance').innerText = 'N/A';
                         document.getElementById('studentFee').innerText = 'No Record';
                         document.getElementById('studentFee').className = 'text-4xl font-bold mt-4 mb-2 text-slate-400';
-                        document.getElementById('overviewAttendance').innerText = 'N/A';
-                        document.getElementById('overviewFee').innerText = 'No Record';
-                        document.getElementById('overviewLastSemester').innerText = 'N/A';
                     }
                 }
 

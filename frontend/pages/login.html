@@ -115,8 +115,8 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
             const btn = e.target.querySelector('button[type="submit"]');
             const msg = document.getElementById('loginMessage');
             
@@ -124,41 +124,50 @@
             btn.disabled = true;
             msg.classList.add('hidden');
             
+            // Simulate network delay
+            await new Promise(r => setTimeout(r, 800));
+            
             try {
-                // Connect to real backend
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                msg.classList.remove('hidden');
-                if (response.ok) {
-                    if (data.role === 'admin') {
-                        localStorage.setItem('adminToken', 'true');
-                        localStorage.setItem('userEmail', email);
-                        msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
-                        msg.innerText = 'Admin Authentication Successful! Redirecting...';
-                        setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
-                    } else if (data.role === 'student') {
-                        localStorage.setItem('studentToken', 'true');
-                        localStorage.setItem('userEmail', email);
-                        msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
-                        msg.innerText = 'Student Authentication Successful! Redirecting...';
-                        setTimeout(() => window.location.href = 'student-dashboard.html', 1500);
-                    }
-                } else {
-                    msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
-                    msg.innerText = data.message || 'Authentication Failed';
-                    btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
-                    btn.disabled = false;
+                // 1. Check Admin Login
+                if (email === 'admin@excellenceiti.com' && password === 'admin123') {
+                    localStorage.setItem('adminToken', 'true');
+                    localStorage.setItem('userEmail', email);
+                    msg.classList.remove('hidden');
+                    msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    msg.innerText = 'Admin Authentication Successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'admin-dashboard.html', 1000);
+                    return;
                 }
+
+                // 2. Check Student Login
+                const students = JSON.parse(localStorage.getItem('itiStudents') || '[]');
+                const studentMatch = students.find(s => 
+                    (s.email === email || s.rollNo === email) && 
+                    s.password && s.password === password
+                );
+
+                if (studentMatch) {
+                    localStorage.setItem('studentToken', 'true');
+                    localStorage.setItem('userEmail', studentMatch.email || studentMatch.rollNo);
+                    localStorage.setItem('studentId', studentMatch.id);
+                    msg.classList.remove('hidden');
+                    msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    msg.innerText = 'Student Authentication Successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'student-dashboard.html', 1000);
+                    return;
+                }
+
+                // 3. Auth Failed
+                msg.classList.remove('hidden');
+                msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
+                msg.innerText = 'Invalid credentials. Please try again.';
+                btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
+                btn.disabled = false;
+
             } catch (error) {
                 msg.classList.remove('hidden');
                 msg.className = 'text-center font-bold text-sm mt-4 text-red-600';
-                msg.innerText = 'Network Error. Could not reach the server.';
+                msg.innerText = 'System Error. Please clear cache.';
                 btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Authenticate Terminal';
                 btn.disabled = false;
             }
