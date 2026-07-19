@@ -99,13 +99,21 @@
 
     <!-- Hero Section -->
     <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        <!-- Background Image with Overlay -->
-        <div class="absolute inset-0 z-0">
+        <!-- Background Image Slider with Overlay -->
+        <div class="absolute inset-0 z-0 overflow-hidden bg-slate-900" id="hero-slider">
+            <!-- Slide 1 -->
             <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop"
-                alt="Engineering Workshop" class="w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-gradient-to-r from-brandBlue/95 via-brandBlue/80 to-transparent"></div>
+                alt="Engineering Workshop" class="hero-slide absolute inset-0 w-full h-full object-cover transition-transform duration-1000 translate-x-0 z-0" />
+            <!-- Slide 2 -->
+            <img src="https://images.unsplash.com/photo-1516328315181-7000c01cb3b3?q=80&w=2070&auto=format&fit=crop"
+                alt="Campus Architecture" class="hero-slide absolute inset-0 w-full h-full object-cover transition-transform duration-1000 translate-x-full z-0" />
+            <!-- Slide 3 -->
+            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=2070&auto=format&fit=crop"
+                alt="Technical Students" class="hero-slide absolute inset-0 w-full h-full object-cover transition-transform duration-1000 translate-x-full z-0" />
+            
+            <div class="absolute inset-0 bg-gradient-to-r from-brandBlue/95 via-brandBlue/80 to-transparent z-10 pointer-events-none"></div>
             <div
-                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-40">
+                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-40 z-10 pointer-events-none">
             </div>
         </div>
 
@@ -679,6 +687,33 @@
                     popup.classList.add('opacity-0', 'invisible');
                     content.classList.add('scale-90');
                 });
+            }
+
+            // Hero Slider Logic (Alternating Directions)
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero-slide');
+            if (slides.length > 0) {
+                setInterval(() => {
+                    const nextSlide = (currentSlide + 1) % slides.length;
+                    const direction = Math.random() > 0.5 ? -1 : 1;
+                    
+                    const currentExitClass = direction === -1 ? '-translate-x-full' : 'translate-x-full';
+                    const nextEnterClass = direction === -1 ? 'translate-x-full' : '-translate-x-full';
+
+                    slides[currentSlide].classList.remove('translate-x-0', 'translate-x-full', '-translate-x-full');
+                    slides[currentSlide].classList.add(currentExitClass);
+                    
+                    slides[nextSlide].classList.remove('transition-transform', 'duration-1000', 'translate-x-0', 'translate-x-full', '-translate-x-full');
+                    slides[nextSlide].classList.add(nextEnterClass);
+                    
+                    void slides[nextSlide].offsetWidth; // force reflow
+                    
+                    slides[nextSlide].classList.add('transition-transform', 'duration-1000');
+                    slides[nextSlide].classList.remove(nextEnterClass);
+                    slides[nextSlide].classList.add('translate-x-0');
+                    
+                    currentSlide = nextSlide;
+                }, 5000);
             }
         });
     </script>
