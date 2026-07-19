@@ -9,7 +9,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initSearchAndVoice();
     initNotifications();
     injectFloatingContact();
+    addLogoAnimation();
 });
+
+// 0. Logo Animation
+function addLogoAnimation() {
+    // Inject a custom CSS animation for the logo
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.05); }
+        }
+        @keyframes boltGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(244, 180, 0, 0.4)); }
+            50% { filter: drop-shadow(0 0 8px rgba(244, 180, 0, 0.9)); }
+        }
+        .logo-container-animated {
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        .logo-bolt-animated {
+            animation: boltGlow 2s ease-in-out infinite;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Apply to the main header logo
+    const logoDiv = document.querySelector('header a[href="index.html"] div');
+    const logoBolt = document.querySelector('header a[href="index.html"] i.fa-bolt');
+    
+    if (logoDiv) logoDiv.classList.add('logo-container-animated');
+    if (logoBolt) logoBolt.classList.add('logo-bolt-animated');
+}
 
 // 1. Inject Premium Controls into Header
 function injectPremiumControls() {
