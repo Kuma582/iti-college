@@ -539,22 +539,40 @@
 
             // Determine AI response
             const lowerText = text.toLowerCase();
-            let response = "Thank you for your question. A human representative will connect with you shortly, or you can use the WhatsApp button below to chat with us instantly!";
+            const isHindi = lowerText.includes('kya') || lowerText.includes('kaise') || lowerText.includes('hai') || localStorage.getItem('lang') === 'hi';
             
-            if (lowerText.includes('chatbot')) {
-                response = "I am the Excellence ITI AI Chatbot! I am here 24/7 to help you navigate our campus features.";
-            } else if (lowerText.includes('admission')) {
-                response = "As your AI Admission Assistant, I can guide you through our online application process, fee structures, and eligibility criteria for the 2026-27 session.";
-            } else if (lowerText.includes('career') || lowerText.includes('guidance')) {
-                response = "For AI Career Guidance, our system analyzes your strengths and suggests the best NCVT trades (like Electrician or Fitter) to maximize your placement chances.";
-            } else if (lowerText.includes('faq')) {
-                response = "I can answer all your AI FAQs! Ask me about hostel facilities, workshop timings, library access, and more.";
-            } else if (lowerText.includes('notice')) {
-                response = "Using our AI Notice Generator, administrators can automatically draft and publish urgent campus alerts and holiday notices directly to the student portal.";
-            } else if (lowerText.includes('email')) {
-                response = "Our AI Email Generator helps staff quickly compose professional emails to students and parents regarding attendance and performance.";
-            } else if (lowerText.includes('performance') || lowerText.includes('analysis')) {
-                response = "The AI Student Performance Analysis tool tracks test scores and attendance in real-time to identify areas where students need extra academic support.";
+            let response = isHindi 
+                ? "Aapke sawal ke liye dhanyawad. Ek human representative aapse jald sampark karega, ya aap niche diye WhatsApp button se turant chat kar sakte hain!"
+                : "Thank you for your question. A human representative will connect with you shortly, or you can use the WhatsApp button below to chat with us instantly!";
+            
+            if (lowerText.includes('chatbot') || lowerText.includes('bot')) {
+                response = isHindi 
+                    ? "Main Excellence ITI AI Chatbot hoon! Main yahan campus ki jankari ke liye 24/7 uplabdh hoon." 
+                    : "I am the Excellence ITI AI Chatbot! I am here 24/7 to help you navigate our campus features.";
+            } else if (lowerText.includes('admission') || lowerText.includes('namankan')) {
+                response = isHindi
+                    ? "Ek AI Admission Assistant ke roop mein, main 2026-27 session ke liye online form, fees aur criteria ki jankari de sakta hoon."
+                    : "As your AI Admission Assistant, I can guide you through our online application process, fee structures, and eligibility criteria for the 2026-27 session.";
+            } else if (lowerText.includes('career') || lowerText.includes('guidance') || lowerText.includes('job') || lowerText.includes('naukri')) {
+                response = isHindi
+                    ? "AI Career Guidance ke liye, humara system aapki skills ko analyze karke best NCVT trade (jaise Electrician ya Fitter) suggest karta hai."
+                    : "For AI Career Guidance, our system analyzes your strengths and suggests the best NCVT trades (like Electrician or Fitter) to maximize your placement chances.";
+            } else if (lowerText.includes('faq') || lowerText.includes('sawal')) {
+                response = isHindi
+                    ? "Main aapke sabhi AI FAQs ka jawab de sakta hoon! Hostel, library aur workshop ke baare mein koi bhi sawal poochein."
+                    : "I can answer all your AI FAQs! Ask me about hostel facilities, workshop timings, library access, and more.";
+            } else if (lowerText.includes('notice') || lowerText.includes('soochna')) {
+                response = isHindi
+                    ? "AI Notice Generator ka istemal karke, admin automatically campus alert aur chhutti ki soochna bana sakte hain."
+                    : "Using our AI Notice Generator, administrators can automatically draft and publish urgent campus alerts and holiday notices directly to the student portal.";
+            } else if (lowerText.includes('email') || lowerText.includes('mail')) {
+                response = isHindi
+                    ? "Humara AI Email Generator staff ko students aur parents ko professional email likhne mein madad karta hai."
+                    : "Our AI Email Generator helps staff quickly compose professional emails to students and parents regarding attendance and performance.";
+            } else if (lowerText.includes('performance') || lowerText.includes('analysis') || lowerText.includes('marks') || lowerText.includes('result')) {
+                response = isHindi
+                    ? "AI Student Performance Analysis tool test scores aur attendance ko real-time mein track karta hai taaki students ki madad ki ja sake."
+                    : "The AI Student Performance Analysis tool tracks test scores and attendance in real-time to identify areas where students need extra academic support.";
             }
 
             // Bot reply
