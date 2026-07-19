@@ -10,10 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initNotifications();
     injectFloatingContact();
     addLogoAnimation();
-    initCustomCursor();
-    initParticleBackground();
-    init3DTilt();
-    initScrollReveal();
 });
 
 // 0. Logo Animation
@@ -199,14 +195,13 @@ function injectPremiumControls() {
     }
 }
 
-// 2. Dark Mode Logic (Futuristic 2035 - Default to Dark)
+// 2. Dark Mode Logic
 function initDarkMode() {
     const toggleBtn = document.getElementById('btn-dark-mode');
     
-    // Default to dark for the 2035 look unless explicitly set to light
-    if (!('theme' in localStorage) || localStorage.theme === 'dark') {
+    // Check local storage or system preference
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
-        localStorage.theme = 'dark';
     } else {
         document.documentElement.classList.remove('dark');
     }
@@ -580,152 +575,4 @@ function injectFloatingContact() {
             chatBody.scrollTop = chatBody.scrollHeight;
         }, 1500);
     }
-}
-
-// 7. Custom Glowing Cursor (2035 UI)
-function initCustomCursor() {
-    if (window.innerWidth < 1024) return; // Only on desktop
-    
-    const dot = document.createElement('div');
-    dot.className = 'custom-cursor-dot';
-    const outline = document.createElement('div');
-    outline.className = 'custom-cursor-outline';
-    
-    document.body.appendChild(dot);
-    document.body.appendChild(outline);
-
-    window.addEventListener('mousemove', (e) => {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top = e.clientY + 'px';
-        
-        // Slight delay for the outline for a trail effect
-        setTimeout(() => {
-            outline.style.left = e.clientX + 'px';
-            outline.style.top = e.clientY + 'px';
-        }, 50);
-    });
-
-    // Hover effect on interactables
-    document.querySelectorAll('a, button, input, .glass-card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            dot.classList.add('hover');
-            outline.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            dot.classList.remove('hover');
-            outline.classList.remove('hover');
-        });
-    });
-}
-
-// 8. Particle Network Background (2035 UI)
-function initParticleBackground() {
-    const canvas = document.createElement('canvas');
-    canvas.id = 'particle-canvas';
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100vw';
-    canvas.style.height = '100vh';
-    canvas.style.zIndex = '-1';
-    canvas.style.pointerEvents = 'none';
-    document.body.insertBefore(canvas, document.body.firstChild);
-
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let width, height;
-
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.radius = Math.random() * 2;
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > width) this.vx *= -1;
-            if (this.y < 0 || this.y > height) this.vy *= -1;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = document.documentElement.classList.contains('dark') ? 'rgba(0, 255, 255, 0.5)' : 'rgba(11, 60, 145, 0.2)';
-            ctx.fill();
-        }
-    }
-
-    for (let i = 0; i < 50; i++) particles.push(new Particle());
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        
-        particles.forEach((p, i) => {
-            p.update();
-            p.draw();
-            // Connect nearby particles
-            for (let j = i + 1; j < particles.length; j++) {
-                const p2 = particles[j];
-                const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                if (dist < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.strokeStyle = document.documentElement.classList.contains('dark') ? \`rgba(0, 255, 255, \${0.2 - dist/750})\` : \`rgba(11, 60, 145, \${0.1 - dist/1500})\`;
-                    ctx.stroke();
-                }
-            }
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-// 9. 3D Tilt Effect for Glass Cards (2035 UI)
-function init3DTilt() {
-    if (window.innerWidth < 1024) return;
-    const cards = document.querySelectorAll('.glass-card, .glass-dark');
-    
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -10; // Max tilt 10deg
-            const rotateY = ((x - centerX) / centerX) * 10;
-            
-            card.style.transform = \`perspective(1000px) rotateX(\${rotateX}deg) rotateY(\${rotateY}deg) scale3d(1.02, 1.02, 1.02)\`;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-        });
-    });
-}
-
-// 10. Scroll Reveal Animation (2035 UI)
-function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('reveal-visible');
-                // Optional: stop observing once revealed
-                // observer.unobserve(entry.target); 
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal-hidden').forEach(el => observer.observe(el));
 }
