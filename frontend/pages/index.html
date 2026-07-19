@@ -119,7 +119,7 @@
         </div>
 
         <!-- Vertical Quick Links (Right Edge) -->
-        <div class="flex flex-col gap-3 lg:gap-4 absolute right-3 lg:right-6 top-1/2 -translate-y-1/2 z-40">
+        <div class="hidden lg:flex flex-col gap-3 lg:gap-4 absolute right-3 lg:right-6 top-1/2 -translate-y-1/2 z-40">
             <a href="#" onclick="document.getElementById('tour-modal').classList.remove('hidden', 'opacity-0', 'invisible'); return false;" class="group flex items-center gap-3 justify-end">
                 <span class="hidden lg:block text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 drop-shadow-md whitespace-nowrap">360° Virtual Tour</span>
                 <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white text-sm lg:text-lg hover:bg-white hover:text-brandBlue transition-all shadow-lg">
@@ -188,38 +188,38 @@
         </div>
 
         <!-- Dark Stats Bar -->
-        <div class="w-full relative lg:absolute bottom-0 lg:bottom-10 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:max-w-6xl z-30 px-4 lg:px-0 pb-16 lg:pb-0">
-            <div class="bg-slate-900/70 backdrop-blur-lg border border-white/10 rounded-[2rem] p-6 lg:p-8 shadow-2xl relative">
-                <div class="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4 divide-x divide-white/10">
-                    <div class="flex items-center justify-center gap-4 text-left px-2">
+        <div class="w-full relative lg:absolute bottom-0 lg:bottom-10 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:max-w-6xl z-30 px-4 lg:px-0 pb-20 lg:pb-0 mt-8 lg:mt-0">
+            <div class="bg-slate-900/70 backdrop-blur-lg border border-white/10 rounded-[2rem] p-6 lg:p-8 shadow-2xl relative overflow-hidden">
+                <div class="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-8 lg:gap-4 lg:divide-x divide-white/10 snap-x hide-scrollbar pb-2 lg:pb-0">
+                    <div class="flex items-center justify-center gap-4 text-left px-2 snap-center min-w-[200px] lg:min-w-0">
                         <i class="fa-solid fa-graduation-cap text-3xl text-slate-300"></i>
                         <div>
                             <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">2500+</h3>
                             <p class="text-[10px] lg:text-xs text-slate-300">Students<br>Enrolled</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 text-left px-2">
+                    <div class="flex items-center justify-center gap-4 text-left px-2 snap-center min-w-[200px] lg:min-w-0">
                         <i class="fa-solid fa-chalkboard-user text-3xl text-purple-400"></i>
                         <div>
                             <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">120+</h3>
                             <p class="text-[10px] lg:text-xs text-slate-300">Experienced<br>Faculty</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 text-left px-2">
+                    <div class="flex items-center justify-center gap-4 text-left px-2 snap-center min-w-[200px] lg:min-w-0">
                         <i class="fa-solid fa-book-open text-3xl text-blue-400"></i>
                         <div>
                             <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">15+</h3>
                             <p class="text-[10px] lg:text-xs text-slate-300">Courses<br>Offered</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 text-left px-2">
+                    <div class="flex items-center justify-center gap-4 text-left px-2 snap-center min-w-[200px] lg:min-w-0">
                         <i class="fa-solid fa-briefcase text-3xl text-cyan-400"></i>
                         <div>
                             <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">98%</h3>
                             <p class="text-[10px] lg:text-xs text-slate-300">Placement<br>Record</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 text-left px-2 col-span-2 lg:col-span-1">
+                    <div class="flex items-center justify-center gap-4 text-left px-2 snap-center min-w-[200px] lg:min-w-0">
                         <i class="fa-solid fa-trophy text-3xl text-yellow-500"></i>
                         <div>
                             <h3 class="text-xl lg:text-2xl font-poppins font-bold text-white">25+</h3>
