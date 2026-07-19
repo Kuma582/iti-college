@@ -120,7 +120,7 @@
 
         <!-- Vertical Quick Links (Right Edge) -->
         <div class="flex flex-col gap-3 lg:gap-4 absolute right-3 lg:right-6 top-1/2 -translate-y-1/2 z-40">
-            <a href="campus.html" class="group flex items-center gap-3 justify-end">
+            <a href="#" onclick="document.getElementById('tour-modal').classList.remove('hidden', 'opacity-0', 'invisible'); return false;" class="group flex items-center gap-3 justify-end">
                 <span class="hidden lg:block text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 drop-shadow-md whitespace-nowrap">360° Virtual Tour</span>
                 <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white text-sm lg:text-lg hover:bg-white hover:text-brandBlue transition-all shadow-lg">
                     <span class="font-bold text-[10px] lg:text-xs">360°</span>
@@ -738,6 +738,22 @@
             }
         });
     </script>
+
+    <!-- 360 Virtual Tour Modal -->
+    <div id="tour-modal" class="fixed inset-0 z-[500] bg-black/95 backdrop-blur-sm opacity-0 invisible hidden transition-all duration-300 flex items-center justify-center p-4 lg:p-10">
+        <div class="relative w-full max-w-6xl h-[70vh] lg:h-[85vh] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+            <!-- Header/Close -->
+            <div class="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/80 to-transparent z-10 flex justify-between items-center px-6 pointer-events-none">
+                <h3 class="text-white font-bold text-lg drop-shadow-md flex items-center gap-2"><i class="fa-solid fa-vr-cardboard text-brandGold"></i> 360° Virtual Campus Tour</h3>
+            </div>
+            <button onclick="document.getElementById('tour-modal').classList.add('hidden', 'opacity-0', 'invisible'); document.getElementById('tour-iframe').src = document.getElementById('tour-iframe').src;" class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/20 hover:bg-red-500 rounded-full flex items-center justify-center text-white transition-all backdrop-blur-md shadow-lg border border-white/30">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            
+            <!-- YouTube 360 iframe -->
+            <iframe id="tour-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/f2vC4X9K-5E?rel=0&modestbranding=1" title="360 Virtual Tour" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; xr-spatial-tracking" allowfullscreen class="absolute inset-0"></iframe>
+        </div>
+    </div>
 
     <!-- Interactive Scripts -->
     <script src="../assets/js/i18n-data.js"></script>
