@@ -179,9 +179,7 @@
                                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Target Trade (Preference 1) *</label>
                                 <select id="admTrade" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all text-slate-700">
                                     <option value="">Select a Trade</option>
-                                    <option>Electrician (2 Years)</option>
-                                    <option>Fitter (2 Years)</option>
-                                    <option>Mechanic Diesel (1 Year)</option>
+                                    <!-- Dynamic options injected via JS -->
                                 </select>
                             </div>
                         </div>
@@ -239,6 +237,21 @@
                 }
             });
         }
+
+        // Dynamic Trades
+        document.addEventListener('DOMContentLoaded', () => {
+            const trades = JSON.parse(localStorage.getItem('itiTrades') || '[]');
+            const admTrade = document.getElementById('admTrade');
+            if(trades.length > 0) {
+                admTrade.innerHTML = '<option value="">Select a Trade</option>';
+                trades.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.name;
+                    opt.textContent = `${t.name} (${t.duration})`;
+                    admTrade.appendChild(opt);
+                });
+            }
+        });
 
         document.getElementById('admissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
