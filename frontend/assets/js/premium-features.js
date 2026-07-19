@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initi18n();
     initSearchAndVoice();
     initNotifications();
+    injectFloatingContact();
 });
 
 // 1. Inject Premium Controls into Header
@@ -426,4 +427,121 @@ function initNotifications() {
     notifModal.addEventListener('click', (e) => {
         if (e.target === notifModal) closeModal();
     });
+}
+
+// 6. Floating Contact (WhatsApp + AI Bot)
+function injectFloatingContact() {
+    const contactContainer = document.createElement('div');
+    // Position: Bottom Right on Desktop, Bottom Left on Mobile to not clash with Mobile Settings FAB
+    contactContainer.className = 'fixed bottom-6 z-[90] flex flex-col gap-4 ' + 
+        (window.innerWidth < 1024 ? 'left-6' : 'right-6');
+    
+    contactContainer.innerHTML = `
+        <!-- AI Assistant Bot -->
+        <button id="btn-ai-bot" class="w-14 h-14 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center justify-center text-2xl transition-transform hover:scale-110 active:scale-95 group relative" title="Ask AI">
+            <i class="fa-solid fa-robot group-hover:animate-bounce"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-slate-800"></span>
+        </button>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/916209303249" target="_blank" class="w-14 h-14 bg-green-500 text-white rounded-full shadow-[0_0_15px_rgba(34,197,94,0.4)] flex items-center justify-center text-3xl transition-transform hover:scale-110 active:scale-95 group" title="Chat on WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    `;
+
+    document.body.appendChild(contactContainer);
+
+    // AI Bot Modal/Chat Window
+    const aiChatWindow = document.createElement('div');
+    aiChatWindow.id = 'ai-chat-window';
+    aiChatWindow.className = 'fixed bottom-24 z-[100] w-80 sm:w-96 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl opacity-0 invisible transform translate-y-4 transition-all duration-300 flex flex-col overflow-hidden ' + 
+        (window.innerWidth < 1024 ? 'left-6' : 'right-24');
+
+    aiChatWindow.innerHTML = `
+        <div class="bg-slate-900 dark:bg-slate-950 p-4 text-white flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center border border-slate-700">
+                    <i class="fa-solid fa-robot text-brandGold text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm leading-tight">Excellence AI</h4>
+                    <span class="text-[10px] text-green-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> Online</span>
+                </div>
+            </div>
+            <button id="close-ai-chat" class="text-slate-400 hover:text-white transition w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="p-4 h-72 overflow-y-auto bg-slate-50 dark:bg-slate-900/50 flex flex-col gap-4" id="ai-chat-body">
+            <div class="bg-white dark:bg-slate-700 p-3 rounded-tr-xl rounded-b-xl shadow-sm self-start max-w-[85%] border border-slate-100 dark:border-slate-600">
+                <p class="text-sm text-slate-700 dark:text-slate-200">Hi there! 👋 I'm Excellence AI. How can I assist you with admissions, trades, or campus information today?</p>
+            </div>
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex gap-2">
+            <input type="text" id="ai-chat-input" placeholder="Type your query..." class="flex-1 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white text-sm rounded-full px-4 outline-none border border-transparent focus:border-brandBlue/50 transition">
+            <button id="ai-chat-send" class="w-10 h-10 rounded-full bg-brandBlue text-white flex items-center justify-center shrink-0 hover:bg-blue-800 transition shadow-sm"><i class="fa-solid fa-paper-plane text-sm relative -left-0.5"></i></button>
+        </div>
+    `;
+
+    document.body.appendChild(aiChatWindow);
+
+    let isAiOpen = false;
+    document.getElementById('btn-ai-bot').addEventListener('click', () => {
+        isAiOpen = !isAiOpen;
+        if(isAiOpen) {
+            aiChatWindow.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+            setTimeout(() => document.getElementById('ai-chat-input').focus(), 300);
+        } else {
+            aiChatWindow.classList.add('opacity-0', 'invisible', 'translate-y-4');
+        }
+    });
+
+    document.getElementById('close-ai-chat').addEventListener('click', () => {
+        isAiOpen = false;
+        aiChatWindow.classList.add('opacity-0', 'invisible', 'translate-y-4');
+    });
+
+    document.getElementById('ai-chat-send').addEventListener('click', handleAiSend);
+    document.getElementById('ai-chat-input').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') handleAiSend();
+    });
+
+    function handleAiSend() {
+        const input = document.getElementById('ai-chat-input');
+        const text = input.value.trim();
+        if(!text) return;
+
+        const chatBody = document.getElementById('ai-chat-body');
+        
+        // User message
+        chatBody.innerHTML += \`
+            <div class="bg-brandBlue text-white p-3 rounded-tl-xl rounded-b-xl shadow-sm self-end max-w-[85%]">
+                <p class="text-sm">\${text}</p>
+            </div>
+        \`;
+        input.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Show typing indicator
+        const typingId = 'typing-' + Date.now();
+        chatBody.innerHTML += \`
+            <div id="\${typingId}" class="bg-white dark:bg-slate-700 p-4 rounded-tr-xl rounded-b-xl shadow-sm self-start w-16 border border-slate-100 dark:border-slate-600 flex justify-center gap-1">
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+        \`;
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Bot reply (mock)
+        setTimeout(() => {
+            const typingIndicator = document.getElementById(typingId);
+            if(typingIndicator) typingIndicator.remove();
+
+            chatBody.innerHTML += \`
+                <div class="bg-white dark:bg-slate-700 p-3 rounded-tr-xl rounded-b-xl shadow-sm self-start max-w-[85%] border border-slate-100 dark:border-slate-600">
+                    <p class="text-sm text-slate-700 dark:text-slate-200">Thank you for your question. A human representative will connect with you shortly, or you can use the WhatsApp button below to chat with us instantly!</p>
+                </div>
+            \`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 1500);
+    }
 }
