@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIS Gateway Authentication | Excellence ITI</title>
+    <link rel="manifest" href="../public/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
@@ -18,7 +20,7 @@
     <link rel="stylesheet" href="../assets/css/globals.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden transition-colors dark:bg-slate-900 dark:text-slate-200">
 
     <!-- Left Side: Illustration / Branding -->
     <div class="hidden lg:flex w-1/2 relative bg-brandBlue flex-col justify-between p-12 overflow-hidden">
@@ -173,6 +175,9 @@
             this.classList.toggle('fa-eye-slash');
         });
     </script>
+    <script src="../assets/js/i18n-data.js"></script>
+    <script src="../assets/js/premium-features.js"></script>
+    <script src="../assets/js/pwa-setup.js"></script>
     <script src="../assets/js/main.js"></script>
 </body>
 </html>
