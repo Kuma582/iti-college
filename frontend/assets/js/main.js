@@ -308,3 +308,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+/**
+ * Utility: Process Image Upload to Base64 (with Compression)
+ * Resizes the image to a max width/height to save localStorage space.
+ * @param {File} file - The image file
+ * @param {number} maxWidth - Maximum width
+ * @returns {Promise<string>} - Base64 string
+ */
+window.processImageUpload = function(file, maxWidth = 800) {
+    return new Promise((resolve, reject) => {
+        if (!file) return reject('No file provided');
+        
+        // If it's a PDF or non-image, just read as base64 without compression
+        if (!file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject('Failed to read document');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Compress as JPEG
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(dataUrl);
+            };
+            img.onerror = (err) => reject('Failed to load image for compression');
+        };
+        reader.onerror = (err) => reject('Failed to read file');
+    });
+};

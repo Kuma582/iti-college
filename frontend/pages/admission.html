@@ -269,6 +269,21 @@
             alertMsg.classList.add('hidden');
             
             try {
+                let documentBase64 = '';
+                const fileInput = document.getElementById('marksheetFile');
+                if (fileInput.files && fileInput.files[0]) {
+                    try {
+                        documentBase64 = await processImageUpload(fileInput.files[0], 1200);
+                    } catch (err) {
+                        alertMsg.classList.remove('hidden');
+                        alertMsg.className = 'text-center font-bold text-sm mt-4 text-red-600 bg-red-50 p-3 rounded-xl border border-red-200';
+                        alertMsg.innerText = 'Failed to process document: ' + err;
+                        btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane"></i>';
+                        btn.disabled = false;
+                        return;
+                    }
+                }
+
                 // Save to localStorage for demo purposes
                 const admissions = JSON.parse(localStorage.getItem('itiAdmissions') || '[]');
                 const appId = 'APP-' + Math.floor(10000 + Math.random() * 90000);
@@ -277,6 +292,7 @@
                     id: appId,
                     fullName, mobile, email, dob, trade,
                     status: 'Pending',
+                    documentBase64: documentBase64,
                     createdAt: new Date().toISOString()
                 };
                 

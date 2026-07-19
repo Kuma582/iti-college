@@ -755,7 +755,7 @@
                 <div class="glass p-5 rounded-2xl border border-slate-200">
                     <h3 class="font-bold text-slate-800 mb-4">Add Hero Slide</h3>
                     <form onsubmit="saveHeroSlide(event)" class="flex gap-4">
-                        <input type="url" id="heroUrl" required placeholder="Image URL (Unsplash etc.)" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="file" accept="image/*" id="heroUrl" required class="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <button type="submit" class="bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add Slide</button>
                     </form>
                 </div>
@@ -790,7 +790,7 @@
                 <div class="glass p-5 rounded-2xl border border-slate-200">
                     <h3 class="font-bold text-slate-800 mb-4">Add Gallery Image</h3>
                     <form onsubmit="saveGallery(event)" class="flex gap-4">
-                        <input type="url" id="galUrl" required placeholder="Image URL" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="file" accept="image/*" id="galUrl" required class="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <input type="text" id="galCaption" required placeholder="Caption" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
                         <select id="galCat" class="px-4 py-2 border border-slate-200 rounded-xl">
                             <option value="campus">Campus</option>
@@ -825,7 +825,7 @@
                     <h3 class="font-bold text-slate-800 mb-4">Add Recruiter Logo</h3>
                     <form onsubmit="saveRecruiter(event)" class="flex gap-4">
                         <input type="text" id="recName" required placeholder="Company Name" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
-                        <input type="url" id="recLogo" required placeholder="Logo Image URL" class="flex-1 px-4 py-2 border border-slate-200 rounded-xl">
+                        <input type="file" accept="image/*" id="recLogo" required class="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <button type="submit" class="bg-brandBlue text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-800">Add</button>
                     </form>
                 </div>
@@ -928,7 +928,7 @@
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Photo URL</label>
-                            <input type="url" id="sPhoto" placeholder="https://..." class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
+                            <input type="file" accept="image/*" id="sPhoto" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm">
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Attendance %</label>
@@ -1391,7 +1391,7 @@
         document.getElementById('sBatch').value = s.batch || '';
         document.getElementById('sFeeStatus').value = s.feeStatus || 'Pending';
         document.getElementById('sAddress').value = s.address || '';
-        document.getElementById('sPhoto').value = s.photo || '';
+        document.getElementById('sPhoto').dataset.existing = s.photo || '';
         document.getElementById('sAttendance').value = s.attendance || '';
         document.getElementById('sResults').value = s.results || '';
         document.getElementById('sPassword').value = s.password || '';
@@ -1404,12 +1404,30 @@
         document.getElementById('studentModal').classList.add('hidden');
     }
 
-    function saveStudent(e) {
+    async function saveStudent(e) {
         e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const ogText = btn.innerText;
+        btn.innerText = 'Saving...';
+        btn.disabled = true;
+
         const id = document.getElementById('editStudentId').value;
         const docs = document.getElementById('sDocuments').value.split(',').map(d => d.trim()).filter(Boolean);
         const passwordField = document.getElementById('sPassword').value.trim();
         const existingStudent = id ? getStudents().find(x=>x.id===id) : null;
+        
+        const photoInput = document.getElementById('sPhoto');
+        let photoData = photoInput.dataset.existing || '';
+        if (photoInput.files && photoInput.files[0]) {
+            try {
+                photoData = await processImageUpload(photoInput.files[0], 400); // 400px max width for avatar
+            } catch(err) {
+                showToast('Failed to process photo: ' + err, 'error');
+                btn.innerText = ogText;
+                btn.disabled = false;
+                return;
+            }
+        }
         
         const student = {
             id: id || 'STU-' + Date.now(),
@@ -1423,7 +1441,7 @@
             batch: document.getElementById('sBatch').value,
             feeStatus: document.getElementById('sFeeStatus').value,
             address: document.getElementById('sAddress').value.trim(),
-            photo: document.getElementById('sPhoto').value.trim(),
+            photo: photoData,
             attendance: document.getElementById('sAttendance').value,
             results: document.getElementById('sResults').value.trim(),
             documents: docs,
@@ -1442,6 +1460,8 @@
         renderStudentsTable();
         loadDashboard();
         showToast(id ? 'Student updated successfully!' : 'Student added successfully!');
+        btn.innerText = ogText;
+        btn.disabled = false;
     }
 
     function deleteStudent(id) {
@@ -1997,7 +2017,7 @@
                 photo: '',
                 attendance: 0,
                 results: '',
-                documents: [],
+                documents: adm.documentBase64 ? [adm.documentBase64] : [],
                 createdAt: new Date().toISOString(),
             });
             saveStudents(students);
@@ -2302,11 +2322,54 @@
         showToast('Deleted');
     }
 
-    function saveHeroSlide(e) { e.preventDefault(); const d = getCmsData('itiCmsHeroSlider'); d.push({id: Date.now(), url: document.getElementById('heroUrl').value}); setCmsData('itiCmsHeroSlider', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    async function saveHeroSlide(e) { 
+        e.preventDefault(); 
+        const fileInput = document.getElementById('heroUrl');
+        if (!fileInput.files[0]) return;
+        const btn = e.target.querySelector('button'); btn.innerText = 'Uploading...'; btn.disabled = true;
+        try {
+            const b64 = await processImageUpload(fileInput.files[0], 1200);
+            const d = getCmsData('itiCmsHeroSlider'); 
+            d.push({id: Date.now(), url: b64}); 
+            setCmsData('itiCmsHeroSlider', d); 
+            e.target.reset(); renderCMS(); showToast('Added');
+        } catch(err) { showToast('Upload failed', 'error'); }
+        btn.innerText = 'Add Slide'; btn.disabled = false;
+    }
+    
     function saveNotice(e) { e.preventDefault(); const d = getCmsData('itiCmsNotices'); d.push({id: Date.now(), title: document.getElementById('noticeTitle').value, date: document.getElementById('noticeDate').value, tag: document.getElementById('noticeTag').value, desc: document.getElementById('noticeDesc').value}); setCmsData('itiCmsNotices', d); e.target.reset(); renderCMS(); showToast('Added'); }
-    function saveGallery(e) { e.preventDefault(); const d = getCmsData('itiCmsGallery'); d.push({id: Date.now(), url: document.getElementById('galUrl').value, caption: document.getElementById('galCaption').value, cat: document.getElementById('galCat').value}); setCmsData('itiCmsGallery', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    
+    async function saveGallery(e) { 
+        e.preventDefault(); 
+        const fileInput = document.getElementById('galUrl');
+        if (!fileInput.files[0]) return;
+        const btn = e.target.querySelector('button'); btn.innerText = 'Uploading...'; btn.disabled = true;
+        try {
+            const b64 = await processImageUpload(fileInput.files[0], 800);
+            const d = getCmsData('itiCmsGallery'); 
+            d.push({id: Date.now(), url: b64, caption: document.getElementById('galCaption').value, cat: document.getElementById('galCat').value}); 
+            setCmsData('itiCmsGallery', d); 
+            e.target.reset(); renderCMS(); showToast('Added');
+        } catch(err) { showToast('Upload failed', 'error'); }
+        btn.innerText = 'Add'; btn.disabled = false;
+    }
+    
     function saveTestimonial(e) { e.preventDefault(); const d = getCmsData('itiCmsTestimonials'); d.push({id: Date.now(), name: document.getElementById('testName').value, course: document.getElementById('testCourse').value, text: document.getElementById('testText').value}); setCmsData('itiCmsTestimonials', d); e.target.reset(); renderCMS(); showToast('Added'); }
-    function saveRecruiter(e) { e.preventDefault(); const d = getCmsData('itiCmsRecruiters'); d.push({id: Date.now(), name: document.getElementById('recName').value, url: document.getElementById('recLogo').value}); setCmsData('itiCmsRecruiters', d); e.target.reset(); renderCMS(); showToast('Added'); }
+    
+    async function saveRecruiter(e) { 
+        e.preventDefault(); 
+        const fileInput = document.getElementById('recLogo');
+        if (!fileInput.files[0]) return;
+        const btn = e.target.querySelector('button'); btn.innerText = 'Uploading...'; btn.disabled = true;
+        try {
+            const b64 = await processImageUpload(fileInput.files[0], 400);
+            const d = getCmsData('itiCmsRecruiters'); 
+            d.push({id: Date.now(), name: document.getElementById('recName').value, url: b64}); 
+            setCmsData('itiCmsRecruiters', d); 
+            e.target.reset(); renderCMS(); showToast('Added');
+        } catch(err) { showToast('Upload failed', 'error'); }
+        btn.innerText = 'Add'; btn.disabled = false;
+    }
     
     function saveSiteSettings() {
         localStorage.setItem('itiCmsConfig', JSON.stringify({
