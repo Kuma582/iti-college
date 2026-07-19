@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initi18n();
     initSearchAndVoice();
     initNotifications();
-    injectFloatingContact();
     addLogoAnimation();
 });
 
