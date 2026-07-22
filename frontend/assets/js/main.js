@@ -187,10 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Student Corner specific interactions
-    const loadOlderNotices = document.querySelector('a:contains("Load Older Notices")');
-    if (loadOlderNotices) {
-        // Wait, :contains doesn't work in querySelector.
-    }
     const loadOlder = Array.from(document.querySelectorAll('a')).find(a => a.textContent.includes('Load Older Notices'));
     if(loadOlder) {
         loadOlder.addEventListener('click', (e) => {

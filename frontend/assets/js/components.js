@@ -525,7 +525,11 @@
     // Main Mount Execution
     function mountComponents() {
         // Guard against dashboard and login pages where we want to keep native layouts
-        if (document.querySelector('aside') || window.location.pathname.includes('dashboard') || window.location.pathname.includes('login')) {
+        const path = window.location.pathname.toLowerCase();
+        const isDashboardPage = path.includes('/admin-dashboard') || path.includes('/student-dashboard') || path.endsWith('dashboard.html') || path.includes('dashboard/');
+        const isLoginPage = path.endsWith('/login.html') || path.endsWith('/login/') || path.endsWith('login.html');
+
+        if (document.querySelector('aside') || isDashboardPage || isLoginPage) {
             return;
         }
 
