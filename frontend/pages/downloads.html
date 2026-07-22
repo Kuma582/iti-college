@@ -19,28 +19,13 @@
     </script>
     <link rel="stylesheet" href="../assets/css/globals.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Shared Components Loader -->
+    <script src="../assets/js/components.js" defer></script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans overflow-x-hidden transition-colors">
 
     <!-- Header will be injected with premium controls -->
-    <header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/50 dark:border-slate-800 sticky top-0 z-50 shadow-sm" id="main-header">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft">
-                    <i class="fa-solid fa-bolt text-brandGold"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-poppins font-bold text-brandBlue dark:text-white tracking-tight leading-none">EXCELLENCE ITI</h1>
-                </div>
-            </a>
-            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700 dark:text-slate-300">
-                <a href="index.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">Home</a>
-                <a href="downloads.html" class="text-brandBlue dark:text-brandGold border-b-2 border-brandBlue dark:border-brandGold pb-1">Downloads</a>
-                <a href="calendar.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">Calendar</a>
-                <a href="tour.html" class="hover:text-brandBlue dark:hover:text-brandGold transition-colors">360° Tour</a>
-            </nav>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <main class="max-w-7xl mx-auto px-6 py-16">
         <div class="text-center mb-12">
@@ -99,8 +84,11 @@
         </div>
     </main>
 
+    <div id="footer-placeholder"></div>
+
     <script src="../assets/js/i18n-data.js"></script>
     <script src="../assets/js/premium-features.js"></script>
     <script src="../assets/js/pwa-setup.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>

@@ -23,75 +23,13 @@
     <link rel="stylesheet" href="../assets/css/globals.css">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Shared Components Loader -->
+    <script src="../assets/js/components.js" defer></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans overflow-x-hidden transition-colors dark:bg-slate-900 dark:text-slate-200">
 
-    <!-- Top Information Bar -->
-    <div
-        class="bg-brandBlue text-white text-[11px] md:text-xs py-2 px-6 flex flex-col md:flex-row justify-between items-center border-b border-brandGold/50">
-        <div class="flex gap-4">
-            <span><i class="fa-solid fa-phone mr-1 text-brandGold"></i> +91-6209303249</span>
-            <span><i class="fa-solid fa-envelope mr-1 text-brandGold"></i>anmolsharma8783@gmail.com</span>
-        </div>
-        <div class="flex gap-4 mt-2 md:mt-0 font-medium tracking-wide">
-            <span>NCVT Affiliated: DGET-6/24/2024-TC</span>
-            <span class="text-brandGold font-bold">AISHE CODE: C-54321</span>
-        </div>
-    </div>
-
-    <!-- Sticky Header & Mega Nav -->
-    <header class="glass sticky top-0 z-50 shadow-sm transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- Logo -->
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div
-                    class="w-12 h-12 bg-gradient-to-br from-brandBlue to-blue-800 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft group-hover:shadow-glow transition-all duration-300 border border-brandGold/20">
-                    <i class="fa-solid fa-bolt text-brandGold"></i>
-                </div>
-                <div>
-                    <h1
-                        class="text-xl font-poppins font-bold text-brandBlue tracking-tight leading-none group-hover:text-blue-700 transition">
-                        EXCELLENCE ITI</h1>
-                    <span class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">Industrial Training
-                        Institute</span>
-                </div>
-            </a>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-700">
-                <a href="index.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Home</a>
-                <a href="about.html" class="text-brandBlue border-b-2 border-brandBlue pb-1">About Us</a>
-                <a href="courses.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Trades</a>
-                <a href="admission.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Admission</a>
-                <a href="faculty.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Faculty</a>
-                <a href="facilities.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Facilities</a>
-                <a href="gallery.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Gallery</a>
-                <a href="student-corner.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Notice</a>
-                <a href="contact.html"
-                    class="hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Contact</a>
-            <a href="login.html" class="lg:hidden hover:text-brandBlue transition-colors pb-1 border-b-2 border-transparent hover:border-brandGold">Login</a>
-            </nav>
-
-            <!-- Login CTA -->
-            <div class="hidden lg:block">
-                <a href="login.html"
-                    class="bg-brandBlue text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-soft hover:shadow-lg border border-brandBlue hover:border-brandGold flex items-center gap-2">
-                    <i class="fa-solid fa-user-shield"></i> MIS Login
-                </a>
-            </div>
-
-            <!-- Mobile Menu Toggle -->
-            <button class="lg:hidden text-2xl text-brandBlue"><i class="fa-solid fa-bars"></i></button>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <!-- Page Header -->
     <section class="relative bg-brandBlue text-white py-24 px-6 overflow-hidden">
@@ -315,64 +253,7 @@
     </section>
 
     <!-- Footer System -->
-    <footer class="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-12">
-            <div class="space-y-6 md:col-span-1">
-                <a href="index.html" class="flex items-center gap-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-br from-brandBlue to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl border border-brandGold/20">
-                        <i class="fa-solid fa-bolt text-brandGold"></i></div>
-                    <div>
-                        <h1 class="text-lg font-poppins font-bold text-white tracking-tight leading-none">EXCELLENCE ITI
-                        </h1>
-                    </div>
-                </a>
-                <p class="text-sm leading-relaxed">Central India's leading NCVT affiliated industrial training
-                    institute, creating the workforce of tomorrow.</p>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Quick Links</h4>
-                <ul class="space-y-3 text-sm">
-                    <li><a href="about.html" class="hover:text-brandGold transition-colors text-brandGold">About
-                            Institute</a></li>
-                    <li><a href="courses.html" class="hover:text-brandGold transition-colors">Available Trades</a></li>
-                    <li><a href="admission.html" class="hover:text-brandGold transition-colors">Admission 2026</a></li>
-                    <li><a href="contact.html" class="hover:text-brandGold transition-colors">Contact Us</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Student Resources</h4>
-                <ul class="space-y-3 text-sm">
-                    <li><a href="student-corner.html" class="hover:text-brandGold transition-colors">Notice Board</a>
-                    </li>
-                    <li><a href="facilities.html" class="hover:text-brandGold transition-colors">Campus Facilities</a>
-                    </li>
-                    <li><a href="placement.html" class="hover:text-brandGold transition-colors">Placement Cell</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-6 text-lg font-poppins">Contact Info</h4>
-                <ul class="space-y-4 text-sm">
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-location-dot mt-1 text-brandGold"></i>
-                        <span>Excellence ITI Campus, Main Industrial Estate, City - 400001</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <i class="fa-solid fa-phone text-brandGold"></i>
-                        <span>+91-9065606562</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div
-            class="max-w-7xl mx-auto pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
-            <p>&copy; 2026 Excellence ITI. All Rights Reserved. Designed with <i
-                    class="fa-solid fa-heart text-red-500 mx-1"></i></p>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <!-- Interactive Scripts -->
     <script src="../assets/js/i18n-data.js"></script>

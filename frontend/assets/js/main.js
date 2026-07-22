@@ -21,45 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Mobile Menu Toggle - Main Website
-    const mainMobileBtn = document.querySelector('header button .fa-bars')?.parentElement;
-    const desktopNav = document.querySelector('header nav');
-    
-    if (mainMobileBtn && desktopNav && !document.querySelector('aside')) { // Only on main website
-        const mobileMenu = document.createElement('div');
-        mobileMenu.className = 'fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-8 overflow-y-auto pb-12';
-        
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        closeBtn.className = 'absolute top-6 right-6 text-white text-3xl hover:text-brandGold transition-colors';
-        mobileMenu.appendChild(closeBtn);
-        
-        const links = desktopNav.querySelectorAll('a');
-        links.forEach(l => {
-            const mLink = document.createElement('a');
-            mLink.href = l.href;
-            mLink.textContent = l.textContent;
-            mLink.className = 'text-white text-2xl font-poppins font-bold py-4 border-b border-white/10 hover:text-brandGold transition-colors';
-            // Also close menu on link click
-            mLink.addEventListener('click', () => {
-                mobileMenu.classList.add('translate-x-full');
-                document.body.style.overflow = '';
-            });
-            mobileMenu.appendChild(mLink);
-        });
 
-        document.body.appendChild(mobileMenu);
-
-        mainMobileBtn.addEventListener('click', () => {
-            mobileMenu.classList.remove('translate-x-full');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('translate-x-full');
-            document.body.style.overflow = '';
-        });
-    }
 
     // 2.1 Mobile Menu Toggle - Dashboards (Student & Admin)
     const dashboardMobileBtn = document.querySelector('main header button .fa-bars')?.parentElement;
