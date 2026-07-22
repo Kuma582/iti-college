@@ -542,23 +542,23 @@ function injectFloatingContact() {
         const chatBody = document.getElementById('ai-chat-body');
         
         // User message
-        chatBody.innerHTML += \`
+        chatBody.innerHTML += `
             <div class="bg-brandBlue text-white p-3 rounded-tl-xl rounded-b-xl shadow-sm self-end max-w-[85%]">
-                <p class="text-sm">\${text}</p>
+                <p class="text-sm">${text}</p>
             </div>
-        \`;
+        `;
         input.value = '';
         chatBody.scrollTop = chatBody.scrollHeight;
 
         // Show typing indicator
         const typingId = 'typing-' + Date.now();
-        chatBody.innerHTML += \`
-            <div id="\${typingId}" class="bg-white dark:bg-slate-700 p-4 rounded-tr-xl rounded-b-xl shadow-sm self-start w-16 border border-slate-100 dark:border-slate-600 flex justify-center gap-1">
+        chatBody.innerHTML += `
+            <div id="${typingId}" class="bg-white dark:bg-slate-700 p-4 rounded-tr-xl rounded-b-xl shadow-sm self-start w-16 border border-slate-100 dark:border-slate-600 flex justify-center gap-1">
                 <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
                 <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
                 <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
             </div>
-        \`;
+        `;
         chatBody.scrollTop = chatBody.scrollHeight;
 
         // Bot reply (mock)
@@ -566,11 +566,11 @@ function injectFloatingContact() {
             const typingIndicator = document.getElementById(typingId);
             if(typingIndicator) typingIndicator.remove();
 
-            chatBody.innerHTML += \`
+            chatBody.innerHTML += `
                 <div class="bg-white dark:bg-slate-700 p-3 rounded-tr-xl rounded-b-xl shadow-sm self-start max-w-[85%] border border-slate-100 dark:border-slate-600">
                     <p class="text-sm text-slate-700 dark:text-slate-200">Thank you for your question. A human representative will connect with you shortly, or you can use the WhatsApp button below to chat with us instantly!</p>
                 </div>
-            \`;
+            `;
             chatBody.scrollTop = chatBody.scrollHeight;
         }, 1500);
     }

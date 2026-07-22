@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal | Excellence ITI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandBlue: '#0B3C91', brandGold: '#F4B400' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen overflow-hidden flex bg-slate-50">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-brandBlue text-white flex flex-col h-full shadow-2xl relative z-20 transition-all duration-300 hidden md:flex">
+        <!-- Logo -->
+        <div class="p-6 flex items-center gap-3 border-b border-white/10">
+            <div class="w-10 h-10 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center text-brandGold font-bold text-xl border border-white/20 shadow-inner">
+                <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-poppins font-bold tracking-tight">Teacher Portal</h1>
+                <p class="text-[10px] text-blue-200 uppercase tracking-widest">Excellence ITI</p>
+            </div>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-hide" id="sidebarNav">
+            <a href="#" onclick="switchTab('dashboard')" id="tab-dashboard" class="sidebar-tab active flex items-center gap-3 px-4 py-3 bg-white/10 rounded-xl text-brandGold font-medium transition-all shadow-inner border border-white/5">
+                <i class="fa-solid fa-house w-5"></i> <span>Dashboard</span>
+            </a>
+            <a href="#" onclick="switchTab('attendance')" id="tab-attendance" class="sidebar-tab flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-clipboard-user w-5"></i> <span>Mark Attendance</span>
+            </a>
+            <a href="#" onclick="switchTab('students')" id="tab-students" class="sidebar-tab flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-white/5 hover:text-white rounded-xl font-medium transition-all">
+                <i class="fa-solid fa-users w-5"></i> <span>Student Registry</span>
+            </a>
+        </nav>
+
+        <!-- Instructor Profile Details -->
+        <div class="px-6 py-4 border-t border-white/10 bg-slate-900/10 text-xs space-y-3">
+            <div>
+                <span class="text-blue-300 font-bold uppercase tracking-wider block mb-1">Assigned Branches</span>
+                <span class="text-white font-medium block">Electrician, Fitter, Welder, COPA</span>
+            </div>
+            <div>
+                <span class="text-blue-300 font-bold uppercase tracking-wider block mb-1">Assigned Subjects</span>
+                <span class="text-white font-medium block">Trade Theory, Practical Lab, Workshop Sci & Calc</span>
+            </div>
+        </div>
+
+        <!-- Bottom User Card -->
+        <div class="p-4 border-t border-white/10">
+            <div class="flex items-center gap-3 bg-blue-900/50 p-3 rounded-xl border border-white/5">
+                <div class="w-10 h-10 rounded-full bg-white text-brandBlue flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-sm font-bold truncate">Senior Instructor</p>
+                    <p class="text-xs text-blue-200 truncate">teacher@excellenceiti.com</p>
+                </div>
+                <button onclick="logout()" class="text-red-400 hover:text-red-300 transition-colors" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <!-- Top Header -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center z-10 sticky top-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500 hover:text-brandBlue text-xl" onclick="toggleMobileSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div>
+                    <h2 class="text-2xl font-poppins font-bold text-slate-800" id="headerTitle">Teacher Dashboard</h2>
+                    <p class="text-sm text-slate-500">Manage student records and mark attendance.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="bg-blue-50 text-brandBlue text-xs font-bold px-3 py-1.5 rounded-full border border-blue-100 flex items-center gap-1.5">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> Live Session
+                </span>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="flex-1 overflow-y-auto p-8 relative z-0">
+            <!-- 1. DASHBOARD VIEW -->
+            <div id="view-dashboard" class="space-y-8 block">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center gap-6">
+                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-brandBlue text-2xl">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Students</span>
+                            <h3 class="text-3xl font-poppins font-black text-slate-900 mt-1" id="dashTotalStudents">0</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center gap-6">
+                        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-2xl">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Avg. Attendance</span>
+                            <h3 class="text-3xl font-poppins font-black text-slate-900 mt-1" id="dashAvgAttendance">0%</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center gap-6">
+                        <div class="w-14 h-14 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Active Status</span>
+                            <h3 class="text-3xl font-poppins font-black text-slate-900 mt-1">Authorized</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Panels -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Announcements & Reminders -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
+                        <h3 class="text-xl font-poppins font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn text-brandGold"></i> Instructor Notes
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <h4 class="font-bold text-slate-800 text-sm">Attendance Review Cycle</h4>
+                                <p class="text-xs text-slate-500 mt-1">Please ensure daily attendance reports are submitted before 4:00 PM for integration with the student portal.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <h4 class="font-bold text-slate-800 text-sm">Semester Exams Ahead</h4>
+                                <p class="text-xs text-slate-500 mt-1">All practical marks and attendance records must satisfy the 75% minimum criteria for exam eligibility.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation Card -->
+                    <div class="bg-gradient-to-br from-brandBlue to-blue-900 text-white rounded-3xl p-8 flex flex-col justify-between shadow-lg relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop')] opacity-10 mix-blend-overlay"></div>
+                        <div class="relative z-10 space-y-4">
+                            <span class="bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Attendance Shortcut</span>
+                            <h3 class="text-2xl font-poppins font-bold leading-snug">Begin Student Attendance Intake for Today</h3>
+                            <p class="text-sm text-blue-200">Search and filter students by course trade to mark daily records quickly.</p>
+                        </div>
+                        <button onclick="switchTab('attendance')" class="bg-brandGold text-slate-950 font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors shadow-lg w-max mt-6 relative z-10">
+                            Open Attendance Panel &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ATTENDANCE VIEW -->
+            <div id="view-attendance" class="space-y-6 hidden">
+                <!-- Filter Section -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                    <div class="flex flex-wrap gap-4 w-full sm:w-auto">
+                        <select id="attendanceTradeFilter" class="bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-brandBlue">
+                            <option value="All">All Trades / Courses</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Fitter">Fitter</option>
+                            <option value="Welder">Welder</option>
+                            <option value="COPA">COPA</option>
+                        </select>
+                        <input type="text" id="attendanceSearch" placeholder="Search by name or roll no..." 
+                            class="bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-brandBlue w-full sm:w-64">
+                    </div>
+                    <button onclick="saveAttendance()" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3.5 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+                    </button>
+                </div>
+
+                <!-- Quick Attendance Actions -->
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="markAllFiltered(true)" class="flex-1 sm:flex-none bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold px-5 py-3 rounded-2xl transition-all text-xs flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-check-double text-sm"></i> Mark All Present
+                    </button>
+                    <button onclick="markAllFiltered(false)" class="flex-1 sm:flex-none bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold px-5 py-3 rounded-2xl transition-all text-xs flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-xmark text-sm"></i> Mark All Absent
+                    </button>
+                </div>
+
+                <!-- Alert Message -->
+                <div id="attendanceAlert" class="hidden p-4 rounded-2xl font-semibold text-center text-sm shadow-sm transition-all duration-300"></div>
+
+                <!-- Students Table Card -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                                    <th class="px-6 py-4">Roll Number</th>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Trade</th>
+                                    <th class="px-6 py-4">Current Attendance</th>
+                                    <th class="px-6 py-4 text-center">Daily Action</th>
+                                    <th class="px-6 py-4">Set Percent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody" class="divide-y divide-slate-50">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. STUDENTS VIEW -->
+            <div id="view-students" class="space-y-6 hidden">
+                <!-- Top registry controls -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <h3 class="text-xl font-poppins font-bold text-slate-800">Add New Student</h3>
+                    <div class="text-slate-400 text-sm">Create account records locally.</div>
+                </div>
+
+                <!-- Student Creator Form -->
+                <form id="studentRegisterForm" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+                        <input type="text" id="regName" required placeholder="e.g. Rahul Verma"
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                        <input type="email" id="regEmail" required placeholder="e.g. rahul@excellenceiti.com"
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
+                        <input type="text" id="regPassword" required placeholder="e.g. student123"
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Roll Number</label>
+                        <input type="text" id="regRollNo" required placeholder="e.g. ITI2026002"
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Trade / Course</label>
+                        <select id="regTrade" required
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                            <option value="Electrician">Electrician</option>
+                            <option value="Fitter">Fitter</option>
+                            <option value="Welder">Welder</option>
+                            <option value="COPA">COPA</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Initial Attendance (%)</label>
+                        <input type="number" id="regAttendance" required min="0" max="100" value="75"
+                            class="w-full text-sm px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                    </div>
+                    <button type="submit" class="md:col-span-2 bg-brandBlue hover:bg-blue-800 text-white font-bold py-4 rounded-xl transition-all shadow-md mt-4">
+                        Register Student Record
+                    </button>
+                </form>
+
+                <!-- Students List Registry -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+                    <h3 class="text-xl font-poppins font-bold text-slate-800">Current Student Registry</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                                    <th class="px-6 py-4">Roll Number</th>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Email</th>
+                                    <th class="px-6 py-4">Trade</th>
+                                    <th class="px-6 py-4 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registryTableBody" class="divide-y divide-slate-50">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Interactive Sidebar Drawer for Mobile -->
+    <div id="mobileSidebar" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="w-64 bg-brandBlue text-white h-full flex flex-col p-6 shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard-user text-brandGold text-2xl"></i>
+                    <h2 class="text-lg font-poppins font-bold">Teacher Portal</h2>
+                </div>
+                <button onclick="toggleMobileSidebar()" class="text-white hover:text-brandGold text-lg">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <nav class="flex-1 space-y-3">
+                <a href="#" onclick="switchTab('dashboard'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-blue-100 hover:text-white font-medium transition-all">
+                    <i class="fa-solid fa-house w-5"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="switchTab('attendance'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-blue-100 hover:text-white font-medium transition-all">
+                    <i class="fa-solid fa-clipboard-user w-5"></i> <span>Mark Attendance</span>
+                </a>
+                <a href="#" onclick="switchTab('students'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-blue-100 hover:text-white font-medium transition-all">
+                    <i class="fa-solid fa-users w-5"></i> <span>Student Registry</span>
+                </a>
+            </nav>
+
+            <!-- Instructor Profile Details (Mobile) -->
+            <div class="p-4 border-t border-white/10 bg-slate-900/10 rounded-2xl text-[10px] space-y-2">
+                <div>
+                    <span class="text-blue-300 font-bold uppercase tracking-wider block">Assigned Branches</span>
+                    <span class="text-white font-medium">Electrician, Fitter, Welder, COPA</span>
+                </div>
+                <div>
+                    <span class="text-blue-300 font-bold uppercase tracking-wider block">Assigned Subjects</span>
+                    <span class="text-white font-medium">Trade Theory, Practical, Workshop Sci</span>
+                </div>
+            </div>
+
+            <button onclick="logout()" class="w-full bg-red-600/30 text-red-200 border border-red-500/20 py-3 rounded-xl hover:bg-red-600 hover:text-white transition-colors">
+                <i class="fa-solid fa-power-off mr-2"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripting Dashboard Core -->
+    <script>
+        // Check Authentication
+        if (localStorage.getItem('teacherToken') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        let studentsList = [];
+
+        // Load students
+        function loadStudentsData() {
+            studentsList = JSON.parse(localStorage.getItem('itiStudents') || '[]');
+            
+            // Seed a default list if absolutely empty
+            if (studentsList.length === 0) {
+                studentsList = [
+                    { id: 'student_anmol', name: 'Anmol Sharma', email: 'student@excellenceiti.com', password: 'student123', rollNo: 'ITI2026001', attendance: 88, feeStatus: 'Paid', results: 'Distinction (85%)', trade: 'Electrician' },
+                    { id: 'student_vikas', name: 'Vikas Kumar', email: 'vikas@excellenceiti.com', password: 'student123', rollNo: 'ITI2026002', attendance: 76, feeStatus: 'Paid', results: 'First Class (72%)', trade: 'Fitter' },
+                    { id: 'student_priya', name: 'Priya Patel', email: 'priya@excellenceiti.com', password: 'student123', rollNo: 'ITI2026003', attendance: 92, feeStatus: 'Pending', results: 'Outstanding (91%)', trade: 'COPA' },
+                    { id: 'student_amit', name: 'Amit Singh', email: 'amit@excellenceiti.com', password: 'student123', rollNo: 'ITI2026004', attendance: 64, feeStatus: 'Pending', results: 'Pass (60%)', trade: 'Welder' }
+                ];
+                localStorage.setItem('itiStudents', JSON.stringify(studentsList));
+            }
+        }
+
+        // Initialize dashboard statistics
+        function renderDashboardStats() {
+            loadStudentsData();
+            document.getElementById('dashTotalStudents').innerText = studentsList.length;
+
+            const totalAtt = studentsList.reduce((acc, curr) => acc + (Number(curr.attendance) || 0), 0);
+            const avgAtt = studentsList.length > 0 ? Math.round(totalAtt / studentsList.length) : 0;
+            document.getElementById('dashAvgAttendance').innerText = `${avgAtt}%`;
+        }
+
+        // Render attendance table
+        function renderAttendanceTable() {
+            loadStudentsData();
+            const tradeFilter = document.getElementById('attendanceTradeFilter').value;
+            const search = document.getElementById('attendanceSearch').value.toLowerCase().trim();
+            const tableBody = document.getElementById('attendanceTableBody');
+
+            // Filter students list
+            const filtered = studentsList.filter(s => {
+                const matchesTrade = tradeFilter === 'All' || s.trade === tradeFilter;
+                const matchesSearch = s.name.toLowerCase().includes(search) || s.rollNo.toLowerCase().includes(search);
+                return matchesTrade && matchesSearch;
+            });
+
+            tableBody.innerHTML = '';
+            if (filtered.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-slate-400 py-8">No matching student records found.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(s => {
+                const currentAtt = s.attendance || 0;
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-700">${s.rollNo}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">${s.name}</td>
+                        <td class="px-6 py-4"><span class="text-xs font-bold uppercase px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">${s.trade}</span></td>
+                        <td class="px-6 py-4 font-bold ${currentAtt >= 75 ? 'text-green-600' : 'text-red-500'}">${currentAtt}%</td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="inline-flex rounded-xl p-1 bg-slate-100 border border-slate-200 gap-1">
+                                <button onclick="toggleStudentPresence('${s.id}', true)" id="btn-present-${s.id}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-green-500 text-white shadow-sm">Present</button>
+                                <button onclick="toggleStudentPresence('${s.id}', false)" id="btn-absent-${s.id}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:bg-slate-200">Absent</button>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="number" min="0" max="100" value="${currentAtt}" id="input-att-${s.id}" onchange="updateStudentAttendancePercent('${s.id}', this.value)"
+                                class="w-16 bg-slate-50 border border-slate-200 text-center py-1.5 px-1 rounded-lg text-sm focus:outline-none focus:border-brandBlue font-bold">
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Object holding daily status markers
+        const dailyStatus = {};
+
+        function toggleStudentPresence(studentId, isPresent) {
+            dailyStatus[studentId] = isPresent;
+            const btnPresent = document.getElementById(`btn-present-${studentId}`);
+            const btnAbsent = document.getElementById(`btn-absent-${studentId}`);
+            const inputAtt = document.getElementById(`input-att-${studentId}`);
+
+            const student = studentsList.find(s => s.id === studentId);
+            if (!student) return;
+
+            if (isPresent) {
+                btnPresent.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-green-500 text-white shadow-sm';
+                btnAbsent.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:bg-slate-200';
+                
+                // Dynamically increment if they mark present
+                let attVal = Math.min(100, Math.round((Number(student.attendance) || 0) + 0.5));
+                inputAtt.value = attVal;
+            } else {
+                btnPresent.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:bg-slate-200';
+                btnAbsent.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-red-500 text-white shadow-sm';
+                
+                // Dynamically decrement if absent
+                let attVal = Math.max(0, Math.round((Number(student.attendance) || 0) - 0.5));
+                inputAtt.value = attVal;
+            }
+        }
+
+        function updateStudentAttendancePercent(studentId, value) {
+            const val = Math.max(0, Math.min(100, Number(value) || 0));
+            document.getElementById(`input-att-${studentId}`).value = val;
+        }
+
+        // Mark all filtered students as present/absent
+        function markAllFiltered(isPresent) {
+            const tradeFilter = document.getElementById('attendanceTradeFilter').value;
+            const search = document.getElementById('attendanceSearch').value.toLowerCase().trim();
+
+            const filtered = studentsList.filter(s => {
+                const matchesTrade = tradeFilter === 'All' || s.trade === tradeFilter;
+                const matchesSearch = s.name.toLowerCase().includes(search) || s.rollNo.toLowerCase().includes(search);
+                return matchesTrade && matchesSearch;
+            });
+
+            filtered.forEach(s => {
+                toggleStudentPresence(s.id, isPresent);
+            });
+        }
+
+        // Save attendance to localStorage
+        function saveAttendance() {
+            loadStudentsData();
+            let updatedCount = 0;
+
+            studentsList.forEach(s => {
+                const inputAtt = document.getElementById(`input-att-${s.id}`);
+                if (inputAtt) {
+                    const newAtt = Number(inputAtt.value);
+                    if (s.attendance !== newAtt) {
+                        s.attendance = newAtt;
+                        updatedCount++;
+                    }
+                }
+            });
+
+            localStorage.setItem('itiStudents', JSON.stringify(studentsList));
+            
+            // Render alert message
+            const alertEl = document.getElementById('attendanceAlert');
+            alertEl.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            alertEl.className = 'p-4 rounded-2xl font-semibold text-center text-sm shadow-sm transition-all duration-300 bg-green-100 text-green-700 block';
+            alertEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Attendance saved successfully! Updated ${updatedCount} records.`;
+            
+            // Clear message after 3 seconds
+            setTimeout(() => {
+                alertEl.classList.add('hidden');
+            }, 3000);
+
+            renderDashboardStats();
+            renderAttendanceTable();
+        }
+
+        // Render registry list of students
+        function renderRegistryList() {
+            loadStudentsData();
+            const regBody = document.getElementById('registryTableBody');
+            regBody.innerHTML = '';
+
+            if (studentsList.length === 0) {
+                regBody.innerHTML = '<tr><td colspan="5" class="text-center text-slate-400 py-8">No students enrolled yet.</td></tr>';
+                return;
+            }
+
+            studentsList.forEach(s => {
+                regBody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-700">${s.rollNo}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">${s.name}</td>
+                        <td class="px-6 py-4 text-slate-600">${s.email}</td>
+                        <td class="px-6 py-4"><span class="text-xs font-bold uppercase px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">${s.trade}</span></td>
+                        <td class="px-6 py-4 text-center">
+                            <button onclick="deleteStudent('${s.id}')" class="text-red-500 hover:text-red-700 text-sm" title="Delete Record"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Add a student manually
+        document.getElementById('studentRegisterForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            loadStudentsData();
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const rollNo = document.getElementById('regRollNo').value.trim();
+            const trade = document.getElementById('regTrade').value;
+            const att = Number(document.getElementById('regAttendance').value) || 75;
+
+            // Check duplicate email or roll
+            if (studentsList.some(s => s.email === email || s.rollNo === rollNo)) {
+                alert('A student with this Email or Roll Number already exists!');
+                return;
+            }
+
+            const newStudent = {
+                id: 'student_' + Date.now(),
+                name,
+                email,
+                password,
+                rollNo,
+                trade,
+                attendance: att,
+                feeStatus: 'Pending',
+                results: 'N/A'
+            };
+
+            studentsList.push(newStudent);
+            localStorage.setItem('itiStudents', JSON.stringify(studentsList));
+
+            // Reset form
+            e.target.reset();
+            document.getElementById('regAttendance').value = 75;
+
+            renderDashboardStats();
+            renderRegistryList();
+            alert(`Student ${name} successfully enrolled!`);
+        });
+
+        // Delete a student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student record?')) {
+                loadStudentsData();
+                studentsList = studentsList.filter(s => s.id !== studentId);
+                localStorage.setItem('itiStudents', JSON.stringify(studentsList));
+                renderDashboardStats();
+                renderRegistryList();
+            }
+        }
+
+        // Filter and Search triggers
+        document.getElementById('attendanceTradeFilter').addEventListener('change', renderAttendanceTable);
+        document.getElementById('attendanceSearch').addEventListener('input', renderAttendanceTable);
+
+        // Sidebar tabs switching logic
+        function switchTab(tabId) {
+            // Hide all tab views
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-attendance').classList.add('hidden');
+            document.getElementById('view-students').classList.add('hidden');
+
+            // Show selected tab view
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            // Update title
+            const titles = {
+                'dashboard': 'Teacher Dashboard',
+                'attendance': 'Mark Students Attendance',
+                'students': 'Student Registry'
+            };
+            document.getElementById('headerTitle').innerText = titles[tabId];
+
+            // Toggle active styles in sidebar
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('bg-white/10', 'text-brandGold', 'shadow-inner', 'border-white/5', 'active');
+                tab.classList.add('text-blue-100', 'hover:bg-white/5', 'hover:text-white');
+                if (tab.id === `tab-${tabId}`) {
+                    tab.classList.remove('text-blue-100', 'hover:bg-white/5', 'hover:text-white');
+                    tab.classList.add('bg-white/10', 'text-brandGold', 'shadow-inner', 'border', 'border-white/5', 'active');
+                }
+            });
+
+            // Trigger renders
+            if (tabId === 'dashboard') renderDashboardStats();
+            if (tabId === 'attendance') renderAttendanceTable();
+            if (tabId === 'students') renderRegistryList();
+        }
+
+        // Sidebar toggle for mobile devices
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('teacherToken');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'login.html';
+        }
+
+        // Initial Load
+        renderDashboardStats();
+
+        // Listen for live updates from other dashboards (e.g. Admin Dashboard)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'itiStudents') {
+                loadStudentsData();
+                renderDashboardStats();
+                
+                // Refresh the currently active tab view
+                const activeTab = document.querySelector('.sidebar-tab.active');
+                if (activeTab) {
+                    const tabId = activeTab.id.replace('tab-', '');
+                    if (tabId === 'attendance') renderAttendanceTable();
+                    if (tabId === 'students') renderRegistryList();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -56,7 +56,7 @@
     </div>
 
     <!-- Right Side: Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white relative">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white dark:bg-slate-900 relative">
         <a href="index.html" class="lg:hidden absolute top-6 left-6 flex items-center gap-2 text-brandBlue font-bold text-sm">
             <i class="fa-solid fa-arrow-left"></i> Back to Home
         </a>
@@ -66,35 +66,35 @@
                 <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-brandBlue text-3xl mx-auto mb-6 shadow-inner">
                     <i class="fa-solid fa-fingerprint"></i>
                 </div>
-                <h2 class="text-3xl font-poppins font-black text-slate-900 tracking-tight">Welcome Back</h2>
+                <h2 class="text-3xl font-poppins font-black text-slate-900 dark:text-white tracking-tight">Welcome Back</h2>
                 <p class="text-slate-500 text-sm mt-2">Enter your credentials to access the MIS Portal</p>
             </div>
             <form id="loginForm" class="space-y-6">
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address / User ID</label>
+                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Email Address / User ID</label>
                     <div class="relative">
                         <i class="fa-regular fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
                         <input type="text" id="loginEmail" required placeholder="admin@excellenceiti.com"
-                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
                     </div>
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Secure Password</label>
+                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Secure Password</label>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
                         <input type="password" id="loginPassword" required placeholder="••••••••"
-                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
+                            class="w-full text-sm pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all">
                         <i id="togglePassword" class="fa-regular fa-eye absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 cursor-pointer hover:text-brandBlue transition-colors"></i>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between pt-2 text-sm">
-                    <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
+                    <label class="flex items-center gap-2 text-slate-600 dark:text-slate-400 cursor-pointer">
                         <input type="checkbox" class="accent-brandBlue w-4 h-4 rounded border-slate-300">
-                        <span class="font-medium">Remember me</span>
+                        <span class="font-medium dark:text-slate-300">Remember me</span>
                     </label>
-                    <a href="#" class="text-brandBlue font-bold hover:text-brandGold transition-colors">Forgot Password?</a>
+                    <a href="#" class="text-brandBlue font-bold dark:text-blue-400 hover:text-brandGold dark:hover:text-brandGold transition-colors">Forgot Password?</a>
                 </div>
 
                 <button type="submit"
@@ -113,6 +113,22 @@
 
     <!-- Interactive Scripts -->
     <script>
+        // Seed default student account if not present
+        let defaultStudents = JSON.parse(localStorage.getItem('itiStudents') || '[]');
+        if (defaultStudents.length === 0) {
+            defaultStudents.push({
+                id: 'student_anmol',
+                name: 'Anmol Sharma',
+                email: 'student@excellenceiti.com',
+                password: 'student123',
+                rollNo: 'ITI2026001',
+                attendance: 88,
+                feeStatus: 'Paid',
+                results: 'Distinction (85%)'
+            });
+            localStorage.setItem('itiStudents', JSON.stringify(defaultStudents));
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -136,6 +152,23 @@
                     msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
                     msg.innerText = 'Admin Authentication Successful! Redirecting...';
                     setTimeout(() => window.location.href = 'admin-dashboard.html', 1000);
+                    return;
+                }
+
+                // 1.5 Check Teacher Login
+                const registeredTeachers = JSON.parse(localStorage.getItem('itiTeachers') || '[]');
+                const teacherMatch = registeredTeachers.find(t => 
+                    (t.email === email || t.id === email) && 
+                    t.password && t.password === password
+                );
+
+                if ((email === 'teacher@excellenceiti.com' && password === 'teacher123') || teacherMatch) {
+                    localStorage.setItem('teacherToken', 'true');
+                    localStorage.setItem('userEmail', teacherMatch ? teacherMatch.email : email);
+                    msg.classList.remove('hidden');
+                    msg.className = 'text-center font-bold text-sm mt-4 text-green-600';
+                    msg.innerText = 'Teacher Authentication Successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'teacher-dashboard.html', 1000);
                     return;
                 }
 

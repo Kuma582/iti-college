@@ -455,7 +455,8 @@
                             <input type="text" id="tSubject" placeholder="Subject / Trade *" required class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
                             <input type="text" id="tQualification" placeholder="Qualification (e.g. B.Tech)" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
                             <input type="tel" id="tMobile" placeholder="Mobile Number" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
-                            <input type="email" id="tEmail" placeholder="Email Address" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="email" id="tEmail" placeholder="Email / Portal ID *" required class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
+                            <input type="password" id="tPassword" placeholder="Portal Password *" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
                             <input type="text" id="tExperience" placeholder="Experience (e.g. 5 years)" class="form-input px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-brandBlue outline-none text-sm w-full transition-all">
                         </div>
                         <div class="flex gap-3">
@@ -1417,6 +1418,14 @@
         const passwordField = document.getElementById('sPassword').value.trim();
         const existingStudent = id ? getStudents().find(x=>x.id===id) : null;
         
+        // Enforce mandatory password for new students
+        if (!id && !passwordField) {
+            showToast('Password is required for new students!', 'error');
+            btn.innerText = ogText;
+            btn.disabled = false;
+            return;
+        }
+        
         const photoInput = document.getElementById('sPhoto');
         let photoData = photoInput.dataset.existing || '';
         if (photoInput.files && photoInput.files[0]) {
@@ -1856,6 +1865,15 @@
     function saveTeacher(e) {
         e.preventDefault();
         const id = document.getElementById('editTeacherId').value;
+        const passwordField = document.getElementById('tPassword').value.trim();
+        const existingTeacher = id ? getTeachers().find(x => x.id === id) : null;
+
+        // Enforce mandatory password for new teachers
+        if (!id && !passwordField) {
+            showToast('Password is required for new teachers!', 'error');
+            return;
+        }
+
         const teacher = {
             id: id || 'TCH-' + Date.now(),
             name: document.getElementById('tName').value.trim(),
@@ -1864,6 +1882,7 @@
             mobile: document.getElementById('tMobile').value.trim(),
             email: document.getElementById('tEmail').value.trim(),
             experience: document.getElementById('tExperience').value.trim(),
+            password: passwordField || (existingTeacher ? existingTeacher.password : ''),
             createdAt: new Date().toISOString(),
         };
         const teachers = getTeachers();
@@ -1890,6 +1909,7 @@
         document.getElementById('tMobile').value = t.mobile || '';
         document.getElementById('tEmail').value = t.email || '';
         document.getElementById('tExperience').value = t.experience || '';
+        document.getElementById('tPassword').value = t.password || '';
         document.getElementById('teacherForm').scrollIntoView({behavior:'smooth'});
     }
 
@@ -2019,6 +2039,7 @@
                 attendance: 0,
                 results: '',
                 documents: adm.documentBase64 ? [adm.documentBase64] : [],
+                password: adm.mobile || 'student123',
                 createdAt: new Date().toISOString(),
             });
             saveStudents(students);

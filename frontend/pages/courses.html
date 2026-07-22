@@ -76,11 +76,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const coursesGrid = document.getElementById('coursesGrid');
-            const trades = JSON.parse(localStorage.getItem('itiTrades') || '[]');
+            let trades = JSON.parse(localStorage.getItem('itiTrades') || '[]');
             
             if(trades.length === 0) {
-                coursesGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">No trades have been added yet. Admins can add trades from the dashboard.</div>';
-                return;
+                trades = [
+                    { name: 'Electrician', duration: '2 Years', seats: 80, eligibility: '10th Pass' },
+                    { name: 'Fitter', duration: '2 Years', seats: 80, eligibility: '10th Pass' },
+                    { name: 'Welder', duration: '1 Year', seats: 40, eligibility: '10th Pass' },
+                    { name: 'COPA (Computer Operator & Programming Assistant)', duration: '1 Year', seats: 40, eligibility: '10th Pass' }
+                ];
+                localStorage.setItem('itiTrades', JSON.stringify(trades));
             }
 
             const images = [
@@ -104,7 +109,7 @@
                         <p class="text-slate-600 text-sm mb-6 line-clamp-2">Industry-aligned technical training in ${t.name} with practical exposure and modern facilities.</p>
                         
                         <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-8 border-t border-b border-slate-100 py-4">
-                            <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Eligibility</span> <span class="font-semibold text-slate-700">10th Pass</span></div>
+                            <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Eligibility</span> <span class="font-semibold text-slate-700">${t.eligibility || '10th Pass'}</span></div>
                             <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Seats</span> <span class="font-semibold text-slate-700">${t.seats || 40} Units</span></div>
                             <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Course Fee</span> <span class="font-semibold text-brandBlue">Contact Admin</span></div>
                             <div><span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Department</span> <span class="font-semibold text-slate-700">Technical</span></div>

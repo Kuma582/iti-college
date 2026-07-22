@@ -486,6 +486,12 @@
         // Load data on start
         fetchStudentData();
 
+        // Listen for live updates from other tabs (e.g. Teacher Dashboard)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'itiStudents') {
+                fetchStudentData();
+            }
+        });
     </script>
 </body>
 </html>
